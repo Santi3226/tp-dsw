@@ -22,7 +22,7 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ### Modelo
 
-![MD.png]()
+![Docs/MD.png]()
 
 ## Alcance Funcional
 
