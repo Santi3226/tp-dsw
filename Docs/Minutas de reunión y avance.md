@@ -32,7 +32,7 @@ Tenés que mencionar que pediste turno, y te solicitarán tu número de DNI para
 
 Cuando te presentes al Laboratorio, se controlará que tu turno se encuentre confirmado, en ese caso, se etiquetan las muestras que hayas traído con un identificador único y se notifica de tu asistencia a los bioquímicos, quienes te llamarán por nombre y apellido para que presentes las muestras y completes, en caso de ser necesario, el proceso, realizando una extracción de sangre.
 
-Si. Deberás cancelar el actual y volver a solicitar uno nuevo. Todo se debe realizar en el mismo momento.
+Si deseas realizar una modificación al turno solicitado, deberás cancelar el actual y volver a solicitar uno nuevo.
 
 Una vez que te presentaste al laboratorio y teniendo en cuenta un plazo de 24 horas, los 2 resultados estarán disponibles y podrás consultarlos en línea. También si en el proceso de registración además de tu mail, seleccionaste la opción: “Quiero recibirlos por mail”, entonces los mismos serán enviados automáticamente a tu casilla.
 
