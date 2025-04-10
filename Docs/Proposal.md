@@ -32,15 +32,15 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 Regularidad:
 |Req|Detalle|
 |:-|:-|
-|CRUD simple|1. CRUD Tipo Habitacion<br>2. CRUD Servicio   PREGUNTAR<br>3. CRUD Localidad|
-|CRUD dependiente|1. CRUD Turno {Depende de} CRUD Tipo Habitacion<br>2. CRUD Paciente {Depende de} CRUD Localidad|
-|Listado<br>+<br>detalle| 1. Listado de clientes filtrado por nombre, dni y edad => Detalle CRUD Cliente<br> 2. Listado de turnos filtrado por rango de fecha, muestra tipo, fecha inicio y fin estadía, estado y nombre del paciente => Detalle muestra datos completos del turno y del paciente|
+|CRUD simple|1. CRUD Paciente<br>2. CRUD CentroAtencion<br>3. CRUD Politicas|
+|CRUD dependiente|1. CRUD Turno {Depende de} CRUD CentroAtencion<br>2. CRUD TipoAnalisis {Depende de} CRUD ResultAnalisis|
+|Listado<br>+<br>detalle| 1. Listado de clientes filtrado por nombre, dni y edad => Detalle CRUD Paciente<br> 2. Listado de turnos filtrado por rango de fecha, muestra tipo, fecha inicio y fin estadía, estado y nombre del paciente => Detalle muestra datos completos del turno y del paciente|
 |CUU/Epic|1. Reservar un turno para una extracción<br>2. Mostrar el resultado de un análisis|
 
 Adicionales para Aprobación
 |Req|Detalle|
 |:-|:-|
-|CRUD |1. CRUD Tipo Habitacion<br>2. CRUD Servicio<br>3. CRUD Localidad<br>4. CRUD Provincia<br>5. CRUD Habitación<br>6. CRUD Empleado<br>7. CRUD Cliente|
+|CRUD |1. CRUD Paciente<br>2. CRUD Turno<br>3. CRUD CentroAtencion<br>4. CRUD TipoAnalisis<br>5. CRUD ResultAnalisis<br>6. CRUD Politicas|
 |CUU/Epic|1. Reservar un turno para una extracción<br>2. Realizar la confirmación de una turno<br>3. Mostrar el resultado de un análisis|
 
 ### Alcance Adicional Voluntario
