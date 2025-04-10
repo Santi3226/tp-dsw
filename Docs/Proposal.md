@@ -6,7 +6,7 @@
 
 - 53106 - Dedich, Santiago
 - 52509 - García Morichetti, Alma
-- Leg - Mateo,
+- 99999 - Apellido, Nombre
 
 ### Repositorios
 
@@ -22,34 +22,31 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ### Modelo
 
-![Docs/MD.png]()
+![MD](https://github.com/user-attachments/assets/2364d5c0-fa1f-4f1e-bdf4-2fc688f6f970)
+
 
 ## Alcance Funcional
 
 ### Alcance Mínimo
 
-_Nota_: el siguiente es un ejemplo para un grupo de 3 integrantes para un sistema de hotel. El
-
 Regularidad:
 |Req|Detalle|
 |:-|:-|
-|CRUD simple|1. CRUD Tipo Habitacion<br>2. CRUD Servicio<br>3. CRUD Localidad|
-|CRUD dependiente|1. CRUD Habitación {depende de} CRUD Tipo Habitacion<br>2. CRUD Cliente {depende de} CRUD Localidad|
-|Listado<br>+<br>detalle| 1. Listado de habitaciones filtrado por tipo de habitación, muestra nro y tipo de habitación => detalle CRUD Habitacion<br> 2. Listado de reservas filtrado por rango de fecha, muestra nro de habitación, fecha inicio y fin estadía, estado y nombre del cliente => detalle muestra datos completos de la reserva y del cliente|
-|CUU/Epic|1. Reservar una habitación para la estadía<br>2. Realizar el check-in de una reserva|
+|CRUD simple|1. CRUD Tipo Habitacion<br>2. CRUD Servicio   PREGUNTAR<br>3. CRUD Localidad|
+|CRUD dependiente|1. CRUD Turno {Depende de} CRUD Tipo Habitacion<br>2. CRUD Paciente {Depende de} CRUD Localidad|
+|Listado<br>+<br>detalle| 1. Listado de clientes filtrado por nombre, dni y edad => Detalle CRUD Cliente<br> 2. Listado de turnos filtrado por rango de fecha, muestra tipo, fecha inicio y fin estadía, estado y nombre del paciente => Detalle muestra datos completos del turno y del paciente|
+|CUU/Epic|1. Reservar un turno para una extracción<br>2. Mostrar el resultado de un análisis|
 
 Adicionales para Aprobación
 |Req|Detalle|
 |:-|:-|
 |CRUD |1. CRUD Tipo Habitacion<br>2. CRUD Servicio<br>3. CRUD Localidad<br>4. CRUD Provincia<br>5. CRUD Habitación<br>6. CRUD Empleado<br>7. CRUD Cliente|
-|CUU/Epic|1. Reservar una habitación para la estadía<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out y facturación de estadía y servicios|
+|CUU/Epic|1. Reservar un turno para una extracción<br>2. Realizar la confirmación de una turno<br>3. Mostrar el resultado de un análisis|
 
 ### Alcance Adicional Voluntario
 
-_Nota_: El Alcance Adicional Voluntario es opcional, pero ayuda a que la funcionalidad del sistema esté completa y será considerado en la nota en función de su complejidad y esfuerzo.
-
 | Req      | Detalle                                                                                                                                                                                                             |
 | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Listados | 1. Estadía del día filtrado por fecha muestra, cliente, habitaciones y estado <br>2. Reservas filtradas por cliente muestra datos del cliente y de cada reserve fechas, estado cantidad de habitaciones y huespedes |
-| CUU/Epic | 1. Consumir servicios<br>2. Cancelación de reserva                                                                                                                                                                  |
-| Otros    | 1. Envío de recordatorio de reserva por email                                                                                                                                                                       |
+| Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis |
+| CUU/Epic | 1. Solicitud de Preparación<br>2. Cancelación de reserva                                                                                                                                                                  |
+| Otros    | 1. Envío de recordatorio de turno por email                                                                                                                                                                       |
