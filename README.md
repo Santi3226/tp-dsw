@@ -2,7 +2,7 @@
 
 ## Sistema de Gestión de Laboratorio Bioquímico
 
-### [Documentación](https://github.com/Santi3226/tp-dsw/tree/main/Docs)
+### [Documentación](https://github.com/Santi3226/tp-dsw/tree/main/docs)
 
 ### [Backend](https://github.com/Santi3226/tp-dsw/tree/main/backend)
 
