@@ -6,13 +6,12 @@
 
 - 53106 - Dedich, Santiago
 - 52509 - García Morichetti, Alma
-- 99999 - Apellido, Nombre
+- 52866 - Latorre, Mateo
 
 ### Repositorios
 
-- [frontend app](http://hyperlinkToGihubOrGitlab)
-- [backend app](http://hyperlinkToGihubOrGitlab)
-  _Nota_: si utiliza un monorepo indicar un solo link con fullstack app.
+- [frontend app](https://github.com/Santi3226/tp-dsw/tree/main/frontend)
+- [backend app](https://github.com/Santi3226/tp-dsw/tree/main/backend)
 
 ## Tema
 
@@ -24,7 +23,6 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ![MD](https://github.com/user-attachments/assets/2364d5c0-fa1f-4f1e-bdf4-2fc688f6f970)
 
-
 ## Alcance Funcional
 
 ### Alcance Mínimo
@@ -32,21 +30,21 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 Regularidad:
 |Req|Detalle|
 |:-|:-|
-|CRUD simple|1. CRUD Paciente<br>2. CRUD CentroAtencion<br>3. CRUD Politicas|
-|CRUD dependiente|1. CRUD Turno {Depende de} CRUD CentroAtencion<br>2. CRUD TipoAnalisis {Depende de} CRUD ResultAnalisis|
-|Listado<br>+<br>detalle| 1. Listado de clientes filtrado por nombre, dni y edad => Detalle CRUD Paciente<br> 2. Listado de turnos filtrado por rango de fecha, muestra tipo, fecha inicio y fin estadía, estado y nombre del paciente => Detalle muestra datos completos del turno y del paciente|
-|CUU/Epic|1. Reservar un turno para una extracción<br>2. Mostrar el resultado de un análisis|
+|CRUD simple|1. CRUD Localidad<br>2. CRUD PlantillaAnalisis<br>3. CRUD Politicas|
+|CRUD dependiente|1. CRUD CentroAtencion {Depende de} CRUD Localidad<br>2. CRUD TipoAnalisis {Depende de} CRUD PlantiilaAnalisis|
+|Listado<br>+<br>detalle| 1. Listado de pacientes filtrado por nombre, dni y edad => Detalle CRUD Paciente<br> 2. Listado de turnos filtrado por rango de fecha, muestra tipo del analisis, fecha de reserva y extracción y nombre del paciente => Detalle muestra datos completos del turno y del paciente|
+|CUU/Epic|1. Reservar un turno para la extracción<br>2. Realizar la extracción (gestión de resultados)|
 
 Adicionales para Aprobación
 |Req|Detalle|
 |:-|:-|
-|CRUD |1. CRUD Paciente<br>2. CRUD Turno<br>3. CRUD CentroAtencion<br>4. CRUD TipoAnalisis<br>5. CRUD ResultAnalisis<br>6. CRUD Politicas|
-|CUU/Epic|1. Reservar un turno para una extracción<br>2. Realizar la confirmación de una turno<br>3. Mostrar el resultado de un análisis|
+|CRUD |1. CRUD Paciente<br>2. CRUD Turno<br>3. CRUD CentroAtencion<br>4. CRUD TipoAnalisis<br>5. CRUD ResultadoAnalisis<br>6. CRUD Politicas<br>7. CRUD PlantillaAnalisis<br>8. CRUD Localidad|
+|CUU/Epic|1. Reservar un turno para la extracción<br>2. Realizar la extracción (gestión de resultados)<br>3. Mostrar y notificar el resultado de un análisis|
 
 ### Alcance Adicional Voluntario
 
-| Req      | Detalle                                                                                                                                                                                                             |
-| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Req      | Detalle                                                                                                                           |
+| :------- | :-------------------------------------------------------------------------------------------------------------------------------- |
 | Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis |
-| CUU/Epic | 1. Solicitud de Preparación<br>2. Cancelación de reserva                                                                                                                                                                  |
-| Otros    | 1. Envío de recordatorio de turno por email                                                                                                                                                                       |
+| CUU/Epic | 1. Carga de Plantillas de Análisis<br>2. Cancelación de reserva                                                                   |
+| Otros    | 1. Envío de recordatorio de turno por email                                                                                       |
