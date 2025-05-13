@@ -21,7 +21,8 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ### Modelo
 
-![MD](https://github.com/user-attachments/assets/2364d5c0-fa1f-4f1e-bdf4-2fc688f6f970)
+![MD](https://github.com/user-attachments/assets/178a0e9a-c953-4d24-a656-563d0963d97b)
+
 
 ## Alcance Funcional
 
