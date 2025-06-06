@@ -1,0 +1,34 @@
+### Obtener todos los personajes
+GET http://localhost:3000/api/localidad
+### Obtener un personaje por ID
+GET http://localhost:3000/api/localidad/2000
+### Borrar por ID
+DELETE http://localhost:3000/api/localidad/2000
+
+### Crear un nuevo personaje
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/localidad   
+Content-Type: application/json 
+
+{
+  "denominacion": "Buenos Aires",
+  "codPostal": "3000"
+}
+
+### Actua un personaje por ID solo algunos atb
+PATCH http://localhost:3000/api/localidad/3000
+Content-Type: application/json
+
+{
+    "codPostal": "3000"
+}
+
+### Actua un personaje por ID al 100%
+PUT http://localhost:3000/api/localidad/3000
+Content-Type: application/json
+
+{
+  "denominacion": "BSAS",
+  "codPostal": "3000"
+}
+
