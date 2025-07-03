@@ -4,11 +4,11 @@ import {sanitizeLocalidadInput, findAll, findOne, deleteOne, add, update} from "
 const localidadRouter = Router();
 
 localidadRouter.get('/',findAll);
-localidadRouter.get('/:codPostal',findOne);
-localidadRouter.delete('/:codPostal',deleteOne);
+localidadRouter.get('/:id',findOne);
+localidadRouter.delete('/:id',deleteOne);
 localidadRouter.post('/',sanitizeLocalidadInput,add);
-localidadRouter.patch('/:codPostal',sanitizeLocalidadInput,update);
-localidadRouter.put('/:codPostal',sanitizeLocalidadInput,update);
+localidadRouter.patch('/:id',sanitizeLocalidadInput,update);
+localidadRouter.put('/:id',sanitizeLocalidadInput,update);
 
 
 export {localidadRouter}

@@ -3,8 +3,7 @@ GET http://localhost:3000/api/localidad
 ### Obtener un personaje por ID
 GET http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
 ### Borrar por ID
-DELETE http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
-
+DELETE http://localhost:3000/api/localidad/6866a5eaf38f14d8fb069c2e
 ### Crear un nuevo personaje
 //Tener cuidado con la extra linea desp de content-type
 POST http://localhost:3000/api/localidad   
@@ -14,21 +13,21 @@ Content-Type: application/json
   "denominacion": "Buenos Aires",
   "codPostal": "3000"
 }
-
 ### Actua un personaje por ID solo algunos atb
-PATCH http://localhost:3000/api/localidad/3000
+PATCH http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
 Content-Type: application/json
 
 {
-    "codPostal": "3000"
+  "id": "6865d7c2cdb4fe46b4f6e3e8",
+  "denominacion": "San Jose de La Esquina"
 }
-
 ### Actua un personaje por ID al 100%
-PUT http://localhost:3000/api/localidad/3000
+PUT http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
 Content-Type: application/json
 
 {
-  "denominacion": "BSAS",
-  "codPostal": "3000"
+  "id": "6865d7c2cdb4fe46b4f6e3e8",
+  "denominacion": "San José de La Esquina",
+  "codPostal": "2185"
 }
 

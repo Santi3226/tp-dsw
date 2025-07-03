@@ -55,8 +55,8 @@ async function add(req:Request, res:Response) //?
 
 async function update(req:Request, res:Response)
 {
-  const localidad = await repository.update(req.body.sanitizeLocalidadInput);
-  if (!localidad) {
+  const localidad = await repository.update(req.params.id, req.body.sanitizeLocalidadInput);
+  if (localidad===undefined) {
     res.status(404).send({ error: 'Localidad not found' });
     return;
   }

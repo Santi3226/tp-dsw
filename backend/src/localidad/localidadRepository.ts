@@ -20,10 +20,9 @@ export class LocalidadRepository implements Respository<Localidad>{
     return item;
   }
 
-  public async update(item: Localidad): Promise<Localidad | undefined> {
-    const { _id, ...updateData } = item; // Desestructurar para obtener el _id y el resto de los datos
-    const id = new ObjectId(item._id)
-    return await (localidades.findOneAndUpdate({id}, {$set: updateData}, {returnDocument: 'after'})) || undefined;
+  public async update(id:string, item: Localidad): Promise<Localidad | undefined> {
+    const _id = new ObjectId(id)
+    return (await localidades.findOneAndUpdate({ _id }, { $set: item }, { returnDocument: 'after' })) || undefined
   }
   
   public async delete(item: { id: string; }): Promise<Localidad | undefined> {
