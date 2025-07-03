@@ -14,7 +14,8 @@
   "packageManager": "pnpm@10.6.5",
   "dependencies": {
     "express": "5.1.0",
-    "mongodb": "6.17.0"
+    "mongodb": "6.17.0",
+    "mysql2": "3.14.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
