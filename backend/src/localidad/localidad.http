@@ -1,9 +1,9 @@
 ### Obtener todos los personajes
 GET http://localhost:3000/api/localidad
 ### Obtener un personaje por ID
-GET http://localhost:3000/api/localidad/2000
+GET http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
 ### Borrar por ID
-DELETE http://localhost:3000/api/localidad/2000
+DELETE http://localhost:3000/api/localidad/6865d7c2cdb4fe46b4f6e3e8
 
 ### Crear un nuevo personaje
 //Tener cuidado con la extra linea desp de content-type

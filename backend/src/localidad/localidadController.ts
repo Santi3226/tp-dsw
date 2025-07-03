@@ -19,15 +19,15 @@ function sanitizeLocalidadInput(req: Request, res: Response, next: NextFunction)
 }
 
 // Get all localidades
-function findAll(req:Request, res:Response)
+async function findAll(req:Request, res:Response)
 { 
-res.json({data: repository.findAll()});
+res.json({data: await repository.findAll()});
 }
 
 //Get one localidad
-function findOne(req:Request, res:Response)
+async function findOne(req:Request, res:Response)
 {
-  const localidad = repository.findOne({codPostal:req.params.codPostal});
+  const localidad = await repository.findOne({id:req.params.id});
   if (!localidad) {
     res.status(404).send({ error: 'Localidad not found' });
     return; //Asegurar q la ejecucion termine aca
@@ -35,9 +35,9 @@ function findOne(req:Request, res:Response)
   res.json({data: localidad});
 }
 
-function deleteOne(req:Request, res:Response)
+async function deleteOne(req:Request, res:Response)
 {
-  const localidad = repository.delete({codPostal:req.params.codPostal});
+  const localidad = await repository.delete({id:req.params.id});
   if (!localidad) {
     res.status(404).send({ error: 'Localidad not found' });
     return;
@@ -45,17 +45,17 @@ function deleteOne(req:Request, res:Response)
   res.status(201).send({message:"Localidad eliminada", data: localidad});
 }
 
-function add(req:Request, res:Response) //?
+async function add(req:Request, res:Response) //?
 {
   const {denominacion, codPostal} = req.body.sanitizeLocalidadInput; 
   const newlocalidad = new Localidad(denominacion, codPostal); //lo crea
-  repository.add(newlocalidad);
+  await repository.add(newlocalidad);
   res.status(201).send({message:"Localidad creada", data: newlocalidad});
 }
 
-function update(req:Request, res:Response)
+async function update(req:Request, res:Response)
 {
-  const localidad = repository.update(req.body.sanitizeLocalidadInput);
+  const localidad = await repository.update(req.body.sanitizeLocalidadInput);
   if (!localidad) {
     res.status(404).send({ error: 'Localidad not found' });
     return;
