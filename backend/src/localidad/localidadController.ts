@@ -1,7 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { LocalidadRepository } from './localidadRepository.js';
 import { Localidad } from './localidadEntity.js';
-const repository = new LocalidadRepository();
 
 function sanitizeLocalidadInput(
   req: Request,
@@ -22,45 +20,24 @@ function sanitizeLocalidadInput(
 
 // Get all localidades
 async function findAll(req: Request, res: Response) {
-  res.json({ data: await repository.findAll() });
+  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 //Get one localidad
 async function findOne(req: Request, res: Response) {
-  const localidad = await repository.findOne({ id: req.params.id });
-  if (!localidad) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return; //Asegurar q la ejecucion termine aca
-  }
-  res.json({ data: localidad });
+  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 async function deleteOne(req: Request, res: Response) {
-  const localidad = await repository.delete({ id: req.params.id });
-  if (!localidad) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return;
-  }
-  res.status(201).send({ message: 'Localidad eliminada', data: localidad });
+  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 async function add(req: Request, res: Response) {
-  const { denominacion, codPostal, id } = req.body.sanitizeLocalidadInput;
-  const newlocalidad = new Localidad(denominacion, codPostal, id); //lo crea
-  await repository.add(newlocalidad);
-  res.status(201).send({ message: 'Localidad creada', data: newlocalidad });
+  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 async function update(req: Request, res: Response) {
-  const localidad = await repository.update(
-    req.params.id,
-    req.body.sanitizeLocalidadInput
-  );
-  if (localidad === undefined) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return;
-  }
-  res.send({ message: 'Localidad actualizada', data: localidad });
+  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 export { sanitizeLocalidadInput, findAll, findOne, deleteOne, add, update };
