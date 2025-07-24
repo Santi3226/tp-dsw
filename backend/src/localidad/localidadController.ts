@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
-import { LocalidadRepository } from './localidadRepository.js';
 import { Localidad } from './localidadEntity.js';
-const repository = new LocalidadRepository();
+import { orm } from '../shared/db/orm.js';
+
+const em = orm.em; //EntityManager
 
 function sanitizeLocalidadInput(
   req: Request,
@@ -22,45 +23,78 @@ function sanitizeLocalidadInput(
 
 // Get all localidades
 async function findAll(req: Request, res: Response) {
-  res.json({ data: await repository.findAll() });
+  try {
+    const localidades = await em.find(Localidad, {}); //(Localidad, filtros)
+    res.status(200).json({
+      message: 'Todas las localidades encontradas: ',
+      data: localidades,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching localidades' });
+  }
 }
 
 //Get one localidad
 async function findOne(req: Request, res: Response) {
-  const localidad = await repository.findOne({ id: req.params.id });
-  if (!localidad) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return; //Asegurar q la ejecucion termine aca
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidades = await em.findOneOrFail(Localidad, { id }); //(Localidad, filtros)
+    res.status(200).json({
+      message: 'Localidad encontrada: ',
+      data: localidades,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: error.message || 'Error fetching localidad' });
   }
-  res.json({ data: localidad });
-}
-
-async function deleteOne(req: Request, res: Response) {
-  const localidad = await repository.delete({ id: req.params.id });
-  if (!localidad) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return;
-  }
-  res.status(201).send({ message: 'Localidad eliminada', data: localidad });
 }
 
 async function add(req: Request, res: Response) {
-  const { denominacion, codPostal, id } = req.body.sanitizeLocalidadInput;
-  const newlocalidad = new Localidad(denominacion, codPostal, id); //lo crea
-  await repository.add(newlocalidad);
-  res.status(201).send({ message: 'Localidad creada', data: newlocalidad });
+  try {
+    const localidad = em.create(Localidad, req.body.sanitizeLocalidadInput);
+    await em.persistAndFlush(localidad);
+    res
+      .status(201)
+      .json({ message: 'Localidad creada exitosamente', data: localidad });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error creating localidad', error: error.message });
+  }
 }
 
 async function update(req: Request, res: Response) {
-  const localidad = await repository.update(
-    req.params.id,
-    req.body.sanitizeLocalidadInput
-  );
-  if (localidad === undefined) {
-    res.status(404).send({ error: 'Localidad not found' });
-    return;
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidad = em.getReference(Localidad, id);
+    em.assign(localidad, req.body);
+    await em.flush();
+    res
+      .status(200)
+      .json({ message: 'Localidad actualizada exitosamente', data: localidad });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error updating localidad', error: error.message });
   }
-  res.send({ message: 'Localidad actualizada', data: localidad });
+}
+
+async function deleteOne(req: Request, res: Response) {
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidad = em.getReference(Localidad, id);
+    em.remove(localidad);
+    await em.flush();
+    res.status(200).json({
+      message: 'Localidad eliminada exitosamente',
+      data: localidad,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error updating localidad', error: error.message });
+  }
 }
 
 export { sanitizeLocalidadInput, findAll, findOne, deleteOne, add, update };
