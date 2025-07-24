@@ -44,12 +44,10 @@ async function findOne(req: Request, res: Response) {
       data: localidades,
     });
   } catch (error: any) {
-    res.status(500).json({ message: 'Error fetching localidades' });
+    res
+      .status(500)
+      .json({ message: error.message || 'Error fetching localidad' });
   }
-}
-
-async function deleteOne(req: Request, res: Response) {
-  res.status(500).json({ message: 'Not implemented yet' });
 }
 
 async function add(req: Request, res: Response) {
@@ -67,7 +65,36 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
-  res.status(500).json({ message: 'Not implemented yet' });
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidad = em.getReference(Localidad, id);
+    em.assign(localidad, req.body);
+    await em.flush();
+    res
+      .status(200)
+      .json({ message: 'Localidad actualizada exitosamente', data: localidad });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error updating localidad', error: error.message });
+  }
+}
+
+async function deleteOne(req: Request, res: Response) {
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidad = em.getReference(Localidad, id);
+    em.remove(localidad);
+    await em.flush();
+    res.status(200).json({
+      message: 'Localidad eliminada exitosamente',
+      data: localidad,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error updating localidad', error: error.message });
+  }
 }
 
 export { sanitizeLocalidadInput, findAll, findOne, deleteOne, add, update };

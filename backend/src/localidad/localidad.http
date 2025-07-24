@@ -1,11 +1,5 @@
 ### GET ALL
 GET http://localhost:3000/api/localidad
-### GET ONE (ID)
-@id = {createLocalidad.response.body.data.id}
-GET http://localhost:3000/api/localidad/{{id}}
-
-### DELETE
-DELETE http://localhost:3000/api/localidad/6
 
 ### POST
 //Tener cuidado con la extra linea desp de content-type
@@ -13,25 +7,24 @@ POST http://localhost:3000/api/localidad
 Content-Type: application/json 
 
 {
-  "denominacion": "Buenos Aires",
+  "denominacion": "Salta",
+  "codPostal": "1500"
+}
+
+### ID
+@id = 9
+
+### GET ONE 
+GET http://localhost:3000/api/localidad/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/localidad/{{id}}
+Content-Type: application/json
+
+{
+  "denominacion": "Salita",
   "codPostal": "3000"
 }
 
-### PATCH
-PATCH http://localhost:3000/api/localidad/1
-Content-Type: application/json
-
-{
-  "denominacion": "San Jose de La Esquina"
-}
-
-### PUT
-PUT http://localhost:3000/api/localidad/1
-Content-Type: application/json
-
-{
-  "id": "1",
-  "denominacion": "San José de La Esquina",
-  "codPostal": "2185"
-}
-
+### DELETE
+DELETE http://localhost:3000/api/localidad/{{id}}
