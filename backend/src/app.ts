@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import { localidadRouter } from './localidad/localidadRoutes.js';
-import { orm, syncSchema } from './shared/orm.js';
+import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 
 const app = express();

@@ -1,5 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { Localidad } from './localidadEntity.js';
+import { orm } from '../shared/db/orm.js';
+
+const em = orm.em; //EntityManager
 
 function sanitizeLocalidadInput(
   req: Request,
@@ -20,12 +23,29 @@ function sanitizeLocalidadInput(
 
 // Get all localidades
 async function findAll(req: Request, res: Response) {
-  res.status(500).json({ message: 'Not implemented yet' });
+  try {
+    const localidades = await em.find(Localidad, {}); //(Localidad, filtros)
+    res.status(200).json({
+      message: 'Todas las localidades encontradas: ',
+      data: localidades,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching localidades' });
+  }
 }
 
 //Get one localidad
 async function findOne(req: Request, res: Response) {
-  res.status(500).json({ message: 'Not implemented yet' });
+  try {
+    const id = Number.parseInt(req.params.id);
+    const localidades = await em.findOneOrFail(Localidad, { id }); //(Localidad, filtros)
+    res.status(200).json({
+      message: 'Localidad encontrada: ',
+      data: localidades,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching localidades' });
+  }
 }
 
 async function deleteOne(req: Request, res: Response) {
@@ -33,7 +53,17 @@ async function deleteOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
-  res.status(500).json({ message: 'Not implemented yet' });
+  try {
+    const localidad = em.create(Localidad, req.body.sanitizeLocalidadInput);
+    await em.persistAndFlush(localidad);
+    res
+      .status(201)
+      .json({ message: 'Localidad creada exitosamente', data: localidad });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error creating localidad', error: error.message });
+  }
 }
 
 async function update(req: Request, res: Response) {

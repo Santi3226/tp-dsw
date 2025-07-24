@@ -1,10 +1,12 @@
 import { MikroORM } from '@mikro-orm/core';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
+import { MySqlDriver } from '@mikro-orm/mysql';
 
 export const orm = await MikroORM.init({
-  entities: ['./dist/**/*.entity.js'],
-  entitiesTs: ['./src/**/*.entity.ts'],
+  entities: ['./dist/**/*Entity.js'],
+  entitiesTs: ['./src/**/*Entity.ts'],
   dbName: 'laboratorio',
+  driver: MySqlDriver,
   clientUrl: 'mysql://root:Santitomi1@localhost:3306/laboratorio',
   highlighter: new SqlHighlighter(),
   debug: true,
