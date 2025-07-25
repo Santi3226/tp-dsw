@@ -9,13 +9,13 @@ function sanitizeLocalidadInput(
   res: Response,
   next: NextFunction
 ) {
-  req.body.sanitizeLocalidadInput = {
+  req.body.sanitizedInput = {
     denominacion: req.body.denominacion,
     codPostal: req.body.codPostal,
   };
-  Object.keys(req.body.sanitizeLocalidadInput).forEach((key) => {
-    if (req.body.sanitizeLocalidadInput[key] === undefined)
-      delete req.body.sanitizeLocalidadInput[key]; //Si falta algun campo lo deja como estaba
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined)
+      delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
   });
   // Aqui van todos los chequeos de seg y datos
   next();
@@ -52,7 +52,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const localidad = em.create(Localidad, req.body.sanitizeLocalidadInput);
+    const localidad = em.create(Localidad, req.body.sanitizedInput);
     await em.persistAndFlush(localidad);
     res
       .status(201)
@@ -93,7 +93,7 @@ async function deleteOne(req: Request, res: Response) {
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: 'Error updating localidad', error: error.message });
+      .json({ message: 'Error deleting localidad', error: error.message });
   }
 }
 

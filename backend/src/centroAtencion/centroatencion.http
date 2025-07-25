@@ -1,0 +1,31 @@
+### GET ALL
+GET http://localhost:3000/api/centroAtencion
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/centroAtencion   
+Content-Type: application/json 
+
+{
+  "nombre": "Retiro",
+  "domicilio": "San Martin 1500",
+  "localidad": 7
+}
+
+### ID
+@id = 1
+
+### GET ONE 
+GET http://localhost:3000/api/centroAtencion/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/centroAtencion/{{id}}
+Content-Type: application/json
+
+{
+  "denominacion": "Salita",
+  "codPostal": "3000"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/centroAtencion/{{id}}
