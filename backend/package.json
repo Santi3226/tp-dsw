@@ -6,12 +6,12 @@
   "main": "app.js",
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
-    "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\""
+    "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\"" 
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.6.5",
+  "packageManager": "pnpm@10.13.1",
   "dependencies": {
     "@mikro-orm/core": "6.4.16",
     "@mikro-orm/mysql": "6.4.16",

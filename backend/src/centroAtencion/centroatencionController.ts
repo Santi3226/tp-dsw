@@ -15,7 +15,7 @@ function sanitizeCentroAtencionInput(
     localidad: req.body.localidad, //Se espera que sea un objeto con id de la localidad
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizednput[key] === undefined)
+    if (req.body.sanitizedInput[key] === undefined)
       delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
   });
   // Aqui van todos los chequeos de seg y datos
@@ -95,8 +95,7 @@ async function deleteOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const centro = em.getReference(CentroAtencion, id);
-    em.remove(centro);
-    await em.flush();
+    await em.removeAndFlush(centro);
     res.status(200).json({
       message: 'Centro eliminada exitosamente',
       data: centro,
