@@ -7,9 +7,9 @@ POST http://localhost:3000/api/centroAtencion
 Content-Type: application/json 
 
 {
-  "nombre": "Retiro",
-  "domicilio": "San Martin 1500",
-  "localidad": 7
+  "nombre": "Error",
+  "domicilio": "-",
+  "localidad": 4
 }
 
 ### ID

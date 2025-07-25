@@ -27,7 +27,7 @@ export class CentroAtencion extends BaseEntity {
   @Property()
   public domicilio!: string;
 
-  @ManyToOne(() => Localidad, { nullable: false })
+  @ManyToOne(() => Localidad, { nullable: false, updateRule: 'cascade', deleteRule: 'cascade' })
   localidad!: Rel<Localidad>;
 
   // OnetoMany turnos

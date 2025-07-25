@@ -24,7 +24,7 @@ function sanitizeLocalidadInput(
 // Get all localidades
 async function findAll(req: Request, res: Response) {
   try {
-    const localidades = await em.find(Localidad, {}); //(Localidad, filtros)
+    const localidades = await em.find(Localidad, {}, { populate: ['centros'] });
     res.status(200).json({
       message: 'Todas las localidades encontradas: ',
       data: localidades,
@@ -38,7 +38,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const localidades = await em.findOneOrFail(Localidad, { id }); //(Localidad, filtros)
+    const localidades = await em.findOneOrFail(Localidad, { id },{ populate: ['centros'] }); //(Localidad, filtros)
     res.status(200).json({
       message: 'Localidad encontrada: ',
       data: localidades,
