@@ -8,11 +8,11 @@ Content-Type: application/json
 
 {
   "denominacion": "Salta",
-  "codPostal": "1500"
+  "codPostal": "3000"
 }
 
 ### ID
-@id = 9
+@id = 4
 
 ### GET ONE 
 GET http://localhost:3000/api/localidad/{{id}}
@@ -22,8 +22,8 @@ PUT http://localhost:3000/api/localidad/{{id}}
 Content-Type: application/json
 
 {
-  "denominacion": "Salita",
-  "codPostal": "3000"
+  "denominacion": "Rosario",
+  "codPostal": "2001"
 }
 
 ### DELETE

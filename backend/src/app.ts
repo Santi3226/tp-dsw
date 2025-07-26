@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express, { NextFunction, Request, Response } from 'express';
 import { localidadRouter } from './localidad/localidadRoutes.js';
+import { centroAtencionRouter } from './centroAtencion/centroatencionRoutes.js';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 
@@ -13,6 +14,7 @@ app.use((req, res, next) => {
 });
 //antes de las rutas y middleware de negocio
 app.use('/api/localidad', localidadRouter); //Manda todas las peticiones q comiencen asi al router
+app.use('/api/centroAtencion', centroAtencionRouter);
 
 app.use((_, res) => {
   res.status(404).send({ error: 'Resource not found, check links' });

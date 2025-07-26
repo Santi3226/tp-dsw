@@ -9,13 +9,13 @@ function sanitizeLocalidadInput(
   res: Response,
   next: NextFunction
 ) {
-  req.body.sanitizeLocalidadInput = {
+  req.body.sanitizedInput = {
     denominacion: req.body.denominacion,
     codPostal: req.body.codPostal,
   };
-  Object.keys(req.body.sanitizeLocalidadInput).forEach((key) => {
-    if (req.body.sanitizeLocalidadInput[key] === undefined)
-      delete req.body.sanitizeLocalidadInput[key]; //Si falta algun campo lo deja como estaba
+  Object.keys(req.body.sanitizedInput).forEach((key) => {
+    if (req.body.sanitizedInput[key] === undefined)
+      delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
   });
   // Aqui van todos los chequeos de seg y datos
   next();
@@ -24,7 +24,7 @@ function sanitizeLocalidadInput(
 // Get all localidades
 async function findAll(req: Request, res: Response) {
   try {
-    const localidades = await em.find(Localidad, {}); //(Localidad, filtros)
+    const localidades = await em.find(Localidad, {}, { populate: ['centros'] });
     res.status(200).json({
       message: 'Todas las localidades encontradas: ',
       data: localidades,
@@ -38,7 +38,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const localidades = await em.findOneOrFail(Localidad, { id }); //(Localidad, filtros)
+    const localidades = await em.findOneOrFail(Localidad, { id },{ populate: ['centros'] }); //(Localidad, filtros)
     res.status(200).json({
       message: 'Localidad encontrada: ',
       data: localidades,
@@ -52,7 +52,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const localidad = em.create(Localidad, req.body.sanitizeLocalidadInput);
+    const localidad = em.create(Localidad, req.body.sanitizedInput);
     await em.persistAndFlush(localidad);
     res
       .status(201)
@@ -93,7 +93,7 @@ async function deleteOne(req: Request, res: Response) {
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: 'Error updating localidad', error: error.message });
+      .json({ message: 'Error deleting localidad', error: error.message });
   }
 }
 
