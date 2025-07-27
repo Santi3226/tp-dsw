@@ -1,0 +1,40 @@
+### GET ALL
+GET http://localhost:3000/api/paciente
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/paciente
+Content-Type: application/json
+
+{
+  "nombre": "Trucho",
+  "apellido": "Dedich",
+  "dni": "12345678",
+  "fechaNacimiento": "1990-01-01",
+  "telefono": "123456789",
+  "email": "santiago@example.com",
+  "direccion": "Calle Falsa 123"
+}
+
+### ID
+@id = 2
+
+### GET ONE 
+GET http://localhost:3000/api/paciente/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/paciente/{{id}}
+Content-Type: application/json
+
+{
+  "nombre": "Santiago",
+  "apellido": "Dedich",
+  "dni": "12345678",
+  "fechaNacimiento": "2003-01-01",
+  "telefono": "123456789",
+  "email": "santiago@example.com",
+  "direccion": "Calle Falsa 123"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/paciente/{{id}}

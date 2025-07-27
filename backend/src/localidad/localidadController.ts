@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Localidad } from './localidadEntity.js';
 import { orm } from '../shared/db/orm.js';
 
