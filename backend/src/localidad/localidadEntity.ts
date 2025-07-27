@@ -11,10 +11,10 @@ import { CentroAtencion } from '../centroAtencion/centroatencionEntity.js';
 
 @Entity()
 export class Localidad extends BaseEntity {
-  @Property({ nullable: false, unique: true })
+  @Property({ nullable: false })
   public denominacion!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public codPostal!: string;
 
   @OneToMany(() => CentroAtencion, (centroAtencion) => centroAtencion.localidad, {

@@ -16,16 +16,16 @@ export class Paciente extends BaseEntity {
   @Property({ nullable: false})
   public nombre!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public apellido!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public dni!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public fechaNacimiento!: Date;
 
-  @Property()
+  @Property({ nullable: false})
   public telefono!: string;
 
   @Property({ nullable: false})
