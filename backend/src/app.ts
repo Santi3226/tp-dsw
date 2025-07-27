@@ -5,6 +5,7 @@ import { pacienteRouter } from './paciente/pacienteRoutes.js';
 import { centroAtencionRouter } from './centroAtencion/centroatencionRoutes.js';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
+import { turnoRouter } from './turno/turnoRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use((req, res, next) => {
 app.use('/api/localidad', localidadRouter); //Manda todas las peticiones q comiencen asi al router
 app.use('/api/centroAtencion', centroAtencionRouter);
 app.use('/api/paciente', pacienteRouter);
+app.use('/api/turno', turnoRouter);
 
 app.use((_, res) => {
   res.status(404).send({ error: 'Resource not found, check links' });

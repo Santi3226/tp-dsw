@@ -21,7 +21,6 @@ export const syncSchema = async () => {
   const generator = orm.getSchemaGenerator();
   /*
   await generator.dropSchema(); // Uncomment to drop the schema
-
   await generator.createSchema(); // Uncomment to create the schema
 */
   await generator.updateSchema();

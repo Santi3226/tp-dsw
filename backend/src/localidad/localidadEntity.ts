@@ -2,8 +2,6 @@ import {
   Cascade,
   Collection,
   Entity,
-  ManyToMany,
-  ManyToOne,
   OneToMany,
   Property,
   Rel,
@@ -19,8 +17,8 @@ export class Localidad extends BaseEntity {
   @Property()
   public codPostal!: string;
 
-  @OneToMany(() => CentroAtencion, (centro) => centro.localidad, {
+  @OneToMany(() => CentroAtencion, (centroAtencion) => centroAtencion.localidad, {
     cascade: [Cascade.ALL],
   })
-  centros = new Collection<CentroAtencion>(this);
+  centroAtencion = new Collection<CentroAtencion>(this);
 }

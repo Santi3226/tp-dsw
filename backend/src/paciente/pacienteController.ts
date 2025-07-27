@@ -16,7 +16,7 @@ function sanitizePacienteInput(
     fechaNacimiento: req.body.fechaNacimiento,
     telefono: req.body.telefono,
     email: req.body.email,
-    direccion: req.body.direccion,
+    direccion: req.body.direccion
     };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -29,7 +29,7 @@ function sanitizePacienteInput(
 // Get all Pacientes
 async function findAll(req: Request, res: Response) {
   try {
-    const pacientes = await em.find(Paciente, {});
+    const pacientes = await em.find(Paciente, {}, { populate: ['turnos'] });
     res.status(200).json({
       message: 'Todos los pacientes encontrados: ',
       data: pacientes,
@@ -43,7 +43,7 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const pacientes = await em.findOneOrFail(Paciente, { id }); //(Paciente, filtros)
+    const pacientes = await em.findOneOrFail(Paciente, { id }, { populate: ['turnos'] }); //(Paciente, filtros)
     res.status(200).json({
       message: 'Paciente encontrada: ',
       data: pacientes,

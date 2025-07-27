@@ -1,18 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
-import { CentroAtencion } from './centroatencionEntity.js';
+import { Turno } from './turnoEntity.js';
 import { orm } from '../shared/db/orm.js';
 
 const em = orm.em; //EntityManager
 
-function sanitizeCentroAtencionInput(
+function sanitizeTurnoInput(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   req.body.sanitizedInput = {
-    nombre: req.body.nombre,
-    domicilio: req.body.domicilio,
-    localidad: req.body.localidad, //Se espera que sea un objeto con id de la localidad
+    recibeMail: req.body.recibeMail,
+    estado: req.body.estado,
+    receta: req.body.receta,
+    observacion: req.body.observacion,
+    fechaHoraExtraccion: req.body.fechaHoraExtraccion,
+    paciente: req.body.paciente,
+    centroAtencion: req.body.centroAtencion,
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -25,19 +29,19 @@ function sanitizeCentroAtencionInput(
 // Get all centros de atencion
 async function findAll(req: Request, res: Response) {
   try {
-    const centros = await em.find(
-      CentroAtencion,
+    const turnos = await em.find(
+      Turno,
       {},
       {
-        populate: ['localidad', 'turno'],
+        populate: ['paciente','centroAtencion'],
       }
     );
     res.status(200).json({
-      message: 'Todos los centros encontrados: ',
-      data: centros,
+      message: 'Todos los turnos encontrados: ',
+      data: turnos,
     });
   } catch (error: any) {
-    res.status(500).json({ message: 'Error fetching centros' });
+    res.status(500).json({ message: 'Error fetching turnos' });
   }
 }
 
@@ -45,70 +49,70 @@ async function findAll(req: Request, res: Response) {
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const centros = await em.findOneOrFail(
-      CentroAtencion,
+    const turnos = await em.findOneOrFail(
+      Turno,
       { id },
       {
-        populate: ['localidad', 'turno'],
+        populate: ['paciente','centroAtencion'],
       }
     );
     res.status(200).json({
-      message: 'Centro encontrado: ',
-      data: centros,
+      message: 'Turno encontrado: ',
+      data: turnos,
     });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || 'Error fetching centro' });
+    res.status(500).json({ message: error.message || 'Error fetching turno' });
   }
 }
 
 async function add(req: Request, res: Response) {
   try {
-    const centro = em.create(CentroAtencion, req.body.sanitizedInput);
+    const turno = em.create(Turno, req.body.sanitizedInput);
     await em.flush();
     res
       .status(201)
-      .json({ message: 'Centro creada exitosamente', data: centro });
+      .json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: 'Error creating centro', error: error.message });
+      .json({ message: 'Error creating turno', error: error.message });
   }
 }
 
 async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const centro = em.getReference(CentroAtencion, id);
-    em.assign(centro, req.body);
+    const turno = em.getReference(Turno, id);
+    em.assign(turno, req.body);
     await em.flush();
     res
       .status(200)
-      .json({ message: 'Centro actualizada exitosamente', data: centro });
+      .json({ message: 'Turno actualizado exitosamente', data: turno });
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: 'Error updating centro', error: error.message });
+      .json({ message: 'Error updating turno', error: error.message });
   }
 }
 
 async function deleteOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
-    const centro = em.getReference(CentroAtencion, id);
-    await em.removeAndFlush(centro);
+    const turno = em.getReference(Turno, id);
+    await em.removeAndFlush(turno);
     res.status(200).json({
-      message: 'Centro eliminada exitosamente',
-      data: centro,
+      message: 'Turno eliminada exitosamente',
+      data: turno,
     });
   } catch (error: any) {
     res
       .status(500)
-      .json({ message: 'Error deleting centro', error: error.message });
+      .json({ message: 'Error deleting turno', error: error.message });
   }
 }
 
 export {
-  sanitizeCentroAtencionInput,
+  sanitizeTurnoInput,
   findAll,
   findOne,
   deleteOne,
