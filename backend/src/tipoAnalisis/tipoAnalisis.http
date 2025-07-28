@@ -1,0 +1,30 @@
+### GET ALL
+GET http://localhost:3000/api/tipoAnalisis
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/tipoAnalisis   
+Content-Type: application/json 
+
+{
+  "nombre": "Perfiil Lipidico",
+  "importe": 3000
+}
+
+### ID
+@id = 2
+
+### GET ONE 
+GET http://localhost:3000/api/tipoAnalisis/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/tipoAnalisis/{{id}}
+Content-Type: application/json
+
+{
+  "nombre": "Hemograma Completo",
+  "importe": 4500
+}
+
+### DELETE
+DELETE http://localhost:3000/api/tipoAnalisis/{{id}}

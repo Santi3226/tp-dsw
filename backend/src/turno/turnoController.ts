@@ -4,11 +4,7 @@ import { orm } from '../shared/db/orm.js';
 
 const em = orm.em; //EntityManager
 
-function sanitizeTurnoInput(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     recibeMail: req.body.recibeMail,
     estado: req.body.estado,
@@ -17,6 +13,7 @@ function sanitizeTurnoInput(
     fechaHoraExtraccion: req.body.fechaHoraExtraccion,
     paciente: req.body.paciente,
     centroAtencion: req.body.centroAtencion,
+    tipoAnalisis: req.body.tipoAnalisis,
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -33,7 +30,7 @@ async function findAll(req: Request, res: Response) {
       Turno,
       {},
       {
-        populate: ['paciente','centroAtencion'],
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'],
       }
     );
     res.status(200).json({
@@ -53,7 +50,7 @@ async function findOne(req: Request, res: Response) {
       Turno,
       { id },
       {
-        populate: ['paciente','centroAtencion'],
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'],
       }
     );
     res.status(200).json({
@@ -69,9 +66,7 @@ async function add(req: Request, res: Response) {
   try {
     const turno = em.create(Turno, req.body.sanitizedInput);
     await em.flush();
-    res
-      .status(201)
-      .json({ message: 'Turno creado exitosamente', data: turno });
+    res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {
     res
       .status(500)
@@ -111,11 +106,4 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-export {
-  sanitizeTurnoInput,
-  findAll,
-  findOne,
-  deleteOne,
-  add,
-  update,
-};
+export { sanitizeTurnoInput, findAll, findOne, deleteOne, add, update };

@@ -7,7 +7,7 @@ POST http://localhost:3000/api/paciente
 Content-Type: application/json
 
 {
-  "nombre": "Trucho",
+  "nombre": "Santiago",
   "apellido": "Dedich",
   "dni": "12345678",
   "fechaNacimiento": "1990-01-01",

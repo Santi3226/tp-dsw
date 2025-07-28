@@ -13,7 +13,8 @@ Content-Type: application/json
   "observacion": "Falta receta",
   "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
   "paciente": 1,
-  "centroAtencion": 1
+  "centroAtencion": 1,
+  "tipoAnalisis": 2
 }
 
 ### ID
@@ -33,7 +34,8 @@ Content-Type: application/json
   "observacion": "S/Observaciones",
   "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
   "paciente": 1,
-  "centroAtencion": 1
+  "centroAtencion": 1,
+   "tipoAnalisis": 2
 }
 
 ### DELETE
