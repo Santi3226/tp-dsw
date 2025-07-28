@@ -5,8 +5,6 @@
 ### Integrantes
 
 - 53106 - Dedich, Santiago
-- 52509 - García Morichetti, Alma
-- 52866 - Latorre, Mateo
 
 ### Repositorios
 

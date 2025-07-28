@@ -7,6 +7,7 @@ import {
   Rel,
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
+import { Turno } from '../turno/turnoEntity.js';
 
 //import { CentroAtencion } from '../centroAtencion/centroatencionEntity.js';
 
@@ -15,16 +16,16 @@ export class Paciente extends BaseEntity {
   @Property({ nullable: false})
   public nombre!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public apellido!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public dni!: string;
 
-  @Property()
+  @Property({ nullable: false})
   public fechaNacimiento!: Date;
 
-  @Property()
+  @Property({ nullable: false})
   public telefono!: string;
 
   @Property({ nullable: false})
@@ -32,10 +33,10 @@ export class Paciente extends BaseEntity {
 
   @Property()
   public direccion!: string;
-/*
+
   @OneToMany(() => Turno, (turno) => turno.paciente, {
     cascade: [Cascade.ALL],
-  })  NO IMPLEMENTADO AUN
+  }) 
   turnos = new Collection<Turno>(this);
-*/
+
   }

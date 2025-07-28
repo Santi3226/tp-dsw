@@ -29,7 +29,7 @@ async function findAll(req: Request, res: Response) {
       CentroAtencion,
       {},
       {
-        populate: ['localidad'],
+        populate: ['localidad', 'turno'],
       }
     );
     res.status(200).json({
@@ -49,7 +49,7 @@ async function findOne(req: Request, res: Response) {
       CentroAtencion,
       { id },
       {
-        populate: ['localidad'],
+        populate: ['localidad', 'turno'],
       }
     );
     res.status(200).json({
