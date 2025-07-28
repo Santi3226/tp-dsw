@@ -7,6 +7,10 @@ import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { turnoRouter } from './turno/turnoRoutes.js';
 import { tipoAnalisisRouter } from './tipoAnalisis/tipoanalisisRoutes.js';
+import { plantillaAnalisisRouter } from './plantillaAnalisis/plantillaanalisisRoutes.js';
+import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRoutes.js';
+import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
+import { politicaRouter } from './politica/politicaRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -21,6 +25,10 @@ app.use('/api/centroAtencion', centroAtencionRouter);
 app.use('/api/paciente', pacienteRouter);
 app.use('/api/turno', turnoRouter);
 app.use('/api/tipoAnalisis', tipoAnalisisRouter);
+app.use('/api/plantillaAnalisis', plantillaAnalisisRouter);
+app.use('/api/parametroAnalisis', parametroAnalisisRouter);
+app.use('/api/resultadoAnalisis', resultadoAnalisisRouter);
+app.use('/api/politica', politicaRouter);
 
 app.use((_, res) => {
   res.status(404).send({ error: 'Resource not found, check links' });
