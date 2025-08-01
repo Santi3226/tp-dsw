@@ -11,6 +11,7 @@ import { plantillaAnalisisRouter } from './plantillaAnalisis/plantillaanalisisRo
 import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRoutes.js';
 import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
 import { politicaRouter } from './politica/politicaRoutes.js';
+import { usuarioRouter } from './usuario/usuarioRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
 });
+
 //antes de las rutas y middleware de negocio
 app.use('/api/localidad', localidadRouter); //Manda todas las peticiones q comiencen asi al router
 app.use('/api/centroAtencion', centroAtencionRouter);
@@ -29,6 +31,7 @@ app.use('/api/plantillaAnalisis', plantillaAnalisisRouter);
 app.use('/api/parametroAnalisis', parametroAnalisisRouter);
 app.use('/api/resultadoAnalisis', resultadoAnalisisRouter);
 app.use('/api/politica', politicaRouter);
+app.use('/api/usuario', usuarioRouter);
 
 app.use((_, res) => {
   res.status(404).send({ error: 'Resource not found, check links' });
@@ -40,3 +43,11 @@ await syncSchema(); //never in production
 app.listen(3000, () => {
   console.log('Server activo en http://localhost:3000/');
 });
+
+/*
+app.use('/login',loginRouter);
+const user = user.find(usr => usr.email =)
+const token = jwt.sign()
+
+
+*/
