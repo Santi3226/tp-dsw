@@ -11,3 +11,4 @@
 | 7   | Backend - bcrypt sin importar (falta de tipos)           | Completo  | Backend    | Santi    | 1-8-25  |
 
 Usar Multer
+Al iniciar sesion comparar el input de contraseña con bcyrpt.compare()
