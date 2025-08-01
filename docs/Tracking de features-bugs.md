@@ -6,4 +6,9 @@
 |2|Localidad - Funcion onDelete no existe|Completo|Backend|Santi|25-7-25|
 |3|CentroAtencion - Relacion circular con Localidad|Completo|Backend|Santi|25-7-25|
 |4|Turno - Imagen de receta|Pendiente|Backend|Santi|-|
-|5|-|Pendiente|Backend|Santi|-|
+|5|Backend - Roles y contraseñas|Pendiente|Backend|Santi|-|
+|6|Frontend - Merge erroneo|Pendiente|Backend|Santi|-|
+
+Usar Multer
+Crear un OnetoOne a una entidad Usuario
+Los documentos estan bien
