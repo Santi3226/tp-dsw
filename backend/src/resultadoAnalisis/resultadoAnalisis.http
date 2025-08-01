@@ -1,0 +1,30 @@
+### GET ALL
+GET http://localhost:3000/api/resultadoAnalisis
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/resultadoAnalisis   
+Content-Type: application/json 
+
+{
+  "valor": "Salta",
+  "parametroAnalisis": 1,
+}
+
+### ID
+@id = 4
+
+### GET ONE 
+GET http://localhost:3000/api/resultadoAnalisis/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/resultadoAnalisis/{{id}}
+Content-Type: application/json
+
+{
+  "denominacion": "Rosario",
+  "codPostal": "2001"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/resultadoAnalisis/{{id}}

@@ -1,0 +1,34 @@
+### GET ALL
+GET http://localhost:3000/api/parametroAnalisis
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/parametroAnalisis   
+Content-Type: application/json 
+
+{
+  "nombre": "Glucosa",
+  "referencia": 90,
+  "unidad": "mg/dL",
+  "tipoAnalisis": 2
+}
+
+### ID
+@id = 2
+
+### GET ONE 
+GET http://localhost:3000/api/parametroAnalisis/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/parametroAnalisis/{{id}}
+Content-Type: application/json
+
+{
+  "nombre": "Glucosa",
+  "referencia": 90,
+  "unidad": "mg/dL",
+  "tipoAnalisis": 1
+}
+
+### DELETE
+DELETE http://localhost:3000/api/parametroAnalisis/{{id}}
