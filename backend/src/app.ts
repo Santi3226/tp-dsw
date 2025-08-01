@@ -11,6 +11,7 @@ import { plantillaAnalisisRouter } from './plantillaAnalisis/plantillaanalisisRo
 import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRoutes.js';
 import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
 import { politicaRouter } from './politica/politicaRoutes.js';
+import { usuarioRouter } from './usuario/usuarioRoutes.js';
 
 const app = express();
 app.use(express.json());
@@ -30,7 +31,7 @@ app.use('/api/plantillaAnalisis', plantillaAnalisisRouter);
 app.use('/api/parametroAnalisis', parametroAnalisisRouter);
 app.use('/api/resultadoAnalisis', resultadoAnalisisRouter);
 app.use('/api/politica', politicaRouter);
-
+app.use('/api/usuario', usuarioRouter);
 
 app.use((_, res) => {
   res.status(404).send({ error: 'Resource not found, check links' });
