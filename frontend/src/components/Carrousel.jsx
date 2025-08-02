@@ -1,29 +1,30 @@
 import Carousel from 'react-bootstrap/Carousel';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Carrousel.css';
+
 
 function Carrousel() {
   return (
-    <Carousel>
+    <Carousel className='Carrousel'>
       <Carousel.Item>
-        <img src="C:\Users\Santiago\Documents\Escuela\2025\DSW\tp-dsw\frontend\src\assets\react.svg" alt="First slide" />
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        <img src="/lab1.png" alt="First slide" />
+        <Carousel.Caption className='CarrouselCaption'>
+          <h3>Confiabilidad</h3>
+          <p>Nuestro laboratorio se compromete a ofrecer resultados precisos y confiables.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <img src="C:\Users\Santiago\Documents\Escuela\2025\DSW\tp-dsw\frontend\src\assets\vite.svg" alt="Second slide" />
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <img src="/lab2.jpg" alt="Second slide" />
+        <Carousel.Caption className='CarrouselCaption'>
+          <h3>Seguridad</h3>
+          <p>Garantizamos su seguridad y privacidad en todo momento.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        <img src="C:\Users\Santiago\Documents\Escuela\2025\DSW\tp-dsw\frontend\src\assets\react.svg" alt="Third slide" />
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
+        <img src="/lab3.png" alt="Third slide" />
+        <Carousel.Caption className='CarrouselCaption'>
+          <h3>Innovación</h3>
+          <p>Fomentamos la investigación y el desarrollo de nuevas soluciones.</p>
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>

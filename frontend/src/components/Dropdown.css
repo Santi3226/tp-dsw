@@ -1,0 +1,22 @@
+.Drop {
+  width: 210px;
+  height: 61px;
+  padding: 2px 2px 2px 2px;
+  border: 1px solid rgba(121, 121, 121, 0);
+  background-color: rgba(255, 255, 255, 0);
+  box-sizing: border-box;
+  font-weight: 700;
+  color: #333333;
+  text-align: center;
+  line-height: normal;
+}
+
+.Drop:hover {
+  box-sizing: border-box;
+  color: rgba(127, 127, 127, 0.99);
+}
+
+.Drop:checked {
+  box-sizing: border-box;
+  color: #7f7f7f;
+}

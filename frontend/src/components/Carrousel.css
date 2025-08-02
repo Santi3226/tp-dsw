@@ -1,0 +1,15 @@
+.Carrousel {
+  width: 100%;
+  height: 410px;
+  object-fit: cover;
+  padding: 2px 2px 2px 2px;
+  background-color: rgba(255, 255, 255, 0);
+  box-sizing: border-box;
+}
+
+.CarrouselCaption {
+  width: auto;
+  padding: auto;
+  background-color: rgba(255, 255, 255, 0.395);
+  backdrop-filter: blur(5px);
+}

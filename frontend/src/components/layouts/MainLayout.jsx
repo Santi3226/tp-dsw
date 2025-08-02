@@ -1,6 +1,7 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import "./MainLayout.css";
+import Drop from "../Dropdown.jsx";
 
 const MainLayout = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -15,16 +16,12 @@ const MainLayout = () => {
     <div className="main-layout">
       <header className="main-header">
         <div className="header-content">
-          <div className="logo">
+          <img className="logo" src="/logo.png" alt="Logo" href="/home"/>
+          <div className="titulo">
             <h1>Laboratorio Generico</h1>
           </div>
           <nav className="main-nav">
-            <Link to="/" className="nav-link">
-              Inicio
-            </Link>
-            <Link to="/about" className="nav-link">
-              Paciente              
-            </Link>
+            <Drop titulo="Paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas" />
             {isAuthenticated() ? (
               <>
                 <Link to="/dashboard" className="nav-link">
@@ -48,7 +45,7 @@ const MainLayout = () => {
       </main>
 
       <footer className="main-footer">
-        <p>&copy; 2025 DSWApp. Todos los derechos reservados.</p>
+        <p> Laboratorio Generico © Todos los derechos reservados. | Sitio desarrollado por Santiago Dedich.</p>
       </footer>
     </div>
   );

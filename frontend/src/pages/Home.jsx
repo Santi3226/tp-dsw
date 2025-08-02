@@ -1,20 +1,26 @@
-import UncontrolledExample from "../components/Carrousel";
+import Carrousel from "../components/Carrousel";
 import "./Home.css";
 
 
 const Home = () => {
   return (
     <div className="home-page">
+
       <div className="hero-section">
-        <h1>Bienvenido a DSWApp</h1>
+        <Carrousel />
+        <p></p>
+        <h1>Laboratorio Generico</h1>
         <p>
-          Un ejemplo completo de React Router con autenticación y gestión de
-          sesión de usuario
+          Somos una empresa dedicada al diagnóstico clínico y al desarrollo de soluciones biotecnológicas, 
+          con presencia en diversas localidades y más de 30 años de trayectoria en el sector de la salud. 
+          Nuestro equipo está conformado por más de 300 profesionales altamente capacitados, distribuidos en múltiples Centros de Atención al Paciente, 
+          así como en nuestras unidades especializadas de Producción, Investigación y Logística. Trabajamos con tecnología de vanguardia, procesos estandarizados y un 
+          sistema de gestión integral que asegura precisión, eficiencia y confianza. 
+          Cada uno de nuestros servicios representa nuestro compromiso con la salud y el bienestar.
         </p>
         <div className="hero-features">
           <div className="feature">
-            <h3>🔐 Authenticación</h3>
-            <p>Rutas protegidas con funcionalidad de inicio y cierre de sesión</p>
+            <p>Aca quiero sacar esto y poner alguno de las imagenes con link</p>
           </div>
           <div className="feature">
             <h3>📱 Uso de Layouts </h3>
@@ -28,17 +34,6 @@ const Home = () => {
       </div>
 
       <div className="content-section">
-        <h2>Empezando</h2>
-        <p>
-          Esta aplicación demuestra cómo implementar React Router DOM con:
-        </p>
-        <ul>
-          <li>Rutas públicas (Home, About)</li>
-          <li>Rutas protegidas (Dashboard, Profile)</li>
-          <li>Layout contenedor para rutas, usando Outlet</li>
-          <li>Uso de contexto para manejo de lógica asociada a autenticación</li>
-          <li>Diseño responsive y barra de navegación</li>
-        </ul>
       </div>
     </div>
   );
