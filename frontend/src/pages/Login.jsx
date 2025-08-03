@@ -53,17 +53,16 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="contraseña">Password</label>
             <input
               type="password"
-              id="password"
-              {...register("password", { required: "Password es requerido" })}
+              id="contraseña"
+              {...register("contraseña", { required: "Contraseña es requerido" })}
               placeholder="Password"
               className="form-input"
-              autoComplete="current-password"
             />
-            {errors.password && (
-              <div className="error-message">{errors.password.message}</div>
+            {errors.contraseña && (
+              <div className="error-message">{errors.contraseña.message}</div>
             )}
           </div>
 

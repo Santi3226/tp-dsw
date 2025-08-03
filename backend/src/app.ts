@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { localidadRouter } from './localidad/localidadRoutes.js';
 import { pacienteRouter } from './paciente/pacienteRoutes.js';
 import { centroAtencionRouter } from './centroAtencion/centroatencionRoutes.js';
@@ -18,10 +18,17 @@ app.use(express.json());
 
 //luego de los middleware base
 app.use((req, res, next) => {
-  RequestContext.create(orm.em, next);
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173'); 
+  res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+app.use((req, res, next) => {
+  RequestContext.create(orm.em, next);
 });
 
 //antes de las rutas y middleware de negocio
@@ -51,6 +58,4 @@ app.listen(3000, () => {
 app.use('/login',loginRouter);
 const user = user.find(usr => usr.email =)
 const token = jwt.sign()
-
-
 */

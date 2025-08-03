@@ -8,8 +8,16 @@ Content-Type: application/json
 
 {
   "email": "admin",
-  "contraseña": "123",
+  "contraseña": "12",
   "role": "admin"
+}
+### LOGIN
+POST http://localhost:3000/api/usuario/login
+Content-Type: application/json
+
+{
+  "email": "admin",
+  "contraseña": "12"
 }
 
 ### ID

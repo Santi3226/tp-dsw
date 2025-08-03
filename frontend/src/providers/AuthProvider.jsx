@@ -19,6 +19,7 @@ function getUser(jwt) {
       user: decoded.user,
       name: decoded.name,
       email: decoded.email,
+      role: decoded.role,
     };
   } catch (error) {
     return error;
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     setErrorLogin(null);
     try {
       const response = await axios.post(
-        "http://localhost:4000/login",
+        "http://localhost:3000/api/usuario/login",
         userData
       );
       localStorage.setItem("token", response.data.token);

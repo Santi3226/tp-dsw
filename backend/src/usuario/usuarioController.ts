@@ -5,22 +5,33 @@ import bcrypt from 'bcrypt';
 
 const em = orm.em; //EntityManager
 const saltRounds = 10;
+const salt = bcrypt.genSaltSync(saltRounds);
 
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
-  const myPlaintextPassword = req.body.contraseña;
-  const salt = bcrypt.genSaltSync(saltRounds);
-  const hash = bcrypt.hashSync(myPlaintextPassword, salt);
+  const { email, contraseña, role, paciente } = req.body;
+  // Validación: Asegurarse de que la contraseña existe
+  if (!contraseña) {
+    res.status(400).json({ message: 'La contraseña es requerida.' });
+    return;
+  }
+  try{
+  const hash = bcrypt.hashSync(contraseña, salt);
 
   req.body.sanitizedInput = {
-    email: req.body.email,
+    email: email,
     contraseña: hash,
-    role: req.body.role,
-    paciente: req.body.paciente,
+    role: role,
+    paciente: paciente,
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
       delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
   });
+  }
+  catch(error: any) {
+    res.status(500).json({ message: 'Error al procesar la contraseña.' });
+    return;
+  }
   // Aqui van todos los chequeos de seg y datos
   next();
 }
@@ -52,6 +63,44 @@ async function findOne(req: Request, res: Response) {
       data: usuarios,
     });
   } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: error.message || 'Error fetching usuario' });
+  }
+}
+
+async function login(req: Request, res: Response) {
+  try {
+    const {email, contraseña} = req.body;
+    console.log('Intenando logear con:', email);
+
+    const usuario = await em.findOne(
+      Usuario,
+      { email },
+      { populate: ['paciente'] }
+    );
+
+    if (!usuario || !contraseña) {
+      throw new Error('Credenciales inválidas');
+    }
+
+    console.log('User encontrado:', usuario);
+    console.log('Password from request:', contraseña);
+    console.log('Password from database:', usuario.contraseña);
+    const contraseñaCheck = await bcrypt.compare(contraseña, usuario.contraseña);
+    console.log('La contraseña salió:', contraseñaCheck);
+    if(!contraseñaCheck)
+    {
+      throw new Error('Credenciales inválidas'); 
+    }
+    console.log(usuario);
+    res.status(200).json({
+      message: 'Usuario encontrado: ',
+      data: usuario,
+    });
+
+  } catch (error: any) {
+    console.error('Error de servidor:', error);
     res
       .status(500)
       .json({ message: error.message || 'Error fetching usuario' });
@@ -105,4 +154,4 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-export { sanitizeUsuarioInput, findAll, findOne, deleteOne, add, update };
+export { sanitizeUsuarioInput, findAll, findOne, deleteOne, add, update, login };
