@@ -30,7 +30,7 @@
 .stat-card {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
   display: flex;
   align-items: center;
@@ -73,7 +73,7 @@
 .content-card {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   padding: 2rem;
 }
 
@@ -91,8 +91,8 @@
 
 .activity-item {
   display: flex;
-  align-items: center;
   gap: 1rem;
+  text-align: left;
 }
 
 .activity-icon {
@@ -104,11 +104,13 @@
   margin: 0;
   color: #2c3e50;
   font-weight: 500;
+  text-align: left;
 }
 
 .activity-time {
   font-size: 0.85rem;
   color: #6c757d;
+  text-align: left;
 }
 
 .quick-actions {
@@ -142,11 +144,13 @@
   .dashboard-header {
     padding: 1rem 0 0.5rem 0;
   }
+
   .dashboard-stats {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
   .content-card {
     padding: 1rem;
   }
-} 
+}

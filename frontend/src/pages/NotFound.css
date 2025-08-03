@@ -60,7 +60,7 @@ body {
   left: 0;
   width: 100%;
   height: 30px;
-  background-color: var(--lab-green);
+  background-color: #169bd5;
   /* Liquid color */
   border-radius: 40px 40px 0 0;
   opacity: 0.8;
@@ -148,7 +148,7 @@ body {
   left: 0;
   width: 100%;
   height: 40px;
-  background-color: var(--lab-green);
+  background-color: #169bd5;
   border-radius: 15px 15px 0 0;
   opacity: 0.7;
 }
@@ -173,7 +173,7 @@ body {
   left: 0;
   width: 100%;
   height: 35px;
-  background-color: var(--lab-blue);
+  background-color: #3498db;
   border-radius: 12px 12px 0 0;
   opacity: 0.7;
 }
@@ -197,12 +197,12 @@ body {
   font-size: 8em;
   margin-bottom: 0.1em;
   font-weight: bold;
-  text-shadow: 0 0 15px var(--lab-green);
+  text-shadow: 0 0 15px #169bd5;
   animation: pulse 2s infinite alternate;
 }
 
 .error-message {
-  font-size: 1.8em;
+  font-size: 14px;
   margin-top: 0;
   margin-bottom: 0.5em;
 }
@@ -211,11 +211,11 @@ body {
   font-size: 1.2em;
   font-style: italic;
   margin-bottom: 1.5em;
-  color: var(--lab-green);
+  color: #169bd5;
 }
 
 .back-button {
-  background-color: var(--lab-green);
+  background-color: #169bd5;
   color: var(--text-dark);
   border: none;
   padding: 15px 30px;
@@ -227,7 +227,7 @@ body {
 }
 
 .back-button:hover {
-  background-color: #27ae60;
+  background-color: #169bd5;
   transform: translateY(-2px);
 }
 
@@ -280,11 +280,11 @@ body {
 
 @keyframes pulse {
   0% {
-    text-shadow: 0 0 15px var(--lab-green);
+    text-shadow: #169bd5;
   }
 
   100% {
-    text-shadow: 0 0 25px var(--lab-blue), 0 0 35px var(--lab-green);
+    text-shadow: 0 0 25px #61dafb, 0 0 35px #169bd5;
   }
 }
 

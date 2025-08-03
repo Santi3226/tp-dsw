@@ -1,19 +1,38 @@
 import Dropdown from 'react-bootstrap/Dropdown';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './Dropdown.css';
 
-function Drop(titulo, uno, dos, tres, cuatro) {
+function Drop(props) {
+  const { titulo, uno, dos, tres, cuatro } = props;
   return (
     <Dropdown className='Drop'>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Inicio
+      <Dropdown.Toggle className='DropToggle' variant="success" id="dropdown-basic">
+        {titulo[0].toUpperCase() + titulo.slice(1)}
       </Dropdown.Toggle>
 
-      <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">${uno}</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">${dos}</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">${tres}</Dropdown.Item>
-        <Dropdown.Item href="#/action-4">${cuatro}</Dropdown.Item>
+      <Dropdown.Menu className='DropMenu'>
+        {uno !== undefined && (
+          <>
+            <Dropdown.Item className='DropItem' href={`/${titulo}/${uno[0].toLowerCase() + uno.slice(1)}`}>{uno}</Dropdown.Item>
+          </>
+        )}
+        {dos !== undefined && (
+          <>
+            <Dropdown.Divider className='DropDivider'/>
+            <Dropdown.Item className='DropItem'href={`/${titulo}`}>{dos}</Dropdown.Item>
+          </>
+        )}
+        {tres !== undefined && (
+          <>
+            <Dropdown.Divider className='DropDivider'/>
+            <Dropdown.Item className='DropItem' href={`/${titulo}`}>{tres}</Dropdown.Item>
+          </>
+        )}
+        {cuatro !== undefined && (
+          <>
+            <Dropdown.Divider className='DropDivider'/>
+            <Dropdown.Item className='DropItem' href={`/${titulo}`}>{cuatro}</Dropdown.Item>
+          </>
+        )}
       </Dropdown.Menu>
     </Dropdown>
   );

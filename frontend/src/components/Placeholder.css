@@ -1,0 +1,44 @@
+.Card {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: white;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.CardButton {
+  background-color: #169bd5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: 500;
+  align-self: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.CardTitle {
+  font-size: 1.5rem;
+  font: bold;
+  margin-bottom: 1rem;
+  margin-top: 10px;
+}
+
+/* Efecto al pasar el cursor */
+.Card:hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Eleva la tarjeta ligeramente */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.CardImg {
+  margin-top: 35px;
+  align-self: center;
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}

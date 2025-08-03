@@ -15,15 +15,11 @@ const AuthLayout = () => {
     <div className="auth-layout">
       <aside className="auth-sidebar">
         <div className="sidebar-header">
-          <h2>DSWApp</h2>
+          <h2>Laboratorio Genérico</h2>
           <p>Bienvenido, {user?.name || "User"}!</p>
         </div>
 
         <nav className="sidebar-nav">
-          <Link to="/" className="sidebar-link">
-            <span className="icon">🏠</span>
-            Inicio
-          </Link>
           <Link to="/dashboard" className="sidebar-link">
             <span className="icon">📊</span>
             Panel de Control
@@ -37,6 +33,10 @@ const AuthLayout = () => {
           <Link to="/dashboard/profile" className="sidebar-link">
             <span className="icon">👤</span>
             Perfil
+          </Link>
+          <Link to="/" className="sidebar-link">
+            <span className="icon">🏠</span>
+            Volver al Inicio
           </Link>
         </nav>
 

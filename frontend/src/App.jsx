@@ -5,8 +5,8 @@ import "./App.css";
 import MainLayout from "./components/layouts/MainLayout";
 
 // Public Pages
+import Paciente from "./pages/Paciente" 
 import Home from "./pages/Home";
-import About from "./pages/About";
 
 // Protected Pages
 import Dashboard from "./pages/Dashboard";
@@ -15,6 +15,7 @@ import ProductList from "./pages/ProductList";
 
 // Other components
 import Login from "./pages/Login";
+import Register from "./pages/Register"
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -33,30 +34,17 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="about" element={<About />} />
+                <Route path="/paciente" element={<Paciente />} />
               </Route>
 
               <Route path="/login" element={<Login />} />
-
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={[]} />
-                }
-              >
-                <Route index element={<Dashboard />} />
-                <Route path="profile" element={<Profile />} />
-
-                <Route
-                  path="products"
-                  element={
-                    <ProtectedRoute allowedRoles={[]}>
-                      <ProductList />
-                    </ProtectedRoute>
-                  }
-                />
+              <Route path="/register" element={<Register />} />
+              <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]} />}>
+              <Route index element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="products" element={<ProtectedRoute allowedRoles={[]}><ProductList />
+                </ProtectedRoute>}/>
               </Route>
-
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

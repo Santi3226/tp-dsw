@@ -1,6 +1,15 @@
 import Carrousel from "../components/Carrousel";
+import Placehold from "../components/Placeholder.jsx";
+import axiosInstance from "../helpers/api.js";
 import "./Home.css";
 
+axiosInstance.get('http://localhost:3000/api/paciente/1')
+  .then(response => {
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.error(error);
+  });
 
 const Home = () => {
   return (
@@ -8,8 +17,8 @@ const Home = () => {
 
       <div className="hero-section">
         <Carrousel />
-        <p></p>
-        <h1>Laboratorio Generico</h1>
+        <p></p>   
+        <h1>Laboratorio Genérico</h1>
         <p>
           Somos una empresa dedicada al diagnóstico clínico y al desarrollo de soluciones biotecnológicas, 
           con presencia en diversas localidades y más de 30 años de trayectoria en el sector de la salud. 
@@ -19,21 +28,10 @@ const Home = () => {
           Cada uno de nuestros servicios representa nuestro compromiso con la salud y el bienestar.
         </p>
         <div className="hero-features">
-          <div className="feature">
-            <p>Aca quiero sacar esto y poner alguno de las imagenes con link</p>
-          </div>
-          <div className="feature">
-            <h3>📱 Uso de Layouts </h3>
-            <p>Diferentes layouts para áreas públicas y protegidas</p>
-          </div>
-          <div className="feature">
-            <h3>🛣️ Organización de rutas</h3>
-            <p>Estructura de enrutamiento anidado</p>
-          </div>
+          <Placehold titulo="Novedad" boton="Leer Mas" texto="Nuevo centro de atencion disponible en Rosario." image="/centro.jpg" />
+          <Placehold titulo="Turnos" boton="Conseguir Turno" texto="Turnos disponibles para todas las especialidades." image="/turno.jpg" />
+          <Placehold titulo="Contacto" boton="Consultar" texto="Tenes dudas acerca de tus turnos? Consulta las 24hs." image="/consulta.png" />
         </div>
-      </div>
-
-      <div className="content-section">
       </div>
     </div>
   );

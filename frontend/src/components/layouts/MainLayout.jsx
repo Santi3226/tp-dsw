@@ -21,12 +21,14 @@ const MainLayout = () => {
             <h1>Laboratorio Generico</h1>
           </div>
           <nav className="main-nav">
-            <Drop titulo="Paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas" />
+            <Drop titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas" />
+            <Drop titulo="turno" uno="Gestion de Turnos" dos="Resultados"/>
+            <Drop titulo="algo mas?" uno="-" dos="-"/>
             {isAuthenticated() ? (
               <>
-                <Link to="/dashboard" className="nav-link">
-                  Dashboard
-                </Link>
+              <Link to="/dashboard" className="dashboard-btn">
+                Dashboard
+              </Link>
                 <button onClick={handleLogout} className="logout-btn">
                   Cerrar sesión
                 </button>

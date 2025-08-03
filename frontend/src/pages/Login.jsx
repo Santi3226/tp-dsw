@@ -26,7 +26,6 @@ const Login = () => {
           <h1>Bienvenido</h1>
           <p>Ingrese a su cuenta para continuar</p>
         </div>
-
         <form
           className="login-form"
           onSubmit={handleSubmit(onSubmit)}
@@ -77,11 +76,14 @@ const Login = () => {
               Olvido su contraseña?
             </Link>
           </div>
-
+          <div className="buttons">
           <button type="submit" className="login-btn" disabled={isSubmitting}>
             {isSubmitting ? "Ingresando..." : "Ingresar"}
           </button>
-
+          <Link to="/" id="ret" className="login-btn">
+              Inicio
+            </Link>
+          </div>
           {errorLogin && <div className="error-message">{errorLogin}</div>}
         </form>
 

@@ -4,7 +4,7 @@
 }
 
 .hero-section {
-  margin-top: 120px;
+  margin-top: 80px;
   text-align: center;
   padding: 3rem 0;
 }
@@ -29,10 +29,10 @@
 }
 
 .hero-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem;
 }
 
 .feature {
@@ -96,7 +96,7 @@
   content: "✓";
   position: absolute;
   left: 0;
-  color: #28a745;
+  color: #197287;
   font-weight: bold;
 }
 

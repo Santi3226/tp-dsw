@@ -1,0 +1,34 @@
+/* Estilos para las pestañas de navegación */
+.nav-link {
+  color: #000000;
+  border-bottom: none;
+  /* Eliminar el borde inferior */
+  margin-right: 5px;
+  /* Espacio entre pestañas */
+  transition: all 0.3s ease;
+}
+
+.nav-link.active {
+  color: #169bd5;
+  background-color: gainsboro;
+  border-bottom: 0px;
+}
+
+.nav-link.active:hover {
+  color: #000000;
+  border-bottom: 0px;
+}
+
+.nav-item:hover {
+  background-color: gainsboro;
+  color: #000000;
+  border-bottom: none;
+}
+
+.prep {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 40px;
+  gap: 0.8rem;
+}
