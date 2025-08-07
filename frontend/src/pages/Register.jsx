@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import "./Register.css";
 
 const Register = () => {
-  const { login, errorLogin } = useAuth();
+  const { regist, errorLogin } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -15,8 +15,8 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    await login(data)
-    navigate("/dashboard");
+    await regist(data)
+    navigate("/");
   };
 
   return (
@@ -45,7 +45,6 @@ const Register = () => {
               })}
               placeholder="Ej: mail@mail.com"
               className="form-input"
-              autoComplete="email"
             />
             {errors.email && (
               <div className="error-message">{errors.email.message}</div>
@@ -53,14 +52,13 @@ const Register = () => {
           </div>
 
           <div className="form-group" id="dos">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Contraseña</label>
             <input
               type="password"
               id="password"
-              {...register("password", { required: "Password es requerido" })}
-              placeholder="Password"
+              {...register("contraseña", { required: "Contraseña es requerido" })}
+              placeholder="Contraseña"
               className="form-input"
-              autoComplete="current-password"
             />
             {errors.password && (
               <div className="error-message">{errors.password.message}</div>
@@ -116,14 +114,29 @@ const Register = () => {
             )}
           </div>
           <div className="form-group">
-            <label htmlFor="text">Direccion</label>
+            <label htmlFor="text">Domicilio</label>
             <input
               type="text"
-              id="direccion"
-              {...register("direccion", {
-                required: "Direccion es requerida",
+              id="domicilio"
+              {...register("domicilio", {
+                required: "Domicilio es requerida",
               })}
-              placeholder="Direccion"
+              placeholder="Domicilio"
+              className="form-input"
+            />
+            {errors.direccion && (
+              <div className="error-message">{errors.direccion.message}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="text">Telefono</label>
+            <input
+              type="text"
+              id="telefono"
+              {...register("telefono", {
+                required: "Telefono es requerida",
+              })}
+              placeholder="Telefono"
               className="form-input"
             />
             {errors.direccion && (

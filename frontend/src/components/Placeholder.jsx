@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Placeholder.css';
 
 function Placehold(props) {
-  const { titulo, boton, texto, image } = props;
+  const { link, titulo, boton, texto, image } = props;
   return (
     <div className="d-flex justify-content-around">
       <Card className="Card" style={{ width: '20rem' }}>
@@ -14,7 +14,7 @@ function Placehold(props) {
           <Card.Text className="CardText">
             {texto}
           </Card.Text>
-          <Button className="CardButton">{boton}</Button>
+          <Button href={`/${link}`} className="CardButton">{boton}</Button>
         </Card.Body>
       </Card>
     </div>

@@ -2,7 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { Usuario } from './usuarioEntity.js';
 import { orm } from '../shared/db/orm.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+const claveJWT = 'claveJWTProvisional';
 const em = orm.em; //EntityManager
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -10,32 +12,35 @@ const salt = bcrypt.genSaltSync(saltRounds);
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
   const { email, contraseña, role, paciente } = req.body;
   // Validación: Asegurarse de que la contraseña existe
-  if (!contraseña) {
-    res.status(400).json({ message: 'La contraseña es requerida.' });
-    return;
-  }
-  try{
-  const hash = bcrypt.hashSync(contraseña, salt);
-
-  req.body.sanitizedInput = {
-    email: email,
-    contraseña: hash,
-    role: role,
-    paciente: paciente,
-  };
-  Object.keys(req.body.sanitizedInput).forEach((key) => {
-    if (req.body.sanitizedInput[key] === undefined)
-      delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
-  });
-  }
-  catch(error: any) {
+  try {
+    if (contraseña !== undefined) {
+      const hash = bcrypt.hashSync(contraseña, salt);
+      req.body.sanitizedInput = {
+        email: email,
+        contraseña: hash,
+        role: role,
+        paciente: paciente,
+      };
+    } else {
+      req.body.sanitizedInput = {
+        email: email,
+        role: role,
+        paciente: paciente,
+      };
+    }
+    Object.keys(req.body.sanitizedInput).forEach((key) => {
+      if (
+        req.body.sanitizedInput[key] === undefined
+      )
+        delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
+    });
+  } catch (error: any) {
     res.status(500).json({ message: 'Error al procesar la contraseña.' });
     return;
   }
   // Aqui van todos los chequeos de seg y datos
   next();
 }
-
 // Get all Pacientes
 async function findAll(req: Request, res: Response) {
   try {
@@ -71,9 +76,7 @@ async function findOne(req: Request, res: Response) {
 
 async function login(req: Request, res: Response) {
   try {
-    const {email, contraseña} = req.body;
-    console.log('Intenando logear con:', email);
-
+    const { email, contraseña } = req.body;
     const usuario = await em.findOne(
       Usuario,
       { email },
@@ -81,24 +84,29 @@ async function login(req: Request, res: Response) {
     );
 
     if (!usuario || !contraseña) {
-      throw new Error('Credenciales inválidas');
+      res.status(401).json({ message: 'Credenciales inválidas' });
     }
-
-    console.log('User encontrado:', usuario);
-    console.log('Password from request:', contraseña);
-    console.log('Password from database:', usuario.contraseña);
-    const contraseñaCheck = await bcrypt.compare(contraseña, usuario.contraseña);
-    console.log('La contraseña salió:', contraseñaCheck);
-    if(!contraseñaCheck)
-    {
-      throw new Error('Credenciales inválidas'); 
+    if (usuario) {
+      const contraseñaCheck = await bcrypt.compare(
+        contraseña,
+        usuario.contraseña
+      );
+      if (!contraseñaCheck) {
+        res.status(401).json({ message: 'Credenciales inválidas' });
+      }
+      console.log(usuario);
+      const payload = {
+        id: usuario.id,
+        email: usuario.email,
+        role: usuario.role,
+        paciente: usuario.paciente,
+      };
+      const token = jwt.sign(payload, claveJWT, { expiresIn: '1h' });
+      res.status(200).json({
+        message: 'Usuario encontrado: ',
+        token,
+      });
     }
-    console.log(usuario);
-    res.status(200).json({
-      message: 'Usuario encontrado: ',
-      data: usuario,
-    });
-
   } catch (error: any) {
     console.error('Error de servidor:', error);
     res
@@ -125,7 +133,7 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const usuario = em.getReference(Usuario, id);
-    em.assign(usuario, req.body);
+    em.assign(usuario, req.body.sanitizedInput);
     await em.flush();
     res
       .status(200)
@@ -154,4 +162,12 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-export { sanitizeUsuarioInput, findAll, findOne, deleteOne, add, update, login };
+export {
+  sanitizeUsuarioInput,
+  findAll,
+  findOne,
+  deleteOne,
+  add,
+  update,
+  login,
+};

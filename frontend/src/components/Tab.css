@@ -8,6 +8,10 @@
   transition: all 0.3s ease;
 }
 
+#login {
+  grid-column: 2;
+  grid-row: 4;
+}
 .nav-link.active {
   color: #169bd5;
   background-color: gainsboro;
@@ -31,4 +35,8 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 40px;
   gap: 0.8rem;
+}
+
+#titulo {
+  margin-top: 30px;
 }

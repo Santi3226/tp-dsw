@@ -28,9 +28,9 @@ const Home = () => {
           Cada uno de nuestros servicios representa nuestro compromiso con la salud y el bienestar.
         </p>
         <div className="hero-features">
-          <Placehold titulo="Novedad" boton="Leer Mas" texto="Nuevo centro de atencion disponible en Rosario." image="/centro.jpg" />
-          <Placehold titulo="Turnos" boton="Conseguir Turno" texto="Turnos disponibles para todas las especialidades." image="/turno.jpg" />
-          <Placehold titulo="Contacto" boton="Consultar" texto="Tenes dudas acerca de tus turnos? Consulta las 24hs." image="/consulta.png" />
+          <Placehold link="" titulo="Novedad" boton="Leer Mas" texto="Nuevo centro de atencion disponible en Rosario." image="/centro.jpg" />
+          <Placehold link="turno" titulo="Turnos" boton="Conseguir Turno" texto="Turnos disponibles para todas las especialidades." image="/turno.jpg" />
+          <Placehold link="" titulo="Contacto" boton="Consultar" texto="Tenes dudas acerca de tus turnos? Consulta las 24hs." image="/consulta.png" />
         </div>
       </div>
     </div>

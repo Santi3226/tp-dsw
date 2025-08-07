@@ -14,10 +14,15 @@ const Login = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = async (data) => {
-    await login(data)
-    navigate("/dashboard");
-  };
+const onSubmit = async (data) => {
+  try {
+    await login(data);
+    navigate("/");
+  } 
+  catch (error) {
+    console.error("Fallo al iniciar sesión:", error);
+  }
+};
 
   return (
     <div className="login-page">

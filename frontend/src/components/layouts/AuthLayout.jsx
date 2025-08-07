@@ -5,7 +5,6 @@ import "./AuthLayout.css";
 const AuthLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -16,7 +15,7 @@ const AuthLayout = () => {
       <aside className="auth-sidebar">
         <div className="sidebar-header">
           <h2>Laboratorio Genérico</h2>
-          <p>Bienvenido, {user?.name || "User"}!</p>
+          <p>Bienvenido, {user?.paciente?.nombre || "Usuario"}!</p>
         </div>
 
         <nav className="sidebar-nav">

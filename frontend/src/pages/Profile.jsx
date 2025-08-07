@@ -6,10 +6,9 @@ const Profile = () => {
   const { user } = useAuth();
 
   const mockProfile = {
-    name: user?.name || "John Doe",
-    email: user?.email || "john.doe@example.com",
-    joinDate: "04/11/1983",
-    lastLogin: "2 horas atrás",
+    name: user?.paciente?.nombre || "Admin",
+    email: user?.email || "Error retriving mail",
+    telefono: user?.paciente?.telefono || "Error retriving phone",
     avatar: "👤",
   };
 
@@ -22,16 +21,14 @@ const Profile = () => {
     defaultValues: {
       name: mockProfile.name,
       email: mockProfile.email,
-      phone: "",
+      phone: mockProfile.telefono,
     },
   });
 
-  const onSubmit = async () => {
-    // Simulate API call
+  const onSubmit = async () => { // LLamada a axios put y actualizar?
     return new Promise((resolve) => {
       setTimeout(() => {
-        // Here you would update the user profile
-        // For demo, just reset the form
+        // creo q va aca la llamada
         reset();
         resolve();
       }, 1000);
@@ -58,14 +55,6 @@ const Profile = () => {
               <div className="detail-item">
                 <label>Email:</label>
                 <span>{mockProfile.email}</span>
-              </div>
-              <div className="detail-item">
-                <label>Registrado:</label>
-                <span>{mockProfile.joinDate}</span>
-              </div>
-              <div className="detail-item">
-                <label>Ultimo login:</label>
-                <span>{mockProfile.lastLogin}</span>
               </div>
             </div>
           </div>
@@ -117,7 +106,6 @@ const Profile = () => {
                 <input
                   type="tel"
                   id="phone"
-                  placeholder="+1 (555) 123-4567"
                   {...register("phone")}
                   className="form-input"
                 />

@@ -34,17 +34,19 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="/paciente" element={<Paciente />} />
+                <Route path="/paciente" element={<Paciente allowedRoles={["user","admin"]}/>} />
+                <Route path="/turno" element={<Home allowedRoles={["user","admin"]} />} />
               </Route>
 
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              
               <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]} />}>
-              <Route index element={<Dashboard />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="products" element={<ProtectedRoute allowedRoles={[]}><ProductList />
-                </ProtectedRoute>}/>
+                <Route index element={<Dashboard />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="products" element={<ProtectedRoute allowedRoles={[]}><ProductList /></ProtectedRoute>}/>
               </Route>
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

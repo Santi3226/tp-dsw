@@ -10,6 +10,8 @@
 | 6   | Merge erroneo                                    | Pendiente | Frontend   | Santi    | -       |
 | 7   | bcrypt sin importar (falta de tipos)             | Completo  | Backend    | Santi    | 1-8-25  |
 | 8   | Falta de permisos del frontend al backend        | Completo  | Backend    | Santi    | 3-8-25  |
+| 8   | Login Funcional                                  | Completo  | Frontend   | Santi    | 4-8-25  |
+| 9   | Modify no acata correctamente los campos nulos   | Pendiente | Frontend   | Santi    | 6-8-25  |
 
 Usar Multer
-Al iniciar sesion comparar el input de contraseña con bcyrpt.compare()
+Recordar los mails

@@ -29,11 +29,9 @@ Content-Type: application/json
 {
   "nombre": "Santiago",
   "apellido": "Dedich",
-  "dni": "12345678",
-  "fechaNacimiento": "2003-01-01",
-  "telefono": "123456789",
-  "email": "santiago@example.com",
-  "direccion": "Calle Falsa 123"
+  "fechaNacimiento": "2003-11-13",
+  "telefono": "3467494137",
+  "direccion": "25 de Mayo 1256"
 }
 
 ### DELETE
