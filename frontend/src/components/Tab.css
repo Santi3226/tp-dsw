@@ -8,10 +8,15 @@
   transition: all 0.3s ease;
 }
 
+#consulta {
+  padding-bottom: 100px;
+}
+
 #login {
   grid-column: 2;
   grid-row: 4;
 }
+
 .nav-link.active {
   color: #169bd5;
   background-color: gainsboro;

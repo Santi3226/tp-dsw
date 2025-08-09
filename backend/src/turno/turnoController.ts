@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Turno } from './turnoEntity.js';
 import { orm } from '../shared/db/orm.js';
+import fs from 'fs';
 
 const em = orm.em; //EntityManager
 
@@ -64,7 +65,11 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+    fs.renameSync(`${req.file?.path}`,`${req.file?.destination}${req.file?.originalname}` );
+    req.body.sanitizedInput.receta = `${req.file?.destination}${req.file?.originalname}` || "Sin Receta";
+    
     const turno = em.create(Turno, req.body.sanitizedInput);
+    console.log(req.file);
     await em.flush();
     res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {

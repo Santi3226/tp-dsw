@@ -7,8 +7,10 @@ POST http://localhost:3000/api/plantillaAnalisis
 Content-Type: application/json
 
 {
-  "denominacion": "Salta",
-  "codPostal": "3000"
+  "hsAyuno": "8hs",
+  "preparacion": "-",
+  "fechaDesde": "2025-08-08",
+  "tiempoPrevisto": 3
 }
 
 ### ID

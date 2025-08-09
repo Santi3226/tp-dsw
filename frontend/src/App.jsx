@@ -34,7 +34,7 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="/paciente" element={<Paciente allowedRoles={["user","admin"]}/>} />
+                <Route path="/paciente/:tab" element={<Paciente allowedRoles={["user","admin"]}/>} />
                 <Route path="/turno" element={<Home allowedRoles={["user","admin"]} />} />
               </Route>
 

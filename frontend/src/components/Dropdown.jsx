@@ -12,25 +12,25 @@ function Drop(props) {
       <Dropdown.Menu className='DropMenu'>
         {uno !== undefined && (
           <>
-            <Dropdown.Item className='DropItem' href={`/${titulo}/${uno[0].toLowerCase() + uno.slice(1)}`}>{uno}</Dropdown.Item>
+            <Dropdown.Item className='DropItem' href={`/${titulo}/${uno.toLowerCase().replaceAll(" ","")}`}>{uno}</Dropdown.Item>
           </>
         )}
         {dos !== undefined && (
           <>
             <Dropdown.Divider className='DropDivider'/>
-            <Dropdown.Item className='DropItem'href={`/${titulo}`}>{dos}</Dropdown.Item>
+            <Dropdown.Item className='DropItem'href={`/${titulo}/${dos.toLowerCase().replaceAll(" ","")}`}>{dos}</Dropdown.Item>
           </>
         )}
         {tres !== undefined && (
           <>
             <Dropdown.Divider className='DropDivider'/>
-            <Dropdown.Item className='DropItem' href={`/${titulo}`}>{tres}</Dropdown.Item>
+            <Dropdown.Item className='DropItem' href={`/${titulo}/${tres.toLowerCase().replaceAll(" ","")}`}>{tres}</Dropdown.Item>
           </>
         )}
         {cuatro !== undefined && (
           <>
             <Dropdown.Divider className='DropDivider'/>
-            <Dropdown.Item className='DropItem' href={`/${titulo}`}>{cuatro}</Dropdown.Item>
+            <Dropdown.Item className='DropItem' href={`/${titulo}/${cuatro.toLowerCase().replaceAll(" ","")}`}>{cuatro}</Dropdown.Item>
           </>
         )}
       </Dropdown.Menu>

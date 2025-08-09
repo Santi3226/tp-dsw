@@ -29,10 +29,8 @@ function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
       };
     }
     Object.keys(req.body.sanitizedInput).forEach((key) => {
-      if (
-        req.body.sanitizedInput[key] === undefined
-      )
-        delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
+      if (req.body.sanitizedInput[key] === undefined)
+        delete req.body.sanitizedInput[key];
     });
   } catch (error: any) {
     res.status(500).json({ message: 'Error al procesar la contraseña.' });
@@ -101,7 +99,15 @@ async function login(req: Request, res: Response) {
         role: usuario.role,
         paciente: usuario.paciente,
       };
-      const token = jwt.sign(payload, claveJWT, { expiresIn: '1h' });
+      let token;
+      if(req.body.remember)
+      {
+        token = jwt.sign(payload, claveJWT, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
+      }
+      else
+      {
+        token = jwt.sign(payload, claveJWT, { expiresIn: '1h' });
+      }
       res.status(200).json({
         message: 'Usuario encontrado: ',
         token,

@@ -20,7 +20,7 @@ function sanitizePacienteInput(
     };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
-      delete req.body.sanitizedInput[key]; //Si falta algun campo lo deja como estaba
+      delete req.body.sanitizedInput[key];
   });
   // Aqui van todos los chequeos de seg y datos
   next();

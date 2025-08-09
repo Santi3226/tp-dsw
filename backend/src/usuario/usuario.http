@@ -7,16 +7,16 @@ POST http://localhost:3000/api/usuario
 Content-Type: application/json
 
 {
-  "email": "jp@mail.com",
+  "email": "titi@mail.com",
   "contraseña": "123",
   "role": "user",
   "paciente": {
-    "nombre": "Juan",
-    "apellido": "Perez",
-    "dni": "12345678",
-    "fechaNacimiento": "1990-01-01",
-    "telefono": "123456789",
-    "direccion": "Calle Falsa 123"
+    "nombre": "Titi",
+    "apellido": "Forti",
+    "dni": "45678900",
+    "fechaNacimiento": "2004-05-25T00:00:00.000Z",
+    "telefono": "3467896443",
+    "direccion": "Rivadavia 1000"
 }
 }
 ### LOGIN

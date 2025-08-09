@@ -119,7 +119,7 @@ const Register = () => {
               type="text"
               id="domicilio"
               {...register("domicilio", {
-                required: "Domicilio es requerida",
+                required: "Domicilio es requerido",
               })}
               placeholder="Domicilio"
               className="form-input"
@@ -134,7 +134,7 @@ const Register = () => {
               type="text"
               id="telefono"
               {...register("telefono", {
-                required: "Telefono es requerida",
+                required: "Telefono es requerido",
               })}
               placeholder="Telefono"
               className="form-input"

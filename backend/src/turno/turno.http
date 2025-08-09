@@ -9,8 +9,7 @@ Content-Type: application/json
 {
   "recibeMail": false,
   "estado": "Pendiente",
-  "receta": "S/Receta",
-  "observacion": "Falta receta",
+  "observacion": "-",
   "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
   "paciente": 1,
   "centroAtencion": 1,
@@ -18,7 +17,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 2
+@id = 5
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}
