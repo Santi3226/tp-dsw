@@ -2,7 +2,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Drop from './Dropdown.jsx';
 import { useForm } from "react-hook-form";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.js";
 import '../pages/Register.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';

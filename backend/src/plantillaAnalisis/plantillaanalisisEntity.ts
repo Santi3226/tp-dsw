@@ -12,7 +12,7 @@ import { TipoAnalisis } from '../tipoAnalisis/tipoanalisisEntity.js';
 @Entity()
 export class PlantillaAnalisis extends BaseEntity {
   @Property({ nullable: false })
-  public hsAyuno!: number;
+  public hsAyuno!: string;
 
   @Property({ nullable: false })
   public preparacion!: string;

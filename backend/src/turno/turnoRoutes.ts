@@ -15,7 +15,7 @@ const turnoRouter = Router();
 turnoRouter.get('/', findAll);
 turnoRouter.get('/:id', findOne);
 turnoRouter.delete('/:id', deleteOne);
-turnoRouter.post('/', upload.single('receta'), sanitizeTurnoInput, add);
+turnoRouter.post('/', upload.single('receta'), add);
 turnoRouter.patch('/:id', sanitizeTurnoInput, update);
 turnoRouter.put('/:id', sanitizeTurnoInput, update);
 

@@ -24,7 +24,7 @@ const MainLayout = () => {
           </div>
           <nav className="main-nav">
             <Drop titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas" />
-            <Drop titulo="turno" uno="Gestion de Turnos" dos="Resultados"/>
+            <Drop titulo="turno" uno="Gestion de Turnos" dos="Registrar Turno" tres="Resultados"/>
             <Drop titulo="algo mas?" uno="-" dos="-"/>
             {isAuthenticated() ? (
               <>

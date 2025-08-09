@@ -15,3 +15,8 @@
 | 10  | Recuerdame en el inicio de sesion (s/cookies)    | Completo  | Backend    | Santi    | 8-8-25  |
 | 11  | Ventana Resultados                               | Pendiente | Frontend   | Santi    | 8-8-25  |
 | 12  | Agenda - Recordar mediante mails                 | Pendiente | Backend    | Santi    | 8-8-25  |
+| 13  | Como rellenar un componente con datos del bend   | Pendiente | Frontend   | Santi    | 8-8-25  |
+
+TURNOS
+Necesito ingresar un date time para la fecha y ver si puedo validarla derecho ahi haciendo get turnos
+Hacer el post (lo deje arriba del todo en tabTurno creo)

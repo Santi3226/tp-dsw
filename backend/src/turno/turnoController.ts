@@ -8,7 +8,6 @@ const em = orm.em; //EntityManager
 function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     recibeMail: req.body.recibeMail,
-    estado: req.body.estado,
     receta: req.body.receta,
     observacion: req.body.observacion,
     fechaHoraExtraccion: req.body.fechaHoraExtraccion,
@@ -65,11 +64,25 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    fs.renameSync(`${req.file?.path}`,`${req.file?.destination}${req.file?.originalname}` );
-    req.body.sanitizedInput.receta = `${req.file?.destination}${req.file?.originalname}` || "Sin Receta";
-    
-    const turno = em.create(Turno, req.body.sanitizedInput);
-    console.log(req.file);
+    const { recibeMail, estado, observacion, fechaHoraExtraccion, paciente, centroAtencion, tipoAnalisis } = req.body; 
+    //Pq el formdata me desacomoda los datos del sanitizer
+    let filePath = "Sin Receta";
+    if (req.file) {
+      const newPath = `${req.file.destination}${req.file.originalname}`;
+      fs.renameSync(req.file.path, newPath);
+      filePath = newPath;
+    }
+    const turnoData = {
+      recibeMail: recibeMail === 'true',
+      estado: 'Pendiente', 
+      observacion: observacion || "",
+      receta: filePath,
+      fechaHoraExtraccion: new Date(fechaHoraExtraccion),
+      paciente: paciente,
+      centroAtencion: centroAtencion,
+      tipoAnalisis: tipoAnalisis,
+    };
+    const turno = em.create(Turno, turnoData);
     await em.flush();
     res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {

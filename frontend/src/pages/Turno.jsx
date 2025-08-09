@@ -1,5 +1,5 @@
-import TabBar from "../components/TabPaciente.jsx";
-import "./Paciente.css";
+import TabBar from "../components/TabTurno.jsx";
+import "./Turno.css";
 import { useParams } from 'react-router-dom';
 
 const Paciente = () => {
@@ -7,9 +7,9 @@ const Paciente = () => {
   return (
     <div className="about-page">
         <div className="about-content">
-          <h1 className="h1">Pacientes</h1>
-          <p className="p">Sección dedicada a nuestros pacientes, podras gestionar tu perfil, 
-            ver resultados e incluso realizar consultas de análisis y temas particulares.</p>
+          <h1 className="h1">Turno</h1>
+          <p className="p">Sección dedicada a nuestros turnos, solicita tu proximo turno en Example Brand Laboratorios, 
+            o consulta aquellos ya reservados.</p>
     <div className="tabPaciente">
         <TabBar inicio={tab}/>         
       </div>

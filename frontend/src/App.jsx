@@ -7,11 +7,11 @@ import MainLayout from "./components/layouts/MainLayout";
 // Public Pages
 import Paciente from "./pages/Paciente" 
 import Home from "./pages/Home";
+import Turno from "./pages/Turno";
 
 // Protected Pages
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
-import ProductList from "./pages/ProductList";
 
 // Other components
 import Login from "./pages/Login";
@@ -35,7 +35,7 @@ function App() {
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
                 <Route path="/paciente/:tab" element={<Paciente allowedRoles={["user","admin"]}/>} />
-                <Route path="/turno" element={<Home allowedRoles={["user","admin"]} />} />
+                <Route path="/turno/:tab" element={<Turno allowedRoles={["user","admin"]} />} />
               </Route>
 
               <Route path="/login" element={<Login />} />
@@ -44,7 +44,6 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="profile" element={<Profile />} />
-                <Route path="products" element={<ProtectedRoute allowedRoles={[]}><ProductList /></ProtectedRoute>}/>
               </Route>
               
               <Route path="*" element={<NotFound />} />
