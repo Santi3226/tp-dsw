@@ -8,7 +8,7 @@ const Paciente = () => {
     <div className="about-page">
         <div className="about-content">
           <h1 className="h1">Turno</h1>
-          <p className="p">Sección dedicada a nuestros turnos, solicita tu proximo turno en Example Brand Laboratorios, 
+          <p className="p">Sección dedicada a nuestros turnos, solicita tu proximo turno en Laboratorio Genérico, 
             o consulta aquellos ya reservados.</p>
     <div className="tabPaciente">
         <TabBar inicio={tab}/>         

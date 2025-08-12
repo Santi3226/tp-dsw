@@ -150,12 +150,23 @@
   }
 
   .main-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
+    width: 100%;
+    order: 1;
+    height: auto;
+    display: flex;
+    overflow-x: auto;
+    padding: 0.5rem;
+  }
+
+  .drop {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    border-left: none;
+    border-bottom: 3px solid transparent;
   }
 
   .main-content {
+    order: 2;
     padding: 1rem;
   }
 }

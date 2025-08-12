@@ -1,11 +1,12 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Drop from './Dropdown.jsx';
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth.js";
 import '../pages/Register.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../helpers/api.js';
 
 function TabBar(props) {
   const { modify , user, errorLogin } = useAuth();
@@ -35,6 +36,28 @@ function TabBar(props) {
   }
   };
 
+  const [tiposAnalisis, setTiposAnalisis] = useState([]); 
+  const [tipoAnalisisSeleccionado, setTipoAnalisisSeleccionado] = useState('');
+
+  useEffect(() => {
+    const getDatos = async () => {
+      try {
+        const tipos = await axiosInstance.get('/tipoAnalisis'); 
+        setTiposAnalisis(tipos.data.data);
+
+      } catch (error) {
+        console.error("Error al obtener los centros de atención:", error);
+      }
+    };
+    getDatos();
+  }, []); //Recolector de datos
+
+const handleSelectChange = (event) => {
+  setTipoAnalisisSeleccionado(event.target.value);
+};
+
+const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSeleccionado));
+
   const onSubmitConsult = async (data) => {
     try {
     alert("En teoria, mandaste una consulta, felicitaciones crack!");
@@ -43,7 +66,7 @@ function TabBar(props) {
     console.error("Fallo al consultar:", error);
   }
   };
-
+  
   const {inicio} = props; 
   return (
     <Tabs
@@ -55,12 +78,43 @@ function TabBar(props) {
       <Tab eventKey="preparacion" title="Preparación">
           <h2 className='titulo'>Consultar preparación</h2>
           <p>Seleccionar tipo de análisis</p>
-          <Drop titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas"/>
-          <div className='prep'>
-              <p>Horas de Ayuno</p> <p>Dummy 2hs</p>
-              <p>Tiempo Espera Previsto</p> <p>Dummy 2hs</p>
-              <p>Preparación</p> <p>Dummy Text</p>
-          </div>
+            <select
+              id="tipoAnalisis"
+              className="form-input"
+              value={tipoAnalisisSeleccionado} // Esto controla el valor del select
+              onChange={handleSelectChange} 
+            >
+            <option value="">-</option>
+            {tiposAnalisis.map((ta, index) => (
+            <option key={index} value={ta.id}>
+              {ta.nombre}
+            </option>
+            ))}
+            </select>
+            
+            {analisisElegido && analisisElegido.plantillaAnalisis && (
+            <div style={{ marginTop: '20px' }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Atributo</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(analisisElegido.plantillaAnalisis).map(([key, value]) => (
+                    (key !== 'id' && typeof value !== 'object' && key !== 'fechaDesde') && (
+                      <tr key={key}>
+                        <td>{key}</td>
+                        <td>{value.toString()}</td>
+                      </tr>
+                    )
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
       </Tab>
       <Tab eventKey="gestiondepaciente" title="Gestión de Paciente">
         <h2 className='titulo'>Modificar los datos del Paciente</h2>
@@ -201,9 +255,6 @@ function TabBar(props) {
         </form>
 
       </Tab>
-      <Tab eventKey="resultados" title="Resultados">
-        Tab content for Loooonger Tab
-      </Tab>
       <Tab eventKey="consultas" title="Consultas">
         <h2 className='titulo'>Consultas generales</h2>
         <form
@@ -217,6 +268,7 @@ function TabBar(props) {
               type="email"
               id="email"
               {...register("email", {
+                required: "Email requerido",
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, // Expresión regular para validar formato de email
                   message: "Formato de email no válido",
@@ -264,6 +316,7 @@ function TabBar(props) {
               type="text"
               id="dni"
               {...register("dni", {
+                required: "DNI requerido",
                 pattern: {
                   value: /^\d{8}$/, // Expresión regular para validar dni
                   message: "Formato de dni no válido",

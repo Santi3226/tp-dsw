@@ -78,7 +78,7 @@ async function login(req: Request, res: Response) {
     const usuario = await em.findOne(
       Usuario,
       { email },
-      { populate: ['paciente'] }
+      { populate: ['paciente', 'paciente.turnos'] }
     );
 
     if (!usuario || !contraseña) {
@@ -100,12 +100,9 @@ async function login(req: Request, res: Response) {
         paciente: usuario.paciente,
       };
       let token;
-      if(req.body.remember)
-      {
+      if (req.body.remember) {
         token = jwt.sign(payload, claveJWT, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
-      }
-      else
-      {
+      } else {
         token = jwt.sign(payload, claveJWT, { expiresIn: '1h' });
       }
       res.status(200).json({

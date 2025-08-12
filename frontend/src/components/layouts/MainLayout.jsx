@@ -23,9 +23,9 @@ const MainLayout = () => {
             <h1>Laboratorio Genérico</h1>
           </div>
           <nav className="main-nav">
-            <Drop titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Resultados" cuatro="Consultas" />
-            <Drop titulo="turno" uno="Gestion de Turnos" dos="Registrar Turno" tres="Resultados"/>
-            <Drop titulo="algo mas?" uno="-" dos="-"/>
+            <Drop className="drop" titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Consultas" />
+            <Drop className="drop" titulo="turno" uno="Gestion de Turnos" dos="Registrar Turno" tres="Resultados"/>
+            <Drop className="drop" titulo="laboratorio" uno="Centros de Atencion" dos="Presupuestos" tres="Politicas"/>
             {isAuthenticated() ? (
               <>
               <Link to="/dashboard" className="dashboard-btn">

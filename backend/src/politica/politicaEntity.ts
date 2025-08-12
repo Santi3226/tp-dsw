@@ -1,7 +1,4 @@
-import {
-  Entity,
-  Property 
-} from '@mikro-orm/core';
+import { Entity, Property } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 
 @Entity()
@@ -10,8 +7,8 @@ export class Politica extends BaseEntity {
   public diaHabilitacionTurnos!: number;
 
   @Property({ nullable: false })
-  public horaInicioTurnos!: Date;
+  public horaInicioTurnos!: String; //El Date de TS me hace problema
 
   @Property({ nullable: false })
-  public horaFinTurnos!: Date;
+  public horaFinTurnos!: String;
 }

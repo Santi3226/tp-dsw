@@ -24,9 +24,9 @@ function TabBar(props) {
   };
 
   const [centros, setCentros] = useState([]);
-  const [tiposAnalisis, setTiposAnalisis] = useState([]); 
-  const [turnos, setTurnos] = useState([]);
-
+  const [tiposAnalisis, setTiposAnalisis] = useState([]);
+  const [turnos, setTurnos] = useState([]); 
+  
   useEffect(() => {
     const getDatos = async () => {
       try {
@@ -34,11 +34,10 @@ function TabBar(props) {
         setCentros(centros.data.data); 
         const tipos = await axiosInstance.get('/tipoAnalisis'); 
         setTiposAnalisis(tipos.data.data);
-        const turnos = await axiosInstance.get('/tipoAnalisis'); //Filtrar por usuario?
-        setTurnos(tipos.data.data);
-
+        const turnos = await axiosInstance.get('/paciente/'+user.paciente.id); 
+        setTurnos(turnos.data.data.turnos); //Me hizo renegar esta peticion, esta pegada con cinta
       } catch (error) {
-        console.error("Error al obtener los centros de atención:", error);
+        console.error("Error al obtener los datos:", error);
       }
     };
     getDatos();
@@ -83,19 +82,49 @@ function TabBar(props) {
       justify
     >
       <Tab eventKey="gestiondeturnos" title="Gestion de Turnos">
-          <h2 className='titulo'>Gestionar turnos</h2>
-          <p>Mis Turnos</p>
-          
-          <div className='prep'>
-              <p>Horas de Ayuno</p> <p>Dummy 2hs</p>
-              <p>Tiempo Espera Previsto</p> <p>Dummy 2hs</p>
-              <p>Preparación</p> <p>Dummy Text</p>
+          <h2 className='titulo'>Mis turnos</h2>
+          {turnos.length > 0 ? (
+          <div style={{ marginTop: '20px' }}>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Numero de Turno</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora</th>
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Recibe Mail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {turnos.map((turno) => {
+                const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
+                const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                
+                return (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{tipoAnalisisEncontrado.nombre}</td>
+                  <td>{centroAtencionEncontrado.nombre}</td>
+                  <td>{new Date(turno.fechaHoraExtraccion).toLocaleString()}</td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion==""? "-":turno.observacion}</td>
+                  <td>{turno.recibeMail? "Si":"No"}</td>
+                </tr>
+              );
+              })}
+              </tbody>
+            </table>
           </div>
+        ) : (
+          <p style={{marginTop:"30px"}}>No tienes turnos registrados.</p>
+        )}
       </Tab>
       <Tab eventKey="registrarturno" title="Registrar Turno">
           <h2 className='titulo'>Registrar Turno</h2>
           <form
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
           className="login-formReg"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
@@ -213,6 +242,7 @@ function TabBar(props) {
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
+        <p>No implementado aun</p>
       </Tab>
     </Tabs>
   );

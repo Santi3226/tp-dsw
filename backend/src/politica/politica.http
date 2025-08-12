@@ -1,24 +1,25 @@
 ### GET ALL
-GET http://localhost:3000/api/localidad
+GET http://localhost:3000/api/politica
 
 ### POST
 //Tener cuidado con la extra linea desp de content-type
-POST http://localhost:3000/api/localidad   
+POST http://localhost:3000/api/politica   
 Content-Type: application/json 
 
 {
-  "denominacion": "Salta",
-  "codPostal": "3000"
+  "diaHabilitacionTurnos": 30,
+  "horaInicioTurnos": "8:00",
+  "horaFinTurnos": "20:00"
 }
 
 ### ID
-@id = 4
+@id = 1
 
 ### GET ONE 
-GET http://localhost:3000/api/localidad/{{id}}
+GET http://localhost:3000/api/politica/{{id}}
 
 ### PUT
-PUT http://localhost:3000/api/localidad/{{id}}
+PUT http://localhost:3000/api/politica/{{id}}
 Content-Type: application/json
 
 {
@@ -27,4 +28,4 @@ Content-Type: application/json
 }
 
 ### DELETE
-DELETE http://localhost:3000/api/localidad/{{id}}
+DELETE http://localhost:3000/api/politica/{{id}}

@@ -22,8 +22,7 @@ PUT http://localhost:3000/api/tipoAnalisis/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Hemograma Completo",
-  "importe": 4500
+  "plantillaAnalisis": 1
 }
 
 ### DELETE

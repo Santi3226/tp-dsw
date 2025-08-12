@@ -8,6 +8,7 @@ import MainLayout from "./components/layouts/MainLayout";
 import Paciente from "./pages/Paciente" 
 import Home from "./pages/Home";
 import Turno from "./pages/Turno";
+import Laboratorio from "./pages/Laboratorio";
 
 // Protected Pages
 import Dashboard from "./pages/Dashboard";
@@ -34,8 +35,21 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                <Route path="/paciente/:tab" element={<Paciente allowedRoles={["user","admin"]}/>} />
-                <Route path="/turno/:tab" element={<Turno allowedRoles={["user","admin"]} />} />
+                
+                <Route path="/paciente/:tab" element={
+                  <ProtectedRoute>
+                      <Paciente allowedRoles={["user","admin"]}/>
+                  </ProtectedRoute>
+                }></Route>
+
+                <Route path="/turno/:tab" element={
+                  <ProtectedRoute>
+                      <Turno allowedRoles={["user","admin"]}/>
+                  </ProtectedRoute>
+                }></Route>
+
+                <Route path="/laboratorio/:tab" element={<Laboratorio />} />
+
               </Route>
 
               <Route path="/login" element={<Login />} />

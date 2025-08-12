@@ -3,14 +3,6 @@ import Placehold from "../components/Placeholder.jsx";
 import axiosInstance from "../helpers/api.js";
 import "./Home.css";
 
-axiosInstance.get('http://localhost:3000/api/paciente/1')
-  .then(response => {
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.error(error);
-  });
-
 const Home = () => {
   return (
     <div className="home-page">
@@ -29,8 +21,8 @@ const Home = () => {
         </p>
         <div className="hero-features">
           <Placehold link="" titulo="Novedad" boton="Leer Mas" texto="Nuevo centro de atencion disponible en Rosario." image="/centro.jpg" />
-          <Placehold link="turno" titulo="Turnos" boton="Conseguir Turno" texto="Turnos disponibles para todas las especialidades." image="/turno.jpg" />
-          <Placehold link="" titulo="Contacto" boton="Consultar" texto="Tenes dudas acerca de tus turnos? Consulta las 24hs." image="/consulta.png" />
+          <Placehold link="turno/registrarturno" titulo="Turnos" boton="Conseguir Turno" texto="Turnos disponibles para todas las especialidades." image="/turno.jpg" />
+          <Placehold link="paciente/consultas" titulo="Contacto" boton="Consultar" texto="Tenes dudas acerca de tus turnos? Consulta las 24hs." image="/consulta.png" />
         </div>
       </div>
     </div>
