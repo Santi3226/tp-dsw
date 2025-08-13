@@ -22,13 +22,16 @@ export class Turno extends BaseEntity {
   public estado!: string;
 
   @Property()
-  public receta!: string; //A CAMBIAR
+  public receta!: string;
 
   @Property()
   public observacion!: string;
 
   @Property()
   public fechaHoraExtraccion!: Date;
+
+  @Property({ nullable: true })
+  public fechaHoraReserva!: Date;
 
   @ManyToOne(() => Paciente, {
     nullable: false,

@@ -11,6 +11,7 @@ function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
     receta: req.body.receta,
     observacion: req.body.observacion,
     fechaHoraExtraccion: req.body.fechaHoraExtraccion,
+    fechaHoraReserva: req.body.fechaHoraReserva,
     paciente: req.body.paciente,
     centroAtencion: req.body.centroAtencion,
     tipoAnalisis: req.body.tipoAnalisis,
@@ -23,7 +24,7 @@ function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-// Get all centros de atencion
+// Get all turnos
 async function findAll(req: Request, res: Response) {
   try {
     const turnos = await em.find(
@@ -42,7 +43,7 @@ async function findAll(req: Request, res: Response) {
   }
 }
 
-//Get one centro de atencion
+//Get one turno
 async function findOne(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
@@ -64,7 +65,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const { recibeMail, estado, observacion, fechaHoraExtraccion, paciente, centroAtencion, tipoAnalisis } = req.body; 
+    const { recibeMail, estado, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis } = req.body; 
     //Pq el formdata me desacomoda los datos del sanitizer
     let filePath = "Sin Receta";
     if (req.file) {
@@ -78,6 +79,7 @@ async function add(req: Request, res: Response) {
       observacion: observacion || "",
       receta: filePath,
       fechaHoraExtraccion: new Date(fechaHoraExtraccion),
+      fechaHoraReserva: new Date(fechaHoraReserva),
       paciente: paciente,
       centroAtencion: centroAtencion,
       tipoAnalisis: tipoAnalisis,

@@ -12,7 +12,11 @@ import Laboratorio from "./pages/Laboratorio";
 
 // Protected Pages
 import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
+import Profile from "./pages/Profile"; 
+import TurnoAdmin from "./pages/TurnoAdmin";
+import CentroAdmin from "./pages/CentroAdmin";
+import PacienteAdmin from "./pages/PacienteAdmin";
+import PoliticaAdmin from "./pages/PoliticaAdmin";
 
 // Other components
 import Login from "./pages/Login";
@@ -23,6 +27,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Context and Hooks
 import { AuthProvider } from "./providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 
 const client = new QueryClient();
 
@@ -58,6 +63,10 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]} />}>
                 <Route index element={<Dashboard />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="turno" element={<TurnoAdmin />} />
+                <Route path="paciente" element={<PacienteAdmin />} />
+                <Route path="centro" element={<CentroAdmin />} />
+                <Route path="politica" element={<PoliticaAdmin />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />

@@ -23,12 +23,30 @@ const AuthLayout = () => {
             <span className="icon">📊</span>
             Panel de Control
           </Link>
-          {user?.role === "admin" && (
-            <Link to="/dashboard/products" className="sidebar-link">
-              <span className="icon">🧴</span>
-              Productos
-            </Link>
-          )}
+          <Link to="/dashboard/turno" className="sidebar-link">
+            <span className="icon">👨‍🔬</span>
+            Turnos
+          </Link>
+          <Link to="/dashboard/resultado" className="sidebar-link">
+            <span className="icon">📄</span>
+            Resultados
+          </Link>
+          <Link to="/dashboard/centro" className="sidebar-link">
+            <span className="icon">🏥</span>
+            Centros
+          </Link>
+          <Link to="/dashboard/paciente" className="sidebar-link">
+            <span className="icon">🧍‍♂️</span>
+            Pacientes
+          </Link>
+          <Link to="/dashboard/tipoAnalisis" className="sidebar-link">
+            <span className="icon">💉</span>
+            Tipos de Analisis
+          </Link>
+          <Link to="/dashboard/politica" className="sidebar-link">
+            <span className="icon">🛠</span>
+            Politicas
+          </Link>
           <Link to="/dashboard/profile" className="sidebar-link">
             <span className="icon">👤</span>
             Perfil
@@ -41,7 +59,7 @@ const AuthLayout = () => {
 
         <div className="sidebar-footer">
           <button onClick={handleLogout} className="logout-btn">
-            <span className="icon">🚪</span>
+            <span className="icon">🚫</span>
             Cerrar sesión
           </button>
         </div>

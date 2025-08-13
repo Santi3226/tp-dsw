@@ -13,8 +13,8 @@ const NotFound = () => {
       </div>
       <div className="content-wrapper">
         <h1 className="error-code">404</h1>
-        <p className="error-message">¡Oh, no! La página que buscas ha sido desviada de su trayectoria.</p>
-        <p className="lab-quote">Parece que este experimento no ha salido como esperabamos.</p>
+        <p className="error-message">¡Oh, no! La página que buscas no fue encontrada.</p>
+        <p className="lab-quote">Parece que este analisis no salió como esperabamos.</p>
         <button className="back-button" onClick={() => window.history.back()}>
           Volver
         </button>

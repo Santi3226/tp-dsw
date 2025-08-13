@@ -7,7 +7,7 @@ const Dashboard = () => {
   const mockData = {
     totalUsers: 1250,
     activeUsers: 892,
-    revenue: 45600,
+    revenue: 45600, //Esto hay q cambiarlo por data verdadera
     growth: 12.5
   };
 

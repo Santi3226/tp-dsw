@@ -54,7 +54,7 @@ function TabBar(props) {
 
 const handleSelectChange = (event) => {
   setTipoAnalisisSeleccionado(event.target.value);
-};
+}; 
 
 const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSeleccionado));
 
