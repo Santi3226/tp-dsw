@@ -29,7 +29,7 @@ const recordatoriosDiarios = () => {
                     }
                 );
                 for (const turno of turnos) {
-                    await sendNotification(turno.paciente.usuario.email || "Usuario", '¡Hoy es tu turno!, recorda leer la preparación para tu visita y revisar el horario para evitar demoras!');
+                    await sendNotification(turno.paciente.usuario.email || "Usuario", '¡Mañana es tu turno en Laboratorio Genérico!, recorda leer la preparación para tu visita y revisar el horario para evitar demoras!');
                     turno.notificacionEnviada = true;
                     await em.persistAndFlush(turno);
                 }

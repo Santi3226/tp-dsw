@@ -1,13 +1,5 @@
 import nodemailer from "nodemailer";
-
-var transport = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
-  auth: {
-    user: "69b67b6edc08f8",
-    pass: "2b1bfd843c48ba"
-  }
-});
+import { mailFormat } from "./mailFormat.js";
 
 /* METODO OFICIAL
 const transporter = nodemailer.createTransport({
@@ -23,6 +15,16 @@ const transporter = nodemailer.createTransport({
 });
 */
 
+var transport = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "69b67b6edc08f8",
+    pass: "2b1bfd843c48ba"
+  }
+});
+
+
 const sendNotification = async (mail: string, message: string) => {
     console.log(`Enviando notificacion a ${mail}: ${message}`);
     // Logica del mail
@@ -31,7 +33,7 @@ const sendNotification = async (mail: string, message: string) => {
     from: '"Laboratorio Genérico" <laboratorio@ethereal.email>',
     to: mail,
     subject: "Turno Proximo",
-    text: message,
+    html: mailFormat(message),
   });
 
   console.log("Message sent:", info.messageId);
