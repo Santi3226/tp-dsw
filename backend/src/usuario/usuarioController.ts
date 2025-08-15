@@ -3,17 +3,24 @@ import { Usuario } from './usuarioEntity.js';
 import { orm } from '../shared/db/orm.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import "dotenv/config";
 
-const claveJWT = 'claveJWTProvisional';
 const em = orm.em; //EntityManager
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
+
+const claveJWT = process.env.claveJWT; //Secreto de la clave en .env
+
+if (!claveJWT) {
+  throw new Error('JWT_SECRET must be defined.');
+}
 
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
   const { email, contraseña, role, paciente } = req.body;
   // Validación: Asegurarse de que la contraseña existe
   try {
     if (contraseña !== undefined) {
+      const salt = bcrypt.genSaltSync(10); 
       const hash = bcrypt.hashSync(contraseña, salt);
       req.body.sanitizedInput = {
         email: email,
@@ -101,9 +108,9 @@ async function login(req: Request, res: Response) {
       };
       let token;
       if (req.body.remember) {
-        token = jwt.sign(payload, claveJWT, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
+        token = jwt.sign(payload, claveJWT!, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
       } else {
-        token = jwt.sign(payload, claveJWT, { expiresIn: '1h' });
+        token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
       }
       res.status(200).json({
         message: 'Usuario encontrado: ',

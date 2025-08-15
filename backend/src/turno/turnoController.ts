@@ -8,6 +8,7 @@ const em = orm.em; //EntityManager
 function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
   req.body.sanitizedInput = {
     recibeMail: req.body.recibeMail,
+    notificacionEnviada: req.body.notificacionEnviada,
     receta: req.body.receta,
     observacion: req.body.observacion,
     fechaHoraExtraccion: req.body.fechaHoraExtraccion,
@@ -31,7 +32,7 @@ async function findAll(req: Request, res: Response) {
       Turno,
       {},
       {
-        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'], }
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis','paciente.usuario'], }
     );
     res.status(200).json({
       message: 'Todos los turnos encontrados: ',
@@ -50,7 +51,7 @@ async function findOne(req: Request, res: Response) {
       Turno,
       { id },
       {
-        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'],
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'paciente.usuario'],
       }
     );
     res.status(200).json({
@@ -64,7 +65,7 @@ async function findOne(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const { recibeMail, estado, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis } = req.body; 
+    const { recibeMail, estado, notificacionEnviada, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis } = req.body; 
     //Pq el formdata me desacomoda los datos del sanitizer
     let filePath = "Sin Receta";
     if (req.file) {
@@ -75,6 +76,7 @@ async function add(req: Request, res: Response) {
     const turnoData = {
       recibeMail: recibeMail === 'true',
       estado: 'Pendiente', 
+      notificacionEnviada: false, 
       observacion: observacion || "",
       receta: filePath,
       fechaHoraExtraccion: new Date(fechaHoraExtraccion),

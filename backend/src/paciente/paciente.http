@@ -27,11 +27,7 @@ PUT http://localhost:3000/api/paciente/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Santiago",
-  "apellido": "Dedich",
-  "fechaNacimiento": "2003-11-13",
-  "telefono": "3467494137",
-  "direccion": "25 de Mayo 1256"
+  "usuario": 2
 }
 
 ### DELETE

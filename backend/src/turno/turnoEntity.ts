@@ -1,10 +1,6 @@
 import {
-  Cascade,
-  Collection,
   Entity,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
   Property,
   Rel,
 } from '@mikro-orm/core';
@@ -18,19 +14,22 @@ export class Turno extends BaseEntity {
   @Property({ nullable: false })
   public recibeMail!: boolean;
 
+  @Property({ default: false })
+  notificacionEnviada!: boolean; 
+
   @Property({ nullable: false })
   public estado!: string;
 
   @Property()
   public receta!: string;
 
-  @Property()
+  @Property({ default: "-" })
   public observacion!: string;
 
   @Property({ nullable: true })
   public fechaHoraExtraccion!: Date;
 
-  @Property()
+  @Property({ nullable: false })
   public fechaHoraReserva!: Date;
 
   @ManyToOne(() => Paciente, {
