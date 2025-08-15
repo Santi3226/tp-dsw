@@ -27,6 +27,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 // Context and Hooks
 import { AuthProvider } from "./providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import TiposAdmin from "./pages/TiposAdmin";
 
 
 const client = new QueryClient();
@@ -67,6 +68,7 @@ function App() {
                 <Route path="paciente" element={<PacienteAdmin />} />
                 <Route path="centro" element={<CentroAdmin />} />
                 <Route path="politica" element={<PoliticaAdmin />} />
+                <Route path="tipoAnalisis" element={<TiposAdmin />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />

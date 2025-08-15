@@ -1,6 +1,5 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Drop from './Dropdown.jsx';
 import axiosInstance from '../helpers/api'
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth.js";
@@ -218,9 +217,16 @@ function TabBar(props) {
                   return true;
                 }
                 const fileType = value[0].type;
-                const acceptedImageTypes = ['image/jpeg','image/jpg','image/png'];
+                const acceptedImageTypes = ['image/jpeg','image/jpg','image/png','image/bmp'];
                 return acceptedImageTypes.includes(fileType) || "El archivo debe ser una imagen (JPG, PNG).";
+              },
+              isSize: (value) => {
+                if (value[0].size<10*1024*1024) {
+                  return true;
+                }
+                return "El archivo debe ser menor a 10mb.";
               }
+
             }
           })}
             />

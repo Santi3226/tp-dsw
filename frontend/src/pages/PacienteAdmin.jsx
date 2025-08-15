@@ -1,19 +1,43 @@
 import { useForm } from "react-hook-form";
-import {usePaciente, deletePaciente} from "../hooks/usePacientes";
+import {usePaciente, deletePaciente, modifyPaciente, addPaciente} from "../hooks/usePacientes";
 import "./TurnoAdmin.css";
+import { Tab } from "bootstrap";
+import Tabs from "react-bootstrap/esm/Tabs";
 
 function PacienteAdmin() {
 
-const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm({mode: "onBlur",});
+const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
+const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
+const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
 
-const onSubmit = async (data) => {
+const onSubmitDelete = async (data) => {
 try {
-  const id = data.paciente; 
+  const id = data.id; 
   await deletePaciente(id);
   location.reload(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
+}
+};
+
+const onSubmitModify = async (data) => {
+try { 
+  await modifyPaciente(data);
+  location.reload(); 
+} 
+catch (error) {
+  console.error("Fallo al modificar:", error);
+}
+};
+
+const onSubmitAdd = async (data) => {
+try { 
+  await addPaciente(data);
+  location.reload(); 
+} 
+catch (error) {
+  console.error("Fallo al agregar:", error);
 }
 };
 
@@ -72,16 +96,25 @@ const { isLoading, isError, error, pacientes = [] } = usePaciente();
             </tbody>
             </table>
       </div>
-      <form
-        className="login-formReg"
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-      >
-      <div className="form-group">
+      <Tabs
+      defaultActiveKey="modificar"
+      id="justify-tab-example"
+      className="mb-3"
+      justify
+      style={{marginTop:"30px"}}
+    >
+      <Tab eventKey="modificar" title="Modificar">
+          <h2 className='titulo'>Modificar los datos del Paciente</h2>
+          <form
+          className="login-formReg"
+          onSubmit={handleSubmitModify(onSubmitModify)}
+          noValidate
+        >
+          <div className="form-group">
         <label htmlFor="text">Paciente</label>
         <select
-          id="paciente"
-          {...register("paciente", {required:"Paciente requerido"})}
+          id="id"
+          {...registerModify("id", {required:"Id requerido"})}
           className="form-input"
         >
         <option value="">-</option>
@@ -90,20 +123,240 @@ const { isLoading, isError, error, pacientes = [] } = usePaciente();
           {p.id}
         </option>
         ))}
-
         </select>
-        {errors.paciente && (
-          <div className="error-message">{errors.paciente.message}</div>
+        {errorsModify.id && (
+          <div className="error-message">{errorsModify.id.message}</div>
         )}
       </div>
 
-      <button id="borrar" type="submit" className="login-btn" disabled={isSubmitting}>
-        {isSubmitting ? "Un momento..." : "Eliminar"}
+          <div className="form-group" id="tres">
+          <label htmlFor="text">Nombre</label>
+          <input
+              type="text"
+              id="nombre"
+              {...registerModify("nombre")}
+              className="form-input"
+            />
+            {errorsModify.nombre && (
+              <div className="error-message">{errorsModify.nombre.message}</div>
+            )}
+            </div>
+            <div className="form-group" id="cuatro">
+            <label htmlFor="text">Apellido</label>
+            <input
+              type="text"
+              id="apellido"
+              {...registerModify("apellido")}
+              className="form-input"
+            />
+            {errorsModify.apellido && (
+              <div className="error-message">{errorsModify.apellido.message}</div>
+            )}</div>
+            <div className="form-group">
+            <label htmlFor="number">DNI</label>
+            <input
+              type="text"
+              id="dni"
+              {...registerModify("dni", {
+                pattern: {
+                  value: undefined||/^\d{8}$/, // Expresión regular para validar dni
+                  message: "Formato de dni no válido",
+                },
+              })}
+              className="form-input"
+            />
+            {errorsModify.dni && (
+              <div className="error-message">{errorsModify.dni.message}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="text">Direccion</label>
+            <input
+              type="text"
+              id="direccion"
+              {...registerModify("direccion")}
+              className="form-input"
+            />
+            {errorsModify.direccion && (
+              <div className="error-message">{errorsModify.direccion.message}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="text">Telefono</label>
+            <input
+              type="text"
+              id="telefono"
+              {...registerModify("telefono", {
+              })}
+              className="form-input"
+            />
+            {errorsModify.telefono && (
+              <div className="error-message">{errorsModify.telefono.message}</div>
+            )}
+          </div>
+          <div id="fechaNac" className="form-group">
+            <label htmlFor="date">Fecha de Nacimiento</label>
+            <input
+              type="date"
+              id="fechaNacimiento"
+              {...registerModify("fechaNacimiento", {
+                validate: (value) => {
+                  const selectedDate = new Date(value);
+                  const currentDate = new Date();
+                  currentDate.setHours(0, 0, 0, 0);
+                  if (selectedDate > currentDate) {
+                    return "Fecha de nacimiento inválida";
+                  }
+                  return true;
+                },
+              })}
+              className="form-input"
+            />
+            {errorsModify.fechaNacimiento && (
+              <div className="error-message">{errorsModify.fechaNacimiento.message}</div>
+            )}
+          </div>
+          
+          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow: 4}}>
+            {isSubmittingModify ? "Un momento..." : "Modificar"}
+          </button>
+        </form>
+      </Tab>
+      <Tab eventKey="agregar" title="Agregar">
+         <h2 className='titulo'>Agregar un Paciente</h2>
+          <form
+          className="login-formReg"
+          onSubmit={handleSubmitAdd(onSubmitAdd)}
+          noValidate
+        >
+          <div className="form-group" id="tres">
+          <label htmlFor="text">Nombre</label>
+          <input
+              type="text"
+              id="nombre"
+              {...registerAdd("nombre",{required:"Nombre requerido"})}
+              className="form-input"
+            />
+            {errorsAdd.nombre && (
+              <div className="error-message">{errorsAdd.nombre.message}</div>
+            )}
+            </div>
+            <div className="form-group" id="cuatro">
+            <label htmlFor="text">Apellido</label>
+            <input
+              type="text"
+              id="apellido"
+              {...registerAdd("apellido",{required:"Apellido requerido"})}
+              className="form-input"
+            />
+            {errorsAdd.apellido && (
+              <div className="error-message">{errorsAdd.apellido.message}</div>
+            )}</div>
+            <div className="form-group">
+            <label htmlFor="number">DNI</label>
+            <input
+              type="text"
+              id="dni"
+              {...registerAdd("dni", {
+                required:"DNI requerido",
+                pattern: {
+                  value: undefined||/^\d{8}$/, // Expresión regular para validar dni
+                  message: "Formato de dni no válido",
+                },
+              })}
+              className="form-input"
+            />
+            {errorsAdd.dni && (
+              <div className="error-message">{errorsAdd.dni.message}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="text">Direccion</label>
+            <input
+              type="text"
+              id="direccion"
+              {...registerAdd("direccion",{required:"Direccion requerida"})}
+              className="form-input"
+            />
+            {errorsAdd.direccion && (
+              <div className="error-message">{errorsAdd.direccion.message}</div>
+            )}
+          </div>
+          <div className="form-group">
+            <label htmlFor="text">Telefono</label>
+            <input
+              type="text"
+              id="telefono"
+              {...registerAdd("telefono", {required:"Telefono requerido"
+              })}
+              className="form-input"
+            />
+            {errorsAdd.telefono && (
+              <div className="error-message">{errorsAdd.telefono.message}</div>
+            )}
+          </div>
+          <div id="fechaNac" className="form-group">
+            <label htmlFor="date">Fecha de Nacimiento</label>
+            <input
+              type="date"
+              id="fechaNacimiento"
+              {...registerAdd("fechaNacimiento", {
+                required:"Fecha de Nacimiento requerida",
+                validate: (value) => {
+                  const selectedDate = new Date(value);
+                  const currentDate = new Date();
+                  currentDate.setHours(0, 0, 0, 0);
+                  if (selectedDate > currentDate) {
+                    return "Fecha de nacimiento inválida";
+                  }
+                  return true;
+                },
+              })}
+              className="form-input"
+            />
+            {errorsAdd.fechaNacimiento && (
+              <div className="error-message">{errorsAdd.fechaNacimiento.message}</div>
+            )}
+          </div>
+          
+          <button id="login" type="submit" className="login-btn" disabled={isSubmittingAdd} style={{gridRow: 4}}>
+            {isSubmittingAdd ? "Un momento..." : "Agregar"}
+          </button>
+        </form>
+      </Tab>
+      <Tab eventKey="eliminar" title="Eliminar">
+        <h2 className='titulo'>Eliminar un tipo</h2>
+        <form
+        className="login-formReg"
+        onSubmit={handleSubmitDelete(onSubmitDelete)}
+        noValidate
+      >
+      <div className="form-group">
+        <label htmlFor="text">Paciente</label>
+        <select
+          id="id"
+          {...registerDelete("id", {required:"Id requerido"})}
+          className="form-input"
+        >
+        <option value="">-</option>
+        {pacientes.map((p, index) => (
+        <option key={index} value={p.id}>
+          {p.id}
+        </option>
+        ))}
+        </select>
+        {errorsDelete.tipoAnalisis && (
+          <div className="error-message">{errorsDelete.tipoAnalisis.message}</div>
+        )}
+      </div>
+
+      <button id="borrar" type="submit" className="login-btn" disabled={isSubmittingDelete}>
+        {isSubmittingDelete ? "Un momento..." : "Eliminar"}
       </button>
       </form>
+      </Tab>
+    </Tabs>
     </div>
-
-
   );
 }
 

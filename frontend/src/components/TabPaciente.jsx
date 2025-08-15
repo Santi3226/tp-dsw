@@ -248,7 +248,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
             )}
           </div>
           
-          <button id="login" type="submit" className="login-btn" disabled={isSubmitting}>
+          <button id="login" type="submit" className="login-btn" disabled={isSubmitting} style={{gridRow: 5}}>
             {isSubmitting ? "Un momento..." : "Modificar"}
           </button>
           {errorLogin && <div className="error-message">{errorLogin}</div>}
@@ -359,7 +359,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
               <div className="error-message">{errors.telefono.message}</div>
             )}
           </div>
-          <button id="login" type="submit" className="login-btn" disabled={isSubmitting}>
+          <button id="login" type="submit" className="login-btn" style={{gridRow: 4}} disabled={isSubmitting}>
             {isSubmitting ? "Un momento..." : "Consultar"}
           </button>
           {errorLogin && <div className="error-message">{errorLogin}</div>}
