@@ -37,9 +37,11 @@ const { isLoading, isError, error, turnos = [] } = useTurnos();
               <thead>
                 <tr>
                   <th>Numero de Turno</th>
+                  <th>Paciente</th>
                   <th>Tipo de Analisis</th>
                   <th>Centro de Atencion</th>
-                  <th>Fecha y Hora</th>
+                  <th>Fecha y Hora Reserva</th>
+                  <th>Fecha y Hora Extraccion</th>
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Recibe Mail</th>
@@ -49,8 +51,10 @@ const { isLoading, isError, error, turnos = [] } = useTurnos();
               {turnos.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
+                  <td>{turno.paciente.apellido + ", " + turno.paciente.nombre}</td>
                   <td>{turno.tipoAnalisis.nombre}</td>
                   <td>{turno.centroAtencion.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
                   <td>{new Date(turno.fechaHoraExtraccion).toLocaleString()}</td>
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>

@@ -143,19 +143,56 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+.main-header {
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+    color: white;
+    box-shadow: 0 5px 10px rgba(14, 24, 38, 0.256);
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+  }
   .header-content {
-    flex-direction: column;
     gap: 1rem;
     padding: 0 1rem;
   }
-
+  .dashboard-btn {
+    width: 210px;
+    height: 37px;
+    padding: 0px 100px;
+    margin-left: 0px;
+    margin-right: 20px;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    text-align: center;
+    background-color: #169bd5;
+    align-items: center;
+    justify-content: center;
+    font: revert;
+  }
+  .logo {
+    height: 60px;
+    width: 60px;
+    padding: 0px;
+    margin-right: 0px;
+    cursor: pointer;
+  }
+  .titulo h1 {
+    color: #2c3e50;
+    font-size: 1.0rem;
+    font-weight: 700;
+    margin-right: 10px;
+  }
   .main-nav {
     width: 100%;
-    order: 1;
     height: auto;
     display: flex;
     overflow-x: auto;
-    padding: 0.5rem;
   }
 
   .drop {
@@ -166,7 +203,21 @@
   }
 
   .main-content {
-    order: 2;
-    padding: 1rem;
+    padding: 0.5rem;
+    margin: auto 0px;
+  }
+
+  .main-footer {
+    background-color: #d7d7d7;
+    padding: 2rem 0;
+    text-align: center;
+    color: #6c757d;
+    border-top: 1px solid #e9ecef;
+    position: 0 0 0 fixed;
+  }
+
+  .main-footer p {
+    margin: 0;
+    font-size: 0.9rem;
   }
 }

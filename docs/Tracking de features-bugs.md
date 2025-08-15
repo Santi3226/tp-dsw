@@ -14,12 +14,16 @@
 | 9   | Modify no acata correctamente los campos nulos   | Completo  | Frontend   | Santi    | 8-8-25  |
 | 10  | Recuerdame en el inicio de sesion (s/cookies)    | Completo  | Backend    | Santi    | 8-8-25  |
 | 11  | Ventana Resultados                               | Pendiente | Frontend   | Santi    | 8-8-25  |
-| 12  | Agenda - Recordar mediante mails                 | Pendiente | Backend    | Santi    | 8-8-25  |
+| 12  | Cron - Recordar mediante mails                   | Pendiente | Backend    | Santi    | 8-8-25  |
 | 13  | Como rellenar un componente con datos del bend   | Completo  | Frontend   | Santi    | 9-8-25  |
 | 13  | Lista de Turnos                                  | Completo  | Frontend   | Santi    | 12-8-25 |
+| 14  | CRUDs en Dashboard                               | Pendiente | Frontend   | Santi    | 13-8-25 |
+| 14  | Cancelacion de turnos en gestion de turnos       | Pendiente | Frontend   | Santi    | 14-8-25 |
+| 15  | CSS de registrar turno                           | Pendiente | Frontend   | Santi    | 13-8-25 |
+| 16  | Responsive design                                | Pendiente | Frontend   | Santi    | 13-8-25 |
 
-Dashboard, propiedades de admin, creo q es fundamental
-Agregar el cancelar en la pestaña de gestion de turnos
 Necesito ingresar un date time para la fecha y ver si puedo validarla derecho ahi haciendo get turnos -> Pendiente
 Trabajar el responsive design, el del mainlayout esta a medio hacer
-CSS de registrar turno, esta raro
+
+IMPORTANTE
+Cron funciona, hay q corregir la repeticion de la misma tarea varias veces y el setup de mandar un mail

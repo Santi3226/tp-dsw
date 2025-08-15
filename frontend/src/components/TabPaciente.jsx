@@ -102,14 +102,24 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(analisisElegido.plantillaAnalisis).map(([key, value]) => (
-                    (key !== 'id' && typeof value !== 'object' && key !== 'fechaDesde') && (
+                {Object.entries(analisisElegido.plantillaAnalisis).map(([key, value]) => {
+                  if (key === 'tiempoPrevisto') {
+                    return (
+                      <tr key={key}>
+                        <td>{key}</td>
+                        <td>{value.toString() + " días"}</td>
+                      </tr>
+                    );
+                  } else if (key !== 'id' && typeof value !== 'object' && key !== 'fechaDesde') {
+                    return (
                       <tr key={key}>
                         <td>{key}</td>
                         <td>{value.toString()}</td>
                       </tr>
-                    )
-                  ))}
+                    );
+                  }
+                  return null;
+                })}
                 </tbody>
               </table>
             </div>

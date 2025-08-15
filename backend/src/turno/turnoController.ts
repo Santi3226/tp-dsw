@@ -31,8 +31,7 @@ async function findAll(req: Request, res: Response) {
       Turno,
       {},
       {
-        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'],
-      }
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis'], }
     );
     res.status(200).json({
       message: 'Todos los turnos encontrados: ',

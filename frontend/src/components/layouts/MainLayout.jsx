@@ -11,6 +11,7 @@ const MainLayout = () => {
     logout();
     navigate("/");
   };
+  const {user} = useAuth();
 
   return (
     <div className="main-layout">
@@ -26,11 +27,15 @@ const MainLayout = () => {
             <Drop className="drop" titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Consultas" />
             <Drop className="drop" titulo="turno" uno="Gestion de Turnos" dos="Registrar Turno" tres="Resultados"/>
             <Drop className="drop" titulo="laboratorio" uno="Centros de Atencion" dos="Presupuestos" tres="Politicas"/>
-            {isAuthenticated() ? (
+            {(isAuthenticated() && user.role==="admin")  && (
               <>
-              <Link to="/dashboard" className="dashboard-btn">
+                <Link to="/dashboard" className="dashboard-btn">
                 Dashboard
               </Link>
+            </>)}
+            
+            {isAuthenticated()  ? (
+              <>
                 <button onClick={handleLogout} className="logout-btn">
                   Cerrar sesión
                 </button>

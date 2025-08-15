@@ -7,17 +7,18 @@ POST http://localhost:3000/api/turno
 Content-Type: application/json 
 
 {
-  "recibeMail": false,
+  "recibeMail": true,
   "estado": "Pendiente",
+  "receta": "uploads/santi.png",
   "observacion": "-",
-  "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
+  "fechaHoraReserva": "2025-08-15",
   "paciente": 1,
   "centroAtencion": 1,
   "tipoAnalisis": 2
 }
 
 ### ID
-@id = 4
+@id = 9
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}
@@ -27,14 +28,7 @@ PUT http://localhost:3000/api/turno/{{id}}
 Content-Type: application/json
 
 {
-  "recibeMail": true,
-  "estado": "Completo",
-  "receta": "Receta",
-  "observacion": "S/Observaciones",
-  "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
-  "paciente": 1,
-  "centroAtencion": 1,
-   "tipoAnalisis": 2
+  "recibeMail": true
 }
 
 ### DELETE

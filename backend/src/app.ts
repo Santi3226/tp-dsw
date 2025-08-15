@@ -12,6 +12,7 @@ import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRo
 import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
 import { politicaRouter } from './politica/politicaRoutes.js';
 import { usuarioRouter } from './usuario/usuarioRoutes.js';
+import { recordatoriosDiarios } from './cron.js';
 
 const app = express();
 app.use(express.json());
@@ -51,6 +52,7 @@ app.use((_, res) => {
 });
 
 await syncSchema(); //never in production
+recordatoriosDiarios();
 
 app.listen(3000, () => {
   console.log('Server activo en http://localhost:3000/');
