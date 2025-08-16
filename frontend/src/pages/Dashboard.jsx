@@ -15,7 +15,7 @@ const Dashboard = () => {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <h1>Panel de control</h1>
-        <p>Bienvenido nuevamente, {user?.name || 'User'}!</p>
+        <p>Bienvenido nuevamente, {user?.paciente?.nombre || 'User'}!</p>
       </div>
       
       <div className="dashboard-stats">

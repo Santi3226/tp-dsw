@@ -1,14 +1,19 @@
 import { useForm } from "react-hook-form";
-import {usePaciente, deletePaciente, modifyPaciente, addPaciente} from "../hooks/usePacientes";
+import {usePaciente, deletePaciente, modifyPaciente, addPaciente, getPacienteQuery} from "../hooks/usePacientes";
 import "./TurnoAdmin.css";
 import { Tab } from "bootstrap";
 import Tabs from "react-bootstrap/esm/Tabs";
+import { useEffect, useState } from "react";
 
 function PacienteAdmin() {
+
+const [pacientesFiltrados, setPacientesFiltrados] = useState([]); //Definicion del estado
+const { isLoading, isError, error, pacientes} = usePaciente(); //Traida de todos los pacientes
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
+const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmittingFilter }, } = useForm({ mode: "onBlur" });
 
 const onSubmitDelete = async (data) => {
 try {
@@ -41,7 +46,21 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, pacientes = [] } = usePaciente();  
+const onSubmitFilter = async (data) => {
+  try {
+    const response = await getPacienteQuery(data); //Filtrado condicional
+    setPacientesFiltrados(response || []); 
+  } catch (error) {
+    console.error("Fallo al filtrar:", error);
+  }
+};
+
+useEffect(() => {
+    if (Array.isArray(pacientes)) {
+      setPacientesFiltrados(pacientes); //La primera vez llena el arreglo con todos los pacientes, desp se actaliza con los filtros
+    }
+  }, [pacientes]);
+
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
@@ -59,7 +78,7 @@ const { isLoading, isError, error, pacientes = [] } = usePaciente();
     );
   }
 
-  if (pacientes.length === 0) {
+  if (pacientesFiltrados.length === 0) {
     return (
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>No se encontraron pacientes.</p>
@@ -83,26 +102,69 @@ const { isLoading, isError, error, pacientes = [] } = usePaciente();
                 </tr>
               </thead>
               <tbody>
-              {pacientes.map((paciente) => (
+              {pacientesFiltrados.map((paciente) => (
                 <tr key={paciente.id}>
                   <td>{paciente.id}</td>
                   <td>{paciente.nombre +" "+ paciente.apellido}</td>
                   <td>{paciente.dni}</td>
                   <td>{paciente.direccion}</td>
                   <td>{paciente.telefono}</td>
-                  <td>{new Date(paciente.fechaNacimiento).toLocaleString()/*Como corto el tiempo*/}</td> 
+                 <td>{new Date(paciente.fechaNacimiento).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
             </table>
       </div>
       <Tabs
-      defaultActiveKey="modificar"
+      defaultActiveKey="filtrar"
       id="justify-tab-example"
       className="mb-3"
       justify
       style={{marginTop:"30px"}}
     >
+    <Tab eventKey="filtrar" title="Filtrar">
+      <h2 className='titulo'>Filtrar pacientes</h2>
+      <form
+      className="login-formReg"
+      onSubmit={handleSubmitFilter(onSubmitFilter)}
+      noValidate
+    >
+      <div className="form-group" id="uno">
+      <label htmlFor="text">Nombre</label>
+      <input
+          type="text"
+          id="nombre"
+          {...registerFilter("nombre")}
+          className="form-input"
+        />
+        </div>
+
+      <div className="form-group" id="dos">
+      <label htmlFor="text">DNI</label>
+      <input
+          type="text"
+          id="dni"
+          {...registerFilter("dni")}
+          className="form-input"
+        />
+      </div>
+
+      <div className="form-group" id="tres">
+      <label htmlFor="text">DNI</label>
+      <input
+          type="text"
+          id="edad"
+          {...registerFilter("edad")}
+          className="form-input"
+        />
+        </div>
+
+      <button id="login" type="submit" className="login-btn" disabled={isSubmittingFilter} style={{gridRow: 2}}>
+            {isSubmittingFilter ? "Un momento..." : "Filtrar"}
+      </button>
+    </form>
+      </Tab>
+
       <Tab eventKey="modificar" title="Modificar">
           <h2 className='titulo'>Modificar los datos del Paciente</h2>
           <form
@@ -110,7 +172,7 @@ const { isLoading, isError, error, pacientes = [] } = usePaciente();
           onSubmit={handleSubmitModify(onSubmitModify)}
           noValidate
         >
-          <div className="form-group">
+        <div className="form-group">
         <label htmlFor="text">Paciente</label>
         <select
           id="id"

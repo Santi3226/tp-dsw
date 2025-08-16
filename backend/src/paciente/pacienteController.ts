@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Paciente } from './pacienteEntity.js';
 import { orm } from '../shared/db/orm.js';
+import { FilterQuery } from '@mikro-orm/core';
 
 const em = orm.em; //EntityManager
 
@@ -55,6 +56,40 @@ async function findOne(req: Request, res: Response) {
   }
 }
 
+async function findSome(req: Request, res: Response) {
+  try {
+    const filtros: FilterQuery<Paciente> = {};
+
+    if (req.query.nombre) {
+      filtros.nombre = {$like: `%${req.query.nombre as string}%`};
+    } 
+    if (req.query.dni) {
+      filtros.dni = req.query.dni as string;
+    }
+    if (req.query.edad) {
+      const edad = Number(req.query.edad);
+      const hoy = new Date();
+      
+      const fechaNacimientoInicio = new Date(hoy.getFullYear() - (edad + 1), hoy.getMonth(), hoy.getDate() + 1);
+      const fechaNacimientoFin = new Date(hoy.getFullYear() - edad, hoy.getMonth(), hoy.getDate()); 
+
+      if (!isNaN(fechaNacimientoInicio.getTime()) && !isNaN(fechaNacimientoFin.getTime())) {
+          filtros.fechaNacimiento = { $gte: fechaNacimientoInicio, $lte: fechaNacimientoFin };
+      }
+    }
+    const pacientes = await em.find(Paciente, filtros, { populate: ['turnos'] }); 
+    
+    res.status(200).json({
+      message: 'Pacientes encontrados',
+      data: pacientes,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message || 'Error fetching paciente',
+      error: error.toString()
+    });
+  }
+}
 async function add(req: Request, res: Response) {
   try {
     const paciente = em.create(Paciente, req.body.sanitizedInput);
@@ -102,4 +137,4 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-export { sanitizePacienteInput, findAll, findOne, deleteOne, add, update };
+export { sanitizePacienteInput, findAll, findOne, deleteOne, add, update, findSome };
