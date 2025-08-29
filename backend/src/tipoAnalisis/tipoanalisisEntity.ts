@@ -12,6 +12,7 @@ import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Turno } from '../turno/turnoEntity.js';
 import { PlantillaAnalisis } from '../plantillaAnalisis/plantillaanalisisEntity.js';
 import { ParametroAnalisis } from '../parametroAnalisis/parametroanalisisEntity.js';
+import { ResultadoAnalisis } from '../resultadoAnalisis/resultadoanalisisEntity.js';
 
 @Entity()
 export class TipoAnalisis extends BaseEntity {
@@ -34,11 +35,11 @@ export class TipoAnalisis extends BaseEntity {
   plantillaAnalisis!: Rel<PlantillaAnalisis>;
 
   @OneToMany(
-    () => ParametroAnalisis,
-    (parametroAnalisis) => parametroAnalisis.tipoAnalisis,
+    () => ResultadoAnalisis,
+    (resultadoAnalisis) => resultadoAnalisis.tipoAnalisis,
     {
       cascade: [Cascade.ALL],
     }
   )
-  parametroAnalisis = new Collection<ParametroAnalisis>(this);
+  resultadoAnalisis = new Collection<ResultadoAnalisis>(this);
 }

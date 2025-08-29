@@ -1,21 +1,41 @@
 import {
-  Cascade,
-  Collection,
   Entity,
-  OneToMany,
+  ManyToOne,
+  PrimaryKeyProp,
   Property,
   Rel,
 } from '@mikro-orm/core';
-import { BaseEntity } from '../shared/db/baseEntity.js';
 import { ParametroAnalisis } from '../parametroAnalisis/parametroanalisisEntity.js';
+import { TipoAnalisis } from '../tipoAnalisis/tipoanalisisEntity.js';
+import { Turno } from '../turno/turnoEntity.js';
 
 @Entity()
-export class ResultadoAnalisis extends BaseEntity {
-  @Property({ nullable: false})
+export class ResultadoAnalisis {
+    @ManyToOne(() => ParametroAnalisis, {
+    nullable: false,
+    primary: true,
+    updateRule: 'cascade',
+    deleteRule: 'cascade',
+  })
+  parametroAnalisis!: Rel<ParametroAnalisis>;
+
+  @ManyToOne(() => Turno, {
+    nullable: false,
+    primary: true,
+    updateRule: 'cascade',
+    deleteRule: 'cascade',
+  })
+  turno!: Rel<Turno>;
+
+  @Property({ nullable: false })
   public valor!: number;
 
-  @OneToMany(() => ParametroAnalisis, (parametroAnalisis) => parametroAnalisis.resultadoAnalisis, {
-    cascade: [Cascade.ALL],
+  @ManyToOne(() => TipoAnalisis, {
+    nullable: false,
+    updateRule: 'cascade',
+    deleteRule: 'cascade',
   })
-  parametroAnalisis = new Collection<ParametroAnalisis>(this);
+  tipoAnalisis!: Rel<TipoAnalisis>;
+
+  [PrimaryKeyProp]?: ['parametroAnalisis', 'turno'];
 }

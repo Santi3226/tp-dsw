@@ -84,6 +84,7 @@ async function add(req: Request, res: Response) {
       paciente: paciente,
       centroAtencion: centroAtencion,
       tipoAnalisis: tipoAnalisis,
+      resultado: undefined,
     };
     const turno = em.create(Turno, turnoData);
     await em.flush();

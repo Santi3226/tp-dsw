@@ -13,8 +13,7 @@ function sanitizeParametroAnalisisInput(
     nombre: req.body.nombre,
     referencia: req.body.referencia,
     unidad: req.body.unidad,
-    tipoAnalisis: req.body.tipoAnalisis,
-   // resultadoAnalisis: req.body.resultadoAnalisis
+    resultadoAnalisis: req.body.resultadoAnalisis
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -31,7 +30,7 @@ async function findAll(req: Request, res: Response) {
       ParametroAnalisis,
       {},
       {
-        populate: ['tipoAnalisis', /*'resultadoAnalisis'*/],
+        populate: ['resultadoAnalisis'],
       }
     );
     res.status(200).json({
@@ -51,7 +50,7 @@ async function findOne(req: Request, res: Response) {
       ParametroAnalisis,
       { id },
       {
-        populate: ['tipoAnalisis', /*'resultadoAnalisis'*/],
+        populate: ['resultadoAnalisis'],
       }
     );
     res.status(200).json({

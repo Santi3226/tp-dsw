@@ -12,7 +12,8 @@ function sanitizeTipoAnalisisInput(
   req.body.sanitizedInput = {
     nombre: req.body.nombre,
     importe: req.body.importe,
-    plantillaAnalisis: req.body.plantillaAnalisis
+    plantillaAnalisis: req.body.plantillaAnalisis,
+    resultadoAnalisis: req.body.resultadoAnalisis
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)

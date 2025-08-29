@@ -1,6 +1,9 @@
 import {
+  Cascade,
+  Collection,
   Entity,
   ManyToOne,
+  OneToMany,
   Property,
   Rel,
 } from '@mikro-orm/core';
@@ -8,6 +11,7 @@ import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Paciente } from '../paciente/pacienteEntity.js';
 import { CentroAtencion } from '../centroAtencion/centroatencionEntity.js';
 import { TipoAnalisis } from '../tipoAnalisis/tipoanalisisEntity.js';
+import { ResultadoAnalisis } from '../resultadoAnalisis/resultadoanalisisEntity.js';
 
 @Entity()
 export class Turno extends BaseEntity {
@@ -52,4 +56,10 @@ export class Turno extends BaseEntity {
     deleteRule: 'cascade',
   })
   tipoAnalisis!: Rel<TipoAnalisis>;
+
+  @OneToMany(() => ResultadoAnalisis, (resultadoAnalisis) => resultadoAnalisis.turno, {
+    cascade: [Cascade.ALL],
+  })
+  resultadoAnalisis = new Collection<ResultadoAnalisis>(this);
+
 }

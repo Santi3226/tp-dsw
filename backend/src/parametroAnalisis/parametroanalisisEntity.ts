@@ -23,18 +23,12 @@ export class ParametroAnalisis extends BaseEntity {
   @Property({ nullable: false })
   public unidad!: string;
 
-  @ManyToOne(() => TipoAnalisis, {
-    nullable: false,
-    updateRule: 'cascade',
-    deleteRule: 'cascade',
-  })
-  tipoAnalisis!: Rel<TipoAnalisis>;
-
-  @ManyToOne(() => ResultadoAnalisis, {
-    nullable: false,
-    updateRule: 'cascade',
-    deleteRule: 'cascade',
-  })
-  resultadoAnalisis!: Rel<ResultadoAnalisis>;
- 
+  @OneToMany(
+    () => ResultadoAnalisis,
+    (resultadoAnalisis) => resultadoAnalisis.parametroAnalisis,
+    {
+      cascade: [Cascade.ALL],
+    }
+  )
+  resultadoAnalisis = new Collection<ResultadoAnalisis>(this);
 }
