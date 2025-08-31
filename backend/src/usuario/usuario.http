@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 7
+@id = 16
 
 ### GET ONE 
 GET http://localhost:3000/api/usuario/{{id}}
@@ -39,17 +39,7 @@ PUT http://localhost:3000/api/usuario/{{id}}
 Content-Type: application/json
 
 {
-  "email": "titi@mail.com",
-  "contraseña": "123",
-  "role": "user",
-  "paciente": {
-    "nombre": "Titi",
-    "apellido": "Forti",
-    "dni": "45678900",
-    "fechaNacimiento": "2004-05-25T00:00:00.000Z",
-    "telefono": "3467896443",
-    "direccion": "Rivadavia 1000"
-}
+  "contraseña": "123"
 }
 
 ### DELETE

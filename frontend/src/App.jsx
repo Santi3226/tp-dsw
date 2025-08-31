@@ -17,6 +17,7 @@ import TurnoAdmin from "./pages/TurnoAdmin";
 import CentroAdmin from "./pages/CentroAdmin";
 import PacienteAdmin from "./pages/PacienteAdmin";
 import PoliticaAdmin from "./pages/PoliticaAdmin";
+import ResultadosAdmin from "./pages/ResultadosAdmin";
 
 // Other components
 import Login from "./pages/Login";
@@ -69,6 +70,7 @@ function App() {
                 <Route path="centro" element={<CentroAdmin />} />
                 <Route path="politica" element={<PoliticaAdmin />} />
                 <Route path="tipoAnalisis" element={<TiposAdmin />} />
+                <Route path="resultado" element={<ResultadosAdmin />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />

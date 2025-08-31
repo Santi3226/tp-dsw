@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Turno } from './turnoEntity.js';
 import { orm } from '../shared/db/orm.js';
 import fs from 'fs';
+import { FilterQuery } from '@mikro-orm/core';
 
 const em = orm.em; //EntityManager
 
@@ -62,6 +63,32 @@ async function findOne(req: Request, res: Response) {
     res.status(500).json({ message: error.message || 'Error fetching turno' });
   }
 }
+
+async function findSome(req: Request, res: Response) {
+  try {
+    const filtros: FilterQuery<Turno> = {};
+
+    if (req.query.estado) {
+      filtros.estado = {$like: `%${req.query.estado as string}%`};
+    }
+    if (req.query.fechaInicio && req.query.fechaFin) {
+      const fechaInicio = new Date(req.query.fechaInicio as string);
+      const fechaFin = new Date(req.query.fechaFin as string);
+      filtros.fechaHoraReserva = { $gte: fechaInicio, $lte: fechaFin };
+    }
+    const turnos = await em.find(Turno, filtros, { populate: ['paciente', 'centroAtencion', 'tipoAnalisis'] });
+    res.status(200).json({
+      message: 'Turnos encontrados',
+      data: turnos,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message || 'Error fetching turnos',
+      error: error.toString()
+    });
+  }
+}
+
 
 async function add(req: Request, res: Response) {
   try {
@@ -128,4 +155,4 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 
-export { sanitizeTurnoInput, findAll, findOne, deleteOne, add, update };
+export { sanitizeTurnoInput, findAll, findOne, deleteOne, add, update, findSome };

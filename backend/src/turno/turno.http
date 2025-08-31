@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 11
+@id = 13
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}
@@ -28,8 +28,7 @@ PUT http://localhost:3000/api/turno/{{id}}
 Content-Type: application/json
 
 {
-  "recibeMail": true,
-  "notificacionEnviada": false
+  "paciente": 1
 }
 
 ### DELETE

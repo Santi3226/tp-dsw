@@ -143,11 +143,14 @@ async function update(req: Request, res: Response) {
   try {
     const id = Number.parseInt(req.params.id);
     const usuario = em.getReference(Usuario, id);
-    em.assign(usuario, req.body.sanitizedInput);
-    await em.flush();
-    res
-      .status(200)
-      .json({ message: 'Usuario actualizado exitosamente', data: usuario });
+    if(usuario)
+    {
+      em.assign(usuario, req.body.sanitizedInput);
+      await em.flush();
+      res
+        .status(200)
+        .json({ message: 'Usuario actualizado exitosamente', data: usuario });
+    }
   } catch (error: any) {
     res
       .status(500)

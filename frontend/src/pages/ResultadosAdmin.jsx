@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
+import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, useTurnosPendientes} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
 import { useForm } from "react-hook-form";
 import { Tab } from "bootstrap";
 import Tabs from "react-bootstrap/esm/Tabs";
 
-function TurnoAdmin() {
+function ResultadosAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, turnos = [] } = useTurnos();
+const { isLoading, isError, error, turnos = [] } = useTurnosPendientes();
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
@@ -47,6 +47,7 @@ catch (error) {
 
 const onSubmitFilter = async (data) => {
   try {
+    data.estado="Pendiente";
     const response = await getTurnosQuery(data); //Filtrado condicional
     setTurnosFiltrados(response || []); 
   } catch (error) {
@@ -55,10 +56,10 @@ const onSubmitFilter = async (data) => {
 };
 
 useEffect(() => {
-    if (Array.isArray(turnos)) {
-      setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-    }
-  }, [turnos]);
+  if (Array.isArray(turnos)) {
+    setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
+  }
+}, [turnos]);
 
   if (isLoading) {
     return (
@@ -101,7 +102,7 @@ useEffect(() => {
 
   return (
     <div style={pageStyles.container}>
-      <h1 style={pageStyles.header}>Nuestros Turnos</h1>
+      <h1 style={pageStyles.header}>Turnos Pendientes de Resultados</h1>
       <div style={pageStyles.grid}>
       <table className="table">
               <thead>
@@ -502,4 +503,4 @@ const pageStyles = {
   },
 };
 
-export default TurnoAdmin;
+export default ResultadosAdmin;

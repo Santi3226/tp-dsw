@@ -50,6 +50,7 @@ const modifyTurnos = async (data) => {
 const getTurnosQuery = async (data) => {
   try {
     const params = {
+      estado: data.estado === '' ? undefined : data.estado,
       fechaInicio: data.fechaInicio === '' ? undefined : data.fechaInicio,
       fechaFin: data.fechaFin === '' ? undefined : data.fechaFin,
     };
