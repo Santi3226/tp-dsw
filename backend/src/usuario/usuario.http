@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 16
+@id = 15
 
 ### GET ONE 
 GET http://localhost:3000/api/usuario/{{id}}
@@ -39,6 +39,7 @@ PUT http://localhost:3000/api/usuario/{{id}}
 Content-Type: application/json
 
 {
+  "role": "user",
   "contraseña": "123"
 }
 

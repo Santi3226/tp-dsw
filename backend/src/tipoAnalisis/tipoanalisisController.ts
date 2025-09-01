@@ -30,7 +30,7 @@ async function findAll(req: Request, res: Response) {
       TipoAnalisis,
       {},
       {
-        populate: ['turnos', 'plantillaAnalisis'],
+        populate: ['plantillaAnalisis'],
       }
     );
     res.status(200).json({
@@ -50,7 +50,7 @@ async function findOne(req: Request, res: Response) {
       TipoAnalisis,
       { id },
       {
-        populate: ['turnos', 'plantillaAnalisis'],
+        populate: ['plantillaAnalisis'],
       }
     );
     res.status(200).json({

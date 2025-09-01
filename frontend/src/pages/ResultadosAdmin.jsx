@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, useTurnosPendientes} from "../hooks/useTurnos";
+import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
 import { useForm } from "react-hook-form";
 import { Tab } from "bootstrap";
@@ -7,7 +7,8 @@ import Tabs from "react-bootstrap/esm/Tabs";
 
 function ResultadosAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, turnos = [] } = useTurnosPendientes();
+const { isLoading, isError, error, turnos = [] } = useTurnos();
+
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
@@ -56,10 +57,25 @@ const onSubmitFilter = async (data) => {
 };
 
 useEffect(() => {
+  // Filtrar turnos pendientes al cargar el componente
+  const fetchPendientes = async () => {
+    try {
+      const data = { estado: "Pendiente", fechaInicio: "", fechaFin: ""};
+       console.log("Filtrando con datos:", data);
+      const response = await getTurnosQuery(data);
+      setTurnosFiltrados(response || []);
+    } catch (error) {
+      console.error("Error al filtrar turnos pendientes:", error);
+    }
+  };
+  fetchPendientes();
+}, []);
+
+/*useEffect(() => {
   if (Array.isArray(turnos)) {
     setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
   }
-}, [turnos]);
+}, [turnos]);*/
 
   if (isLoading) {
     return (

@@ -76,7 +76,7 @@ async function findSome(req: Request, res: Response) {
       const fechaFin = new Date(req.query.fechaFin as string);
       filtros.fechaHoraReserva = { $gte: fechaInicio, $lte: fechaFin };
     }
-    const turnos = await em.find(Turno, filtros, { populate: ['paciente', 'centroAtencion', 'tipoAnalisis'] });
+    const turnos = await em.find(Turno, filtros, { populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'resultados', 'resultados.parametroAnalisis'] });
     res.status(200).json({
       message: 'Turnos encontrados',
       data: turnos,

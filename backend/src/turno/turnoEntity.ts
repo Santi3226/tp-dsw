@@ -57,9 +57,7 @@ export class Turno extends BaseEntity {
   })
   tipoAnalisis!: Rel<TipoAnalisis>;
 
-  @OneToMany(() => ResultadoAnalisis, (resultadoAnalisis) => resultadoAnalisis.turno, {
-    cascade: [Cascade.ALL],
-  })
-  resultadoAnalisis = new Collection<ResultadoAnalisis>(this);
+  @OneToMany(() => ResultadoAnalisis, (resultado) => resultado.turno, { cascade: [Cascade.ALL] })
+  resultados = new Collection<ResultadoAnalisis>(this);
 
 }

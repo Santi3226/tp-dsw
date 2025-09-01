@@ -11,31 +11,14 @@ import { Turno } from '../turno/turnoEntity.js';
 
 @Entity()
 export class ResultadoAnalisis {
-    @ManyToOne(() => ParametroAnalisis, {
-    nullable: false,
-    primary: true,
-    updateRule: 'cascade',
-    deleteRule: 'cascade',
-  })
-  parametroAnalisis!: Rel<ParametroAnalisis>;
-
-  @ManyToOne(() => Turno, {
-    nullable: false,
-    primary: true,
-    updateRule: 'cascade',
-    deleteRule: 'cascade',
-  })
+  @ManyToOne(() => Turno, { primary: true, updateRule: 'cascade', deleteRule: 'cascade' })
   turno!: Rel<Turno>;
 
+  @ManyToOne(() => ParametroAnalisis, { primary: true, updateRule: 'cascade', deleteRule: 'cascade' })
+  parametroAnalisis!: Rel<ParametroAnalisis>;
+
   @Property({ nullable: false })
-  public valor!: number;
-
-  @ManyToOne(() => TipoAnalisis, {
-    nullable: false,
-    updateRule: 'cascade',
-    deleteRule: 'cascade',
-  })
-  tipoAnalisis!: Rel<TipoAnalisis>;
-
+  valor!: string; // Cambiado a string para poder almacenar valores numéricos o de texto (positivo/negativo)
+  
   [PrimaryKeyProp]?: ['parametroAnalisis', 'turno'];
 }
