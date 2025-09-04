@@ -13,7 +13,8 @@ function sanitizeTipoAnalisisInput(
     nombre: req.body.nombre,
     importe: req.body.importe,
     plantillaAnalisis: req.body.plantillaAnalisis,
-    resultadoAnalisis: req.body.resultadoAnalisis
+    resultadoAnalisis: req.body.resultadoAnalisis,
+    tipoAnalisisParametro: req.body.tipoAnalisisParametro
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)

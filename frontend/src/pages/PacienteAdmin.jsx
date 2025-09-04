@@ -83,7 +83,7 @@ useEffect(() => {
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>No se encontraron pacientes.</p>
         <a href="">
-        <button id="login" type="button" className="login-btn" onclick="window.location.reload();"> 
+        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
             Volver
         </button>
         </a>

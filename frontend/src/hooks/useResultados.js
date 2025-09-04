@@ -10,11 +10,15 @@ const getDatos = async () => {
   }
 };
 
-const addTurnos = async (data) => {
-  const turnoData = {};
+const addResultados = async (data) => {
+  for(const i in data.resultados){
+  let resultadoData = {
+    turno: data.id,
+    parametro: i === '' ? undefined : i,
+    valor: data.resultados[i] === '' ? undefined : data.resultados[i],
+  };
   try {
-    const response = await axiosInstance.post('/turno', turnoData);
-    alert('Turno creado Correctamente!');
+    const response = axiosInstance.post('/resultadoAnalisis', resultadoData);
   } catch (error) {
     console.error('Error en Hook:', error);
     if (error.response && error.response.data && error.response.data.message) {
@@ -27,25 +31,7 @@ const addTurnos = async (data) => {
     throw error;
   }
 };
-
-const modifyTurnos = async (data) => {
-  const turnoData = {
-    id: data.id,
-    nombre: data.nombre === '' ? undefined : data.nombre,
-    apellido: data.apellido === '' ? undefined : data.apellido,
-    dni: data.dni === '' ? undefined : data.dni,
-    telefono: data.telefono === '' ? undefined : data.telefono,
-    direccion: data.direccion === '' ? undefined : data.direccion,
-    estado: data.estado === '' ? undefined : data.estado,
-    fechaNacimiento:
-      data.fechaNacimiento === '' ? undefined : data.fechaNacimiento,
-  };
-  try {
-    await axiosInstance.put('/turno/' + turnoData.id, turnoData);
-    alert('Turno n°:' + turnoData.id + ' modificado correctamente');
-  } catch (error) {
-    console.error('Error al modificar los datos:', error);
-  }
+if(!error) alert('Resultados cargados Correctamente!');
 };
 
 const getTurnosQuery = async (data) => {
@@ -67,21 +53,11 @@ const getTurnosQuery = async (data) => {
   }
 };
 
-const deleteTurnos = async (id) => {
-  try {
-    const turno = await axiosInstance.delete('/turno/' + id);
-    alert('Turno n°:' + id + ' eliminado correctamente');
-  } catch (error) {
-    console.error('Error al eliminar los datos:', error);
-  }
-};
-
 function useTurnos() {
   const { data, isError, error, isLoading } = useQuery({
     queryKey: ['turno'],
     queryFn: getDatos,
   });
-  console.log(data);
   return {
     turnos: data,
     isError,
@@ -90,4 +66,4 @@ function useTurnos() {
   };
 }
 
-export { useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery };
+export { useTurnos, addResultados, getTurnosQuery };

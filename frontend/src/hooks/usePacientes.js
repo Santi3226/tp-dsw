@@ -73,6 +73,8 @@ const addPaciente = async (data) => {
 };
 
 const modifyPaciente = async (data) => {
+  const [year, month, day] = data.fechaNacimiento.split('-').map(Number);
+  const fechaNacimientoUTC = new Date(year, month - 1, day);
   const pacienteData = {
     id: data.id,
     nombre: data.nombre === '' ? undefined : data.nombre,
@@ -80,8 +82,7 @@ const modifyPaciente = async (data) => {
     dni: data.dni === '' ? undefined : data.dni,
     telefono: data.telefono === '' ? undefined : data.telefono,
     direccion: data.direccion === '' ? undefined : data.direccion,
-    fechaNacimiento:
-      data.fechaNacimiento === '' ? undefined : data.fechaNacimiento,
+    fechaNacimiento: data.fechaNacimiento === '' ? undefined : fechaNacimientoUTC,
   };
   try {
     await axiosInstance.put('/paciente/' + pacienteData.id, pacienteData);

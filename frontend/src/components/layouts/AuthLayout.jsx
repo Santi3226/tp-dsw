@@ -12,13 +12,11 @@ const AuthLayout = () => {
 
   return (
     <div className="auth-layout">
-      <aside className="auth-sidebar">
+      <header className="auth-sidebar">
         <div className="sidebar-header">
+        <nav className="sidebar-nav">
           <h2>Laboratorio Genérico</h2>
           <p>Bienvenido, {user?.paciente?.nombre || "Usuario"}!</p>
-        </div>
-
-        <nav className="sidebar-nav">
           <Link to="/dashboard" className="sidebar-link">
             <span className="icon">📊</span>
             Panel de Control
@@ -55,25 +53,24 @@ const AuthLayout = () => {
             <span className="icon">🏠</span>
             Volver al Inicio
           </Link>
-        </nav>
-
-        <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-btn">
-            <span className="icon">🚫</span>
+             <button onClick={handleLogout} className="logout-btn">
+            <span className="icon">🚫 </span>
             Cerrar sesión
           </button>
-        </div>
-      </aside>
+        </nav>
+     
+      </div>
+      </header>
 
       <main className="auth-content">
-        <header className="auth-header">
-          <h1>Area Protegida</h1>
-        </header>
 
         <div className="auth-main">
           <Outlet />
         </div>
       </main>
+        <footer className="main-footer">
+        <p> Laboratorio Generico © Todos los derechos reservados. | Sitio desarrollado por Santiago Dedich.</p>
+      </footer>
     </div>
   );
 };
