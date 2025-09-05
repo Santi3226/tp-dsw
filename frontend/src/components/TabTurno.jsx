@@ -7,6 +7,7 @@ import '../pages/Register.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
 import { useEffect, useState } from 'react';
+import { getTurnosQuery, modifyTurnos } from '../hooks/useTurnos.js';
 
 function TabBar(props) {
   const {user} = useAuth();
@@ -25,7 +26,39 @@ function TabBar(props) {
   const [centros, setCentros] = useState([]);
   const [tiposAnalisis, setTiposAnalisis] = useState([]);
   const [turnos, setTurnos] = useState([]); 
-  
+  const [turnosFiltrados, setTurnosFiltrados] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
+
+  const handleEliminarClick = (id) => {
+    setTurnoAEliminarId(id);
+    setShowModal(true);
+  };
+  const handleCerrarModal = () => {
+    setShowModal(false);
+    setTurnoAEliminarId(null);
+  };
+  const handleConfirmarEliminacion = async () => {
+    const data = {
+      id: turnoAEliminarId,
+      estado: "Anulado",
+    };
+    await modifyTurnos(data);
+    location.reload();
+    handleCerrarModal();
+  };
+
+  /*const turnosResultados = async () => {
+    try {
+      const data = { estado: "Confirmado" };
+      const response = await getTurnosQuery(data); //Filtrado condicional
+      setTurnosFiltrados(response || []);
+      return turnosFiltrados || [];
+    } catch (error) {
+      console.error("Fallo al filtrar:", error);
+    }
+  }; */
+
   useEffect(() => {
     const getDatos = async () => {
       try {
@@ -94,9 +127,10 @@ function TabBar(props) {
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Recibe Mail</th>
+                  <th>Cancelar Turno</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style={{ verticalAlign: 'middle' }}>
                 {turnos.map((turno) => {
                 const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
                 const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
@@ -110,6 +144,21 @@ function TabBar(props) {
                   <td>{turno.estado}</td>
                   <td>{turno.observacion==""? "-":turno.observacion}</td>
                   <td>{turno.recibeMail? "Si":"No"}</td>
+                  <td>
+                    <button 
+                    onClick={() => handleEliminarClick(turno.id)} 
+                    style={{ 
+                      background: 'none', 
+                      border: 'none', 
+                      color: 'red', 
+                      cursor: 'pointer',
+                      fontSize: '20px',
+                      fontStyle: 'underline'
+                    }}
+                  >
+                    ❌ 	
+                  </button>
+                  </td>
                 </tr>
               );
               })}
@@ -118,8 +167,40 @@ function TabBar(props) {
           </div>
         ) : (
           <p style={{marginTop:"30px"}}>No tienes turnos registrados.</p>
-        )}
-      </Tab>
+        )}{showModal && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+            }}>
+              <div style={{
+                backgroundColor: 'white',
+                padding: '20px',
+                borderRadius: '5px',
+                textAlign: 'center',
+                minWidth: '300px'
+              }}>
+                <h4>Confirmar Eliminación</h4>
+                <p>¿Estás seguro de que quieres eliminar este turno?</p>
+                <div style={{ marginTop: '20px' }}>
+                  <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginRight: '10px' }}>
+                    Confirmar
+                  </button>
+                  <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red'}}>
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </Tab>
       <Tab eventKey="registrarturno" title="Registrar Turno">
           <h2 className='titulo'>Registrar Turno</h2>
           <form
@@ -248,7 +329,43 @@ function TabBar(props) {
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
-        <p>No implementado aun</p>
+          {turnos.length > 0 ? (
+          <div style={{ marginTop: '20px' }}>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Numero de Turno</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora</th>
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Recibe Mail</th>
+                </tr>
+              </thead>
+              <tbody>
+                {turnos.map((turno) => {
+                const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
+                const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                
+                return (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{tipoAnalisisEncontrado.nombre}</td>
+                  <td>{centroAtencionEncontrado.nombre}</td>
+                  <td>{new Date(turno.fechaHoraExtraccion).toLocaleString()}</td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion==""? "-":turno.observacion}</td>
+                  <td>{turno.recibeMail? "Si":"No"}</td>
+                </tr>
+              );
+              })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p style={{marginTop:"30px"}}>No tienes turnos registrados.</p>
+        )}
       </Tab>
     </Tabs>
   );
