@@ -167,7 +167,7 @@ const Register = () => {
             )}
           </div>
           
-          <button id="login" type="submit" className="login-btn" disabled={isSubmitting}>
+          <button id="login" type="submit" className="login-btn" disabled={isSubmitting} style={{ gridRow: 5 }}>
             {isSubmitting ? "Un momento..." : "Registrar"}
           </button>
           {errorLogin && <div className="error-message">{errorLogin}</div>}

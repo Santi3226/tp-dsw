@@ -65,3 +65,8 @@
 .divFoto {
   box-sizing: border-box;
 }
+
+.error-message {
+  height: 20px;
+  margin-top: 5px;
+}

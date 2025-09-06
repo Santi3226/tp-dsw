@@ -52,12 +52,14 @@
   color: white;
   text-decoration: none;
   transition: all 0.3s ease;
-  border-left: 3px solid transparent;
+  cursor: grab;
+  border-bottom: 3px solid transparent;
 }
 
 .sidebar-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  border-left-color: #3498db;
+  border-bottom-color: #3498db;
+  cursor: grab;
 }
 
 .sidebar-link.active {
@@ -85,7 +87,7 @@
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
-  align-self: center;  
+  align-self: center;
   justify-content: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
@@ -130,37 +132,37 @@
   .auth-layout {
     flex-direction: column;
   }
-  
+
   .auth-sidebar {
     width: 100%;
     order: 1;
     height: auto;
   }
-  
+
   .auth-content {
     order: 2;
   }
-  
+
   .auth-main {
     padding: 1rem;
   }
-  
+
   .sidebar-nav {
     display: flex;
     overflow-x: auto;
     padding: 0.5rem;
   }
-  
+
   .sidebar-link {
     flex-shrink: 0;
     padding: 0.75rem 1rem;
     border-left: none;
     border-bottom: 3px solid transparent;
   }
-  
+
   .sidebar-link:hover,
   .sidebar-link.active {
     border-left-color: transparent;
     border-bottom-color: #3498db;
   }
-} 
+}

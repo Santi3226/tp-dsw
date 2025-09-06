@@ -12,6 +12,7 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
 //3 forms distintos pq se solapan los errores y los botones
 const [plantillaAnalisis, setPlantillaAnalisis] = useState([]);
+
 useEffect(() => {
     const getDatos = async () => {
       try {

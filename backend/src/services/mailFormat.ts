@@ -1,4 +1,4 @@
-const mailFormat = (message: string) => `
+const mailFormat = (message: string, subject: string) => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -44,8 +44,8 @@ const mailFormat = (message: string) => `
 
           <tr>
             <td style="padding: 40px 30px 20px 30px; color: #333333; font-size: 16px; line-height: 1.6;">
-              <h1 style="margin: 0 0 20px 0; font-size: 22px; font-weight: bold; color: #007bff;">Turno Próximo</h1>
-              
+              <h1 style="margin: 0 0 20px 0; font-size: 22px; font-weight: bold; color: #007bff;">${subject}</h1>
+
               <!-- Parrafo -->
               <p style="margin: 0 0 20px 0;">Estimado/a cliente,</p>
               

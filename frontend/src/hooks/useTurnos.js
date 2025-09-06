@@ -50,14 +50,18 @@ const modifyTurnos = async (data) => {
 
 const getTurnosQuery = async (data) => {
   try {
-    let [year, month, day] = data.fechaInicio.split('-').map(Number);
-    const fechaInicioUTC = new Date(year, month - 1, day);
-    [year, month, day] = data.fechaFin.split('-').map(Number);
-    const fechaFinUTC = new Date(year, month - 1, day);
+    if (data.fechaInicio && data.fechaFin) {
+      let [year, month, day] = data.fechaInicio.split('-').map(Number);
+      const fechaInicioUTC = new Date(year, month - 1, day);
+      [year, month, day] = data.fechaFin.split('-').map(Number);
+      const fechaFinUTC = new Date(year, month - 1, day);
+    }
     const params = {
+      fechaHoraReserva:
+        data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
       estado: data.estado === '' ? undefined : data.estado,
-      fechaInicio: data.fechaInicio === '' ? undefined : fechaInicioUTC,
-      fechaFin: data.fechaFin === '' ? undefined : fechaFinUTC,
+      fechaInicio: data.fechaInicio === undefined ? undefined : fechaInicioUTC,
+      fechaFin: data.fechaFin === undefined ? undefined : fechaFinUTC,
     };
     const response = await axiosInstance.get('/turno/filter', { params });
     return response.data.data;

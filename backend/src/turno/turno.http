@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 14
+@id = 24
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}

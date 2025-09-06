@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import e, { NextFunction, Request, Response } from 'express';
 import { Turno } from './turnoEntity.js';
 import { orm } from '../shared/db/orm.js';
 import fs from 'fs';
 import { FilterQuery } from '@mikro-orm/core';
+import { sendNotification } from '../services/notificationService.js';
 
 const em = orm.em; //EntityManager
 
@@ -17,6 +18,7 @@ function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
     paciente: req.body.paciente,
     centroAtencion: req.body.centroAtencion,
     tipoAnalisis: req.body.tipoAnalisis,
+    email: req.body.email
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -68,6 +70,9 @@ async function findSome(req: Request, res: Response) {
   try {
     const filtros: FilterQuery<Turno> = {};
 
+    if (req.query.fechaHoraReserva) {
+      filtros.fechaHoraReserva = {$like: `%${req.query.fechaHoraReserva as string}%`};
+    }
     if (req.query.estado) {
       filtros.estado = {$like: `%${req.query.estado as string}%`};
     }
@@ -92,7 +97,7 @@ async function findSome(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
-    const { recibeMail, estado, notificacionEnviada, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis } = req.body; 
+    const { recibeMail, estado, notificacionEnviada, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis, email } = req.body; 
     //Pq el formdata me desacomoda los datos del sanitizer
     let filePath = "Sin Receta";
     if (req.file) {
@@ -112,9 +117,12 @@ async function add(req: Request, res: Response) {
       centroAtencion: centroAtencion,
       tipoAnalisis: tipoAnalisis,
       resultado: undefined,
+      email: email
     };
+    console.log(turnoData);
     const turno = em.create(Turno, turnoData);
     await em.flush();
+    await sendNotification(turnoData.email || "Usuario", `¡Tu turno ha sido creado exitosamente! Recuerda revisar la preparación para tu visita y presentarte ${turno.fechaHoraReserva} para evitar demoras!`, 'Turno Creado');
     res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {
     res

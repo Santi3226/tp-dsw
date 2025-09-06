@@ -25,15 +25,15 @@ var transport = nodemailer.createTransport({
 });
 
 
-const sendNotification = async (mail: string, message: string) => {
+const sendNotification = async (mail: string, message: string, subject: string) => {
     console.log(`Enviando notificacion a ${mail}: ${message}`);
     // Logica del mail
     (async () => {
     const info = await transport.sendMail({
     from: '"Laboratorio Genérico" <laboratorio@ethereal.email>',
     to: mail,
-    subject: "Turno Proximo",
-    html: mailFormat(message),
+    subject: subject,
+    html: mailFormat(message, subject),
   });
 
   console.log("Message sent:", info.messageId);

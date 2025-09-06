@@ -1,32 +1,41 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import axiosInstance from '../helpers/api'
-import { useForm } from "react-hook-form";
+import axiosInstance from '../helpers/api';
+import { useForm, useWatch } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth.js";
-import '../pages/Register.css'
+import '../pages/Register.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
 import { useEffect, useState } from 'react';
 import { getTurnosQuery, modifyTurnos } from '../hooks/useTurnos.js';
+import { usePolitica } from '../hooks/usePolitica.js';
 
 function TabBar(props) {
-  const {user} = useAuth();
-  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm({mode: "onBlur",});
+  const { user } = useAuth();
+  const { register, handleSubmit, formState: { errors, isSubmitting }, control } = useForm({ mode: "onBlur" });
   const [errorLogin, setErrorLogin] = useState(null);
   
+  // Utiliza useWatch para observar los cambios en el campo de fecha
+  const fechaHoraReserva = useWatch({
+    control,
+    name: "fechaHoraReserva"
+  });
+
   const onSubmit = async (data) => {
-  try {
-    await registturno(data);
-  } 
-  catch (error) {
-    console.error("Fallo al registrar:", error);
-  }
+    try {
+      // Combina la fecha y la hora para el envío
+      data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
+      await registturno(data);
+    } catch (error) {
+      console.error("Fallo al registrar:", error);
+    }
   };
 
   const [centros, setCentros] = useState([]);
+  const { isLoading, isError, error, politicas = [] } = usePolitica();
   const [tiposAnalisis, setTiposAnalisis] = useState([]);
-  const [turnos, setTurnos] = useState([]); 
-  const [turnosFiltrados, setTurnosFiltrados] = useState([]);
+  const [turnos, setTurnos] = useState([]);
+  const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
 
@@ -34,10 +43,12 @@ function TabBar(props) {
     setTurnoAEliminarId(id);
     setShowModal(true);
   };
+
   const handleCerrarModal = () => {
     setShowModal(false);
     setTurnoAEliminarId(null);
   };
+
   const handleConfirmarEliminacion = async () => {
     const data = {
       id: turnoAEliminarId,
@@ -48,64 +59,104 @@ function TabBar(props) {
     handleCerrarModal();
   };
 
-  /*const turnosResultados = async () => {
-    try {
-      const data = { estado: "Confirmado" };
-      const response = await getTurnosQuery(data); //Filtrado condicional
-      setTurnosFiltrados(response || []);
-      return turnosFiltrados || [];
-    } catch (error) {
-      console.error("Fallo al filtrar:", error);
+  // Función para generar todos los horarios posibles
+  const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
+    const horarios = [];
+    let horaActual = horaInicio;
+    let minutoActual = 0;
+    while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
+      horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
+      minutoActual += intervalo;
+      if (minutoActual >= 60) {
+        minutoActual = 0;
+        horaActual += 1;
+      }
     }
-  }; */
+    return horarios;
+  };
 
+  // Generamos una lista estática de todos los horarios posibles
+  const allTimeSlots = generateTimeSlots(7, 19, 15); // Horarios de atención de 7:00 a 19:00
+
+  // Efecto para cargar los horarios disponibles cuando se selecciona una fecha
+  useEffect(() => {
+    if (fechaHoraReserva) {
+      const turnosFecha = async () => {
+        try {
+          const data = { fechaHoraReserva: fechaHoraReserva };
+          const response = await getTurnosQuery(data);
+          console.log(turnos);
+          console.log(response);
+          // Extrae los horarios ocupados de los turnos recibidos
+          const occupiedTimes = response
+            .filter(turno => turno.estado !== "Anulado")
+            .map(turno => {
+              const date = new Date(turno.fechaHoraReserva);
+              const hour = String(date.getHours()).padStart(2, '0');
+              const minute = String(date.getMinutes()).padStart(2, '0');
+              return `${hour}:${minute}`;
+            });
+
+          // Filtra todos los horarios para quitar los que ya están ocupados
+          const availableSlots = allTimeSlots.filter(
+            slot => !occupiedTimes.includes(slot)
+          );
+          setHorariosDisponibles(availableSlots);
+        } catch (error) {
+          console.error("Error al obtener los turnos:", error);
+        }
+      };
+      turnosFecha();
+    }
+  }, [fechaHoraReserva]);
+
+  // Efecto para obtener todos los datos iniciales
   useEffect(() => {
     const getDatos = async () => {
       try {
         const centros = await axiosInstance.get('/centroAtencion');
-        setCentros(centros.data.data); 
-        const tipos = await axiosInstance.get('/tipoAnalisis'); 
+        setCentros(centros.data.data);
+        const tipos = await axiosInstance.get('/tipoAnalisis');
         setTiposAnalisis(tipos.data.data);
-        const turnos = await axiosInstance.get('/paciente/'+user.paciente.id); 
-        setTurnos(turnos.data.data.turnos); //Me hizo renegar esta peticion, esta pegada con cinta
+        const turnos = await axiosInstance.get('/paciente/' + user.paciente.id);
+        setTurnos(turnos.data.data.turnos);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }
     };
     getDatos();
-  }, []); //Recolector de datos
+  }, []); // El array vacío asegura que se ejecute solo una vez al montar el componente
 
   const registturno = async (data) => {
-    console.log(data.receta);
     setErrorLogin(null);
     const formData = new FormData();
     formData.append('receta', data.receta[0]);
     formData.append('recibeMail', data.recibeMail);
     formData.append('estado', 'Pendiente');
     formData.append('observacion', '');
-    formData.append('fechaHoraExtraccion', data.fechaHoraExtraccion);
+    formData.append('fechaHoraReserva', data.fechaHoraReserva);
     formData.append('paciente', user.paciente.id);
+    formData.append('email', user.email);
     formData.append('centroAtencion', data.centroAtencion);
     formData.append('tipoAnalisis', data.tipoAnalisis);
+    
     try {
       const route = "/turno";
-      const response = await axiosInstance.post(
-        route,
-        formData
-      );
+      const response = await axiosInstance.post(route, formData);
       alert("Turno creado Correctamente!");
+      location.reload(); // Recarga la página después de un registro exitoso
     } catch (error) {
-        console.error("Error en AuthProvider:", error);
-        if (error.response && error.response.data && error.response.data.message) {
-            setErrorLogin(error.response.data.message);
-        } else {
-            setErrorLogin("Error de red o del servidor. Por favor, inténtalo de nuevo.");
-        }
-         throw error;
+      console.error("Error en AuthProvider:", error);
+      if (error.response && error.response.data && error.response.data.message) {
+        setErrorLogin(error.response.data.message);
+      } else {
+        setErrorLogin("Error de red o del servidor. Por favor, inténtalo de nuevo.");
+      }
+      throw error;
     }
   };
 
-  const {inicio} = props; 
+  const { inicio } = props;
   return (
     <Tabs
       defaultActiveKey={inicio}
@@ -113,16 +164,16 @@ function TabBar(props) {
       className="mb-3"
       justify
     >
-      <Tab eventKey="gestiondeturnos" title="Gestion de Turnos">
-          <h2 className='titulo'>Mis turnos</h2>
-          {turnos.length > 0 ? (
+      <Tab eventKey="gestiondeturnos" title="Gestión de Turnos">
+        <h2 className='titulo'>Mis turnos</h2>
+        {turnos.length > 0 ? (
           <div style={{ marginTop: '20px' }}>
             <table className="table">
               <thead>
                 <tr>
-                  <th>Numero de Turno</th>
-                  <th>Tipo de Analisis</th>
-                  <th>Centro de Atencion</th>
+                  <th>Número de Turno</th>
+                  <th>Tipo de Análisis</th>
+                  <th>Centro de Atención</th>
                   <th>Fecha y Hora</th>
                   <th>Estado</th>
                   <th>Observación</th>
@@ -132,118 +183,117 @@ function TabBar(props) {
               </thead>
               <tbody style={{ verticalAlign: 'middle' }}>
                 {turnos.map((turno) => {
-                const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
-                const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
-                
-                return (
-                <tr key={turno.id}>
-                  <td>{turno.id}</td>
-                  <td>{tipoAnalisisEncontrado.nombre}</td>
-                  <td>{centroAtencionEncontrado.nombre}</td>
-                  <td>{new Date(turno.fechaHoraExtraccion).toLocaleString()}</td>
-                  <td>{turno.estado}</td>
-                  <td>{turno.observacion==""? "-":turno.observacion}</td>
-                  <td>{turno.recibeMail? "Si":"No"}</td>
-                  <td>
-                    <button 
-                    onClick={() => handleEliminarClick(turno.id)} 
-                    style={{ 
-                      background: 'none', 
-                      border: 'none', 
-                      color: 'red', 
-                      cursor: 'pointer',
-                      fontSize: '20px',
-                      fontStyle: 'underline'
-                    }}
-                  >
-                    ❌ 	
-                  </button>
-                  </td>
-                </tr>
-              );
-              })}
+                  const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
+                  const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                  if (turno.estado === "Anulado") {
+                    return null;
+                  }
+                  return (
+                    <tr key={turno.id}>
+                      <td>{turno.id}</td>
+                      <td>{tipoAnalisisEncontrado?.nombre}</td>
+                      <td>{centroAtencionEncontrado?.nombre}</td>
+                      <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                      <td>{turno.estado}</td>
+                      <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                      <td>{turno.recibeMail ? "Sí" : "No"}</td>
+                      <td>
+                        <button
+                          onClick={() => handleEliminarClick(turno.id)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'red',
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                            fontStyle: 'underline'
+                          }}
+                        >
+                          ❌
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         ) : (
-          <p style={{marginTop:"30px"}}>No tienes turnos registrados.</p>
-        )}{showModal && (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
+        )}
+        {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
             <div style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 1000,
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '300px'
             }}>
-              <div style={{
-                backgroundColor: 'white',
-                padding: '20px',
-                borderRadius: '5px',
-                textAlign: 'center',
-                minWidth: '300px'
-              }}>
-                <h4>Confirmar Eliminación</h4>
-                <p>¿Estás seguro de que quieres eliminar este turno?</p>
-                <div style={{ marginTop: '20px' }}>
-                  <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginRight: '10px' }}>
-                    Confirmar
-                  </button>
-                  <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red'}}>
-                    Cancelar
-                  </button>
-                </div>
+              <h4>Confirmar Cancelación</h4>
+              <p>¿Estás seguro de que quieres cancelar este turno?</p>
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginRight: '10px' }}>
+                  Confirmar
+                </button>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
+                  Cancelar
+                </button>
               </div>
             </div>
-          )}
-        </Tab>
+          </div>
+        )}
+      </Tab>
       <Tab eventKey="registrarturno" title="Registrar Turno">
-          <h2 className='titulo'>Registrar Turno</h2>
-          <form
+        <h2 className='titulo'>Registrar Turno</h2>
+        <form
           encType="multipart/form-data"
           className="login-formReg"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
         >
-
           <div className="form-group" id="uno">
-            <label htmlFor="text">Tipo de Analisis</label>
+            <label htmlFor="text">Tipo de Análisis</label>
             <select
               id="tipoAnalisis"
-              
               {...register("tipoAnalisis", {
-                required:"Tipo de Analisis requerido",
-                pattern: {
-                },
+                required: "Tipo de Análisis requerido",
               })}
               className="form-input"
             >
-            <option value="">-</option>
-            {tiposAnalisis.map((ta, index) => (
-            <option key={index} value={ta.id}>
-              {ta.nombre}
-            </option>
-            ))}
-
-            </select> 
+              <option value="">-</option>
+              {tiposAnalisis.map((ta, index) => (
+                <option key={index} value={ta.id}>
+                  {ta.nombre}
+                </option>
+              ))}
+            </select>
             {errors.tipoAnalisis && (
               <div className="error-message">{errors.tipoAnalisis.message}</div>
             )}
           </div>
 
-            <div id="dos" className="form-group">
+          <div id="dos" className="form-group">
             <label htmlFor="date">Fecha del Turno</label>
             <input
-              type="datetime-local"
-              id="fechaHoraExtraccion"
-              {...register("fechaHoraExtraccion", { //Necesito ingresar un date time
-                required:"Fecha requerida",
+              style={{ width: "40%" }}
+              type="date"
+              id="fechaHoraReserva"
+              {...register("fechaHoraReserva", {
+                required: "Fecha requerida",
                 validate: (value) => {
-                  const selectedDate = new Date(value); //Aca puedo validar la disponibilidad
+                  const selectedDate = new Date(value);
                   const currentDate = new Date();
                   currentDate.setHours(0, 0, 0, 0);
                   if (selectedDate < currentDate) {
@@ -254,74 +304,93 @@ function TabBar(props) {
               })}
               className="form-input"
             />
-          </div>
-            {errors.fechaHoraExtraccion && (
-              <div className="error-message">{errors.fechaHoraExtraccion.message}</div>
+            {errors.fechaHoraReserva && (
+              <div className="error-message">{errors.fechaHoraReserva.message}</div>
             )}
-          <div className="form-group">
-            <label htmlFor="text">Centro de Atencion</label>
+            </div>
+              <div id="tres" className="form-group">
+            {(fechaHoraReserva && errors.fechaHoraReserva == undefined) && (
+              <>
+                <label htmlFor="time">Hora del Turno</label>
+                <select 
+                  id="horaReserva"
+                  {...register("horaReserva", {
+                    required: "Hora requerida",
+                  })}
+                  className="form-input"
+                >
+                  <option value="">-</option>
+                  {horariosDisponibles.map((hora, index) => (
+                    <option key={index} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </select>
+                {errors.horaReserva && (
+                  <div className="error-message">{errors.horaReserva.message}</div>
+                )}
+              </>
+            )}
+          </div>
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "2"}} id="tres">
+            <label htmlFor="text">Centro de Atención</label>
             <select
               id="centroAtencion"
-              
               {...register("centroAtencion", {
-                required:"Centro requerido",
-                pattern: {
-                },
+                required: "Centro requerido",
               })}
               className="form-input"
             >
-            <option value="">-</option>
-            {centros.map((ca, index) => (
-            <option key={index} value={ca.id}>
-              {ca.nombre+" - "+ca.localidad.denominacion+", "+ca.domicilio}
-            </option>
-            ))}
-
+              <option value="">-</option>
+              {centros.map((ca, index) => (
+                <option key={index} value={ca.id}>
+                  {ca.nombre + " - " + ca.localidad?.denominacion + ", " + ca.domicilio}
+                </option>
+              ))}
             </select>
             {errors.centroAtencion && (
               <div className="error-message">{errors.centroAtencion.message}</div>
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="file">Receta</label> 
+          <div className="form-group" style={{gridColumn: "1", gridRow : "3"}}>
+            <label htmlFor="file">Receta</label>
             <input type="file"
-            accept="image/*" 
-            name="receta" 
-            {...register("receta",
-              {
-                required:"Receta requerida",
-                validate:{
-                isImage: (value) => {
-                // Si no se seleccionó ningún archivo, la validación pasa (será manejada por 'required')
-                if (!value[0]) {
-                  return true;
-                }
-                const fileType = value[0].type;
-                const acceptedImageTypes = ['image/jpeg','image/jpg','image/png','image/bmp'];
-                return acceptedImageTypes.includes(fileType) || "El archivo debe ser una imagen (JPG, PNG).";
-              },
-              isSize: (value) => {
-                if (value[0].size<10*1024*1024) {
-                  return true;
-                }
-                return "El archivo debe ser menor a 10mb.";
-              }
-
-            }
-          })}
+              accept="image/*"
+              name="receta"
+              {...register("receta",
+                {
+                  required: "Receta requerida",
+                  validate: {
+                    isImage: (value) => {
+                      if (!value[0]) {
+                        return true;
+                      }
+                      const fileType = value[0].type;
+                      const acceptedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/bmp'];
+                      return acceptedImageTypes.includes(fileType) || "El archivo debe ser una imagen (JPG, PNG).";
+                    },
+                    isSize: (value) => {
+                      if (value[0].size < 10 * 1024 * 1024) {
+                        return true;
+                      }
+                      return "El archivo debe ser menor a 10mb.";
+                    }
+                  }
+                })}
             />
             {errors.receta && (
               <div className="error-message">{errors.receta.message}</div>
             )}
           </div>
-          <div className="form-options">
+          <div className="form-options" style={{gridColumn: "2", gridRow : "3"}}>
             <label className="checkbox-label">
               <input type="checkbox" {...register("recibeMail")} />
               <span>Deseo recibir Email recordatorio</span>
             </label>
           </div>
-          <button id="turno" type="submit" className="login-btn" disabled={isSubmitting}>
+          <button id="turno" type="submit" className="login-btn" disabled={isSubmitting} style={{gridColumn: "2", gridRow : "4"}}>
             {isSubmitting ? "Un momento..." : "Registrar"}
           </button>
           {errorLogin && <div className="error-message">{errorLogin}</div>}
@@ -329,42 +398,59 @@ function TabBar(props) {
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
-          {turnos.length > 0 ? (
+        {turnos.length > 0 ? (
           <div style={{ marginTop: '20px' }}>
-            <table className="table">
+            <table className="table" style={{ verticalAlign: 'middle' }}>
               <thead>
                 <tr>
-                  <th>Numero de Turno</th>
-                  <th>Tipo de Analisis</th>
-                  <th>Centro de Atencion</th>
+                  <th>Número de Turno</th>
+                  <th>Tipo de Análisis</th>
+                  <th>Centro de Atención</th>
                   <th>Fecha y Hora</th>
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Recibe Mail</th>
+                  <th>Mostrar Resultados</th>
                 </tr>
               </thead>
               <tbody>
                 {turnos.map((turno) => {
-                const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
-                const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
-                
-                return (
-                <tr key={turno.id}>
-                  <td>{turno.id}</td>
-                  <td>{tipoAnalisisEncontrado.nombre}</td>
-                  <td>{centroAtencionEncontrado.nombre}</td>
-                  <td>{new Date(turno.fechaHoraExtraccion).toLocaleString()}</td>
-                  <td>{turno.estado}</td>
-                  <td>{turno.observacion==""? "-":turno.observacion}</td>
-                  <td>{turno.recibeMail? "Si":"No"}</td>
-                </tr>
-              );
-              })}
+                  const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
+                  const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                  if (turno.estado !== "Completado") {
+                    return null;
+                  }
+                  return (
+                    <tr key={turno.id}>
+                      <td>{turno.id}</td>
+                      <td>{tipoAnalisisEncontrado?.nombre}</td>
+                      <td>{centroAtencionEncontrado?.nombre}</td>
+                      <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                      <td>{turno.estado}</td>
+                      <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                      <td>{turno.recibeMail ? "Sí" : "No"}</td>
+                      <td>
+                        <button
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'green',
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                            fontStyle: 'underline'
+                          }}
+                        >
+                          ✔️
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         ) : (
-          <p style={{marginTop:"30px"}}>No tienes turnos registrados.</p>
+          <p style={{ marginTop: "30px" }}>No tienes resultados disponibles.</p>
         )}
       </Tab>
     </Tabs>
