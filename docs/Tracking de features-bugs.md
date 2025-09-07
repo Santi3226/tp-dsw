@@ -30,6 +30,7 @@
 | 23  | Turnos Admin , no se pq me hizo renegar tanto                                 | Pendiente  | Frontend   | Santi    | 6-9-25  |
 
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
+Completar turnos admin para que: se muestre la receta y se confirme el turno
 
 Seccion laboratorio? Ni tanto
 
