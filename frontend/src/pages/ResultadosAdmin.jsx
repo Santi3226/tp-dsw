@@ -32,14 +32,9 @@ function ResultadosAdmin() {
     try {
 
       console.log('Datos a enviar:', data);
-      
-      for(const i in data.resultados){
-        console.log('Elemento:', data.resultados[i]);
-        console.log('Index:', i);
-      }
       /*
       await addResultados(data);
-      data.estado = "Confirmado";
+      data.estado = "Completado";
       await modifyTurnos(data);
       location.reload();
       */
@@ -50,7 +45,7 @@ function ResultadosAdmin() {
 
   const onSubmitFilter = async (data) => {
     try {
-      data.estado = 'Pendiente';
+      data.estado = 'Confirmado';
       const response = await getTurnosQuery(data); //Filtrado condicional
       setTurnosFiltrados(response || []);
     } catch (error) {
@@ -62,7 +57,7 @@ function ResultadosAdmin() {
     // Filtrar turnos pendientes al cargar el componente
     const fetchPendientes = async () => {
       try {
-        const data = { estado: 'Pendiente', fechaInicio: '', fechaFin: '' };
+        const data = { estado: 'Confirmado', fechaInicio: '', fechaFin: '' };
         const response = await getTurnosQuery(data);
         setTurnosFiltrados(response || []);
       } catch (error) {
@@ -162,7 +157,7 @@ function ResultadosAdmin() {
         </table>
       </div>
       <Tabs
-        defaultActiveKey="filtrar"
+        defaultActiveKey="resultado"
         id="justify-tab-example"
         className="mb-3"
         justify
@@ -228,6 +223,7 @@ function ResultadosAdmin() {
             className="login-formReg"
             onSubmit={handleSubmitAdd(onSubmitAdd)}
             noValidate
+            style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
           >
             <select
               id="id"
@@ -246,11 +242,11 @@ function ResultadosAdmin() {
             )}
 
             {idSeleccionado && (
-            <div>
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
               {/* Busco el turno q seleccione */}
               {turnosFiltrados.find((t) => t.id === Number(idSeleccionado))
                 ?.tipoAnalisis.parametros.map((parametro) => (
-                  <div key={parametro.id} className="form-group">
+                  <div key={parametro.id} className="form-group" >
                     <label htmlFor={`parametro-${parametro.id}`}>
 
                       {parametro.parametroAnalisis.nombre} ({parametro.parametroAnalisis.unidad}) {/*Mapear los parametros y mostrarlos*/}

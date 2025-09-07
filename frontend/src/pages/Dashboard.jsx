@@ -10,7 +10,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { pacientes = [] } = usePaciente();
   const { turnos = [] } = useTurnos();
-  console.log(turnos.tipoAnalisis);
+  
   let total = 0;
   let mail = 0;
   
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const mockData = {
     totalUsers: pacientes.length,
     revenue: total,
-    mail: (mail*100/turnos.length) || 0,
+    mail: (mail*100/turnos.length).toFixed(2) || 0,
   };
 
   return (

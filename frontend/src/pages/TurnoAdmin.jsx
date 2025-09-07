@@ -1,18 +1,75 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
-import { useForm } from "react-hook-form";
+import { set, useForm, useWatch } from "react-hook-form";
 import { Tab } from "bootstrap";
 import Tabs from "react-bootstrap/esm/Tabs";
+import { useTiposAnalisis } from "../hooks/useTiposAnalisis.js";
+import { useCentros } from "../hooks/useCentros.js";
+import { usePaciente } from "../hooks/usePacientes.js";
 
 function TurnoAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
 const { isLoading, isError, error, turnos = [] } = useTurnos();
+const {  pacientes = [] } = usePaciente();
+const {  tipos = [] } = useTiposAnalisis();
+const {  centros = [] } = useCentros();
+const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
-const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
+const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmittingFilter }, } = useForm({ mode: "onBlur" });
+
+const fechaHoraReserva = useWatch({
+    control,
+    name: "fechaHoraReserva"
+  });
+const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
+    const horarios = [];
+    let horaActual = horaInicio;
+    let minutoActual = 0;
+    while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
+      horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
+      minutoActual += intervalo;
+      if (minutoActual >= 60) {
+        minutoActual = 0;
+        horaActual += 1;
+      }
+    }
+    return horarios;
+  };
+  const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
+  useEffect(() => {
+    if (fechaHoraReserva) {
+      const turnosFecha = async () => {
+        try {
+          const data = { fechaHoraReserva: fechaHoraReserva };
+          const response = await getTurnosQuery(data);
+          console.log(turnos);
+          console.log(response);
+          // Extrae los horarios ocupados de los turnos recibidos
+          const occupiedTimes = response
+            .filter(turno => turno.estado !== "Anulado")
+            .map(turno => {
+              const date = new Date(turno.fechaHoraReserva);
+              const hour = String(date.getHours()).padStart(2, '0');
+              const minute = String(date.getMinutes()).padStart(2, '0');
+              return `${hour}:${minute}`;
+            });
+
+          // Filtra todos los horarios para quitar los que ya están ocupados
+          const availableSlots = allTimeSlots.filter(
+            slot => !occupiedTimes.includes(slot)
+          );
+          setHorariosDisponibles(availableSlots);
+        } catch (error) {
+          console.error("Error al obtener los turnos:", error);
+        }
+      };
+      turnosFecha();
+    }
+  }, [fechaHoraReserva]);
 
 const onSubmitDelete = async (data) => {
 try {
@@ -142,64 +199,75 @@ useEffect(() => {
       style={{marginTop:"30px"}}
     >
     <Tab eventKey="filtrar" title="Filtrar">
-      <h2 className='titulo'>Filtrar turnos</h2>
-      <form
-      className="login-formReg"
-      onSubmit={handleSubmitFilter(onSubmitFilter)}
-      noValidate
-    >
-      <div className="form-group" id="uno">
-      <label htmlFor="text">Nombre</label>
-      <input
-          type="text"
-          id="nombre"
-          {...registerFilter("nombre")}
-          className="form-input"
-        />
-        </div>
+      <h2 className="titulo">Filtrar turnos</h2>
+          <form
+            className="login-formReg"
+            onSubmit={handleSubmitFilter(onSubmitFilter)}
+            noValidate
+          >
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Inicio</label>
+              <input
+                type="date"
+                id="fechaInicio"
+                {...registerFilter('fechaInicio', {
+                  required: 'Fecha de inicio requerida',
+                  validate: (value) => {},
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaInicio && (
+                <div className="error-message">
+                  {errorsFilter.fechaInicio.message}
+                </div>
+              )}
+            </div>
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Fin</label>
+              <input
+                type="date"
+                id="fechaFin"
+                {...registerFilter('fechaFin', {
+                  required: 'Fecha de fin requerida',
+                  validate: (value) => {},
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaFin && (
+                <div className="error-message">
+                  {errorsFilter.fechaFin.message}
+                </div>
+              )}
+            </div>
 
-      <div className="form-group" id="dos">
-      <label htmlFor="text">DNI</label>
-      <input
-          type="text"
-          id="dni"
-          {...registerFilter("dni")}
-          className="form-input"
-        />
-      </div>
-
-      <div className="form-group" id="tres">
-      <label htmlFor="text">Edad</label>
-      <input
-          type="text"
-          id="edad"
-          {...registerFilter("edad")}
-          className="form-input"
-        />
-        </div>
-
-      <button id="login" type="submit" className="login-btn" disabled={isSubmittingFilter} style={{gridRow: 2}}>
-            {isSubmittingFilter ? "Un momento..." : "Filtrar"}
-      </button>
-    </form>
-      </Tab>
+            <button
+              id="login"
+              type="submit"
+              className="login-btn"
+              disabled={isSubmittingFilter}
+              style={{ alignSelf: 'center' }}
+            >
+              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
+            </button>
+          </form>
+        </Tab>
 
       <Tab eventKey="modificar" title="Modificar">
-          <h2 className='titulo'>Modificar los datos del Paciente</h2>
+          <h2 className='titulo'>Modificar los datos del Turno</h2>
           <form
           className="login-formReg"
           onSubmit={handleSubmitModify(onSubmitModify)}
           noValidate
         >
         <div className="form-group">
-        <label htmlFor="text">Paciente</label>
+        <label htmlFor="text">Turno</label>
         <select
           id="id"
           {...registerModify("id", {required:"Id requerido"})}
           className="form-input"
         >
         <option value="">-</option>
-        {turnos.map((p, index) => (
+        {turnosFiltrados.map((p, index) => (
         <option key={index} value={p.id}>
           {p.id}
         </option>
@@ -304,104 +372,163 @@ useEffect(() => {
         </form>
       </Tab>
       <Tab eventKey="agregar" title="Agregar">
-         <h2 className='titulo'>Agregar un Paciente</h2>
-          <form
+         <h2 className='titulo'>Registrar Turno</h2>
+        <form
+          encType="multipart/form-data"
           className="login-formReg"
           onSubmit={handleSubmitAdd(onSubmitAdd)}
           noValidate
         >
-          <div className="form-group" id="tres">
-          <label htmlFor="text">Nombre</label>
-          <input
-              type="text"
-              id="nombre"
-              {...registerAdd("nombre",{required:"Nombre requerido"})}
-              className="form-input"
-            />
-            {errorsAdd.nombre && (
-              <div className="error-message">{errorsAdd.nombre.message}</div>
-            )}
-            </div>
-            <div className="form-group" id="cuatro">
-            <label htmlFor="text">Apellido</label>
-            <input
-              type="text"
-              id="apellido"
-              {...registerAdd("apellido",{required:"Apellido requerido"})}
-              className="form-input"
-            />
-            {errorsAdd.apellido && (
-              <div className="error-message">{errorsAdd.apellido.message}</div>
-            )}</div>
-            <div className="form-group">
-            <label htmlFor="number">DNI</label>
-            <input
-              type="text"
-              id="dni"
-              {...registerAdd("dni", {
-                required:"DNI requerido",
-                pattern: {
-                  value: undefined||/^\d{8}$/, // Expresión regular para validar dni
-                  message: "Formato de dni no válido",
-                },
+          <div className="form-group" id="uno">
+            <label htmlFor="text">Tipo de Análisis</label>
+            <select
+              id="tipoAnalisis"
+              {...registerAdd("tipoAnalisis", {
+                required: "Tipo de Análisis requerido",
               })}
               className="form-input"
-            />
-            {errorsAdd.dni && (
-              <div className="error-message">{errorsAdd.dni.message}</div>
+            >
+              <option value="">-</option>
+              {tipos.map((ta, index) => (
+                <option key={index} value={ta.id}>
+                  {ta.nombre}
+                </option>
+              ))}
+            </select>
+            {errorsAdd.tipoAnalisis && (
+              <div className="error-message">{errorsAdd.tipoAnalisis.message}</div>
             )}
           </div>
-          <div className="form-group">
-            <label htmlFor="text">Direccion</label>
+
+          <div id="dos" className="form-group">
+            <label htmlFor="date">Fecha del Turno</label>
             <input
-              type="text"
-              id="direccion"
-              {...registerAdd("direccion",{required:"Direccion requerida"})}
-              className="form-input"
-            />
-            {errorsAdd.direccion && (
-              <div className="error-message">{errorsAdd.direccion.message}</div>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="text">Telefono</label>
-            <input
-              type="text"
-              id="telefono"
-              {...registerAdd("telefono", {required:"Telefono requerido"
-              })}
-              className="form-input"
-            />
-            {errorsAdd.telefono && (
-              <div className="error-message">{errorsAdd.telefono.message}</div>
-            )}
-          </div>
-          <div id="fechaNac" className="form-group">
-            <label htmlFor="date">Fecha de Nacimiento</label>
-            <input
+              style={{ width: "40%" }}
               type="date"
-              id="fechaNacimiento"
-              {...registerAdd("fechaNacimiento", {
-                required:"Fecha de Nacimiento requerida",
+              id="fechaHoraReserva"
+              {...registerAdd("fechaHoraReserva", {
+                required: "Fecha requerida",
                 validate: (value) => {
                   const selectedDate = new Date(value);
                   const currentDate = new Date();
                   currentDate.setHours(0, 0, 0, 0);
-                  if (selectedDate > currentDate) {
-                    return "Fecha de nacimiento inválida";
+                  if (selectedDate < currentDate) {
+                    return "Fecha de turno inválida";
                   }
                   return true;
                 },
               })}
               className="form-input"
             />
-            {errorsAdd.fechaNacimiento && (
-              <div className="error-message">{errorsAdd.fechaNacimiento.message}</div>
+            {errorsAdd.fechaHoraReserva && (
+              <div className="error-message">{errorsAdd.fechaHoraReserva.message}</div>
+            )}
+            </div>
+              <div id="tres" className="form-group">
+            {(fechaHoraReserva && errorsAdd.fechaHoraReserva == undefined) && (
+              <>
+                <label htmlFor="time">Hora del Turno</label>
+                <select 
+                  id="horaReserva"
+                  {...registerAdd("horaReserva", {
+                    required: "Hora requerida",
+                  })}
+                  className="form-input"
+                >
+                  <option value="">-</option>
+                  {horariosDisponibles.map((hora, index) => (
+                    <option key={index} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </select>
+                {errorsAdd.horaReserva && (
+                  <div className="error-message">{errorsAdd.horaReserva.message}</div>
+                )}
+              </>
             )}
           </div>
-          
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingAdd} style={{gridRow: 4}}>
-            {isSubmittingAdd ? "Un momento..." : "Agregar"}
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "2"}} id="tres">
+            <label htmlFor="text">Centro de Atención</label>
+            <select
+              id="centroAtencion"
+              {...registerAdd("centroAtencion", {
+                required: "Centro requerido",
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {centros.map((ca, index) => (
+                <option key={index} value={ca.id}>
+                  {ca.nombre + " - " + ca.localidad?.denominacion + ", " + ca.domicilio}
+                </option>
+              ))}
+            </select>
+            {errorsAdd.centroAtencion && (
+              <div className="error-message">{errorsAdd.centroAtencion.message}</div>
+            )}
+          </div>
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "3"}} id="tres">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerAdd("paciente", {
+                required: "Paciente requerido",
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((p, index) => (
+                <option key={index} value={p.id}>
+                  {p.id + " - " + p.nombre + ", " + p.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsAdd.paciente && (
+              <div className="error-message">{errorsAdd.paciente.message}</div>
+            )}
+          </div>
+
+          <div className="form-group" style={{gridColumn: "2", gridRow : "3"}}>
+            <label htmlFor="file">Receta</label>
+            <input type="file"
+              accept="image/*"
+              name="receta"
+              {...registerAdd("receta",
+                {
+                  required: "Receta requerida",
+                  validate: {
+                    isImage: (value) => {
+                      if (!value[0]) {
+                        return true;
+                      }
+                      const fileType = value[0].type;
+                      const acceptedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/bmp'];
+                      return acceptedImageTypes.includes(fileType) || "El archivo debe ser una imagen (JPG, PNG).";
+                    },
+                    isSize: (value) => {
+                      if (value[0].size < 10 * 1024 * 1024) {
+                        return true;
+                      }
+                      return "El archivo debe ser menor a 10mb.";
+                    }
+                  }
+                })}
+            />
+            {errorsAdd.receta && (
+              <div className="error-message">{errorsAdd.receta.message}</div>
+            )}
+          </div>
+          <div className="form-options" style={{gridColumn: "1", gridRow : "4"}}>
+            <label className="checkbox-label">
+              <input type="checkbox" {...registerAdd("recibeMail")} />
+              <span>Deseo recibir Email recordatorio</span>
+            </label>
+          </div>
+          <button id="turno" type="submit" className="login-btn" disabled={isSubmittingAdd} style={{gridColumn: "2", gridRow : "4"}}>
+            {isSubmittingAdd ? "Un momento..." : "Registrar"}
           </button>
         </form>
       </Tab>

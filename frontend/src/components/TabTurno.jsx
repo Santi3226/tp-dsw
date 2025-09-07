@@ -76,7 +76,7 @@ function TabBar(props) {
   };
 
   // Generamos una lista estática de todos los horarios posibles
-  const allTimeSlots = generateTimeSlots(7, 19, 15); // Horarios de atención de 7:00 a 19:00
+  const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
 
   // Efecto para cargar los horarios disponibles cuando se selecciona una fecha
   useEffect(() => {
