@@ -28,6 +28,7 @@
 | 21  | Turnos separados en fecha y hora                                              | Completo   | Frontend   | Santi    | 6-9-25  |
 | 22  | Panel control Dashboard mejorado                                              | Completo   | Frontend   | Santi    | 6-9-25  |
 | 23  | Turnos Admin , no se pq me hizo renegar tanto                                 | Pendiente  | Frontend   | Santi    | 6-9-25  |
+| 24  | Leaflet y Open Street Map                                                     | Pendiente  | Frontend   | Santi    | 25-9-25 |
 
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
 Completar turnos admin para que: se muestre la receta y se confirme el turno
@@ -35,3 +36,9 @@ Completar turnos admin para que: se muestre la receta y se confirme el turno
 Seccion laboratorio? Ni tanto
 
 Cancelar Turno y Resultados tienen un hotfix para aparecer, solucionar con filtrado previo
+
+Leaflet y Open Street Map
+
+Video explicando el funcionamiento del sistema
+Evidencia del resultado de la ejecución de los tests automáticos
+Entregar la proposal actualizada con links al pull request de back y/o front.

@@ -2,9 +2,6 @@
 
 > Sistema de Gestión de Laboratorio Bioquímico.
 
-Node v22.15.0
-pnpm v10.6.5
-
 El repositorio contiene el Frontend y Backend de un sitio web para un Laboratorio Genérico a modo de desarrollo para el Trabajo Práctico Anual de la Cátedra de Desarrollo de Software.
 
 ![Pag. Inicio](image-1.png)
@@ -17,14 +14,18 @@ El repositorio contiene el Frontend y Backend de un sitio web para un Laboratori
 
 ### [Frontend](https://github.com/Santi3226/tp-dsw/tree/main/frontend)
 
+## Instrucciones de Instalación
+
+[Instrucciones](https://github.com/Santi3226/tp-dsw/blob/5a5c3b5e286cf48dc4217163caf904e7a702cc10/docs/Instrucciones%20de%20instalacion.md)
+
 ## Tracking
 
-### [Features-Bugs](https://github.com/Santi3226/tp-dsw/blob/6e171cac5e3fdce0573a7d15e68b770933b6bec5/docs/Tracking%20de%20features-bugs.md)
+[Features-Bugs](https://github.com/Santi3226/tp-dsw/blob/6e171cac5e3fdce0573a7d15e68b770933b6bec5/docs/Tracking%20de%20features-bugs.md)
 
 ## Meta
 
-Santiago Dedich – santidedich3226@gmail.com
+[Gmail](santidedich3226@gmail.com)
 
 Licencia - ...
 
-[Github: Santi3226](https://github.com/Santi3226)
+[Github](https://github.com/Santi3226)

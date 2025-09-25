@@ -1,7 +1,5 @@
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import { useForm } from "react-hook-form";
-import { useAuth } from "../hooks/useAuth.js";
 import '../pages/Register.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
@@ -9,33 +7,7 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../helpers/api.js';
 
 function TabBar(props) {
-  const { modify , user, errorLogin } = useAuth();
-  const { register, handleSubmit, formState: { errors, isSubmitting }} = useForm({mode: "onBlur",});
   
-  const onSubmitModify = async (data) => {
-    const finalData = { ...user };
-    finalData.paciente = { ...user.paciente };
-    for (const key in data) {
-        const value = data[key];
-        if (value !== "" && value !== null && value !== undefined) {
-            if (['email', 'contraseña'].includes(key)) {
-                finalData[key] = value;
-            } else {
-                finalData.paciente[key] = value;
-            }
-        }
-    }
-  try {
-    finalData.id=user.id;
-    finalData.paciente.id=user.paciente.id;
-    await modify(finalData);
-    navigate("/login");
-  } 
-  catch (error) {
-    console.error("Fallo al modificar:", error);
-  }
-  };
-
   const [politicas, setPoliticas] = useState([]); 
 
   useEffect(() => {
@@ -50,15 +22,6 @@ function TabBar(props) {
     };
     getDatos();
   }, []); //Recolector de datos
-
-  const onSubmitConsult = async (data) => {
-    try {
-    alert("En teoria, mandaste una consulta, felicitaciones crack!");
-  } 
-  catch (error) {
-    console.error("Fallo al consultar:", error);
-  }
-  };
   
   const {inicio} = props; 
   return (
@@ -81,7 +44,7 @@ function TabBar(props) {
 
       <Tab eventKey="presupuesto" title="Presupuestos">
         <h2 className='titulo'>Presupuestos</h2>
-        
+        <p>A implementar...</p>
 
       </Tab>
 
