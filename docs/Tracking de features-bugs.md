@@ -33,8 +33,6 @@
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
 Completar turnos admin para que: se muestre la receta y se confirme el turno
 
-Seccion laboratorio? Ni tanto
-
 Cancelar Turno y Resultados tienen un hotfix para aparecer, solucionar con filtrado previo
 
 Leaflet y Open Street Map
