@@ -1,4 +1,5 @@
-import TabBar from "../components/TabLaboratorio.jsx";
+import TabBar from "../components/Mapa.jsx";
+//import TabBar from "../components/TabLaboratorio.jsx";
 import "./Paciente.css";
 import { useParams } from 'react-router-dom';
 

@@ -24,7 +24,6 @@
 
 ### Servicios Externos
 - Cuenta de email para envío de notificaciones (Gmail, Outlook, etc.)
-- API Key de Google Maps (opcional, para funcionalidades de localización)
 
 ## Instalación
 
