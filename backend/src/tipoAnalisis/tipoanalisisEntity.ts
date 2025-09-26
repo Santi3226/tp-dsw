@@ -10,6 +10,10 @@ import {
 } from '@mikro-orm/core';
 import { BaseEntity } from '../shared/db/baseEntity.js';
 import { Turno } from '../turno/turnoEntity.js';
+import { PlantillaAnalisis } from '../plantillaAnalisis/plantillaanalisisEntity.js';
+import { ParametroAnalisis } from '../parametroAnalisis/parametroanalisisEntity.js';
+import { ResultadoAnalisis } from '../resultadoAnalisis/resultadoanalisisEntity.js';
+import { TipoAnalisisParametro } from './tipoanalisisparametroEntity.js';
 
 @Entity()
 export class TipoAnalisis extends BaseEntity {
@@ -19,12 +23,6 @@ export class TipoAnalisis extends BaseEntity {
   @Property({ nullable: false })
   public importe!: number;
 
-  @OneToMany(() => Turno, (turno) => turno.tipoAnalisis, {
-    cascade: [Cascade.ALL],
-  })
-  turnos = new Collection<Turno>(this);
-
-  /*
   @ManyToOne(() => PlantillaAnalisis, {
     nullable: false,
     updateRule: 'cascade',
@@ -32,9 +30,8 @@ export class TipoAnalisis extends BaseEntity {
   })
   plantillaAnalisis!: Rel<PlantillaAnalisis>;
 
-  @OneToMany(() => ParametroAnalisis, (parametroAnalisis) => parametroAnalisis.tipoAnalisis, {
-      cascade: [Cascade.ALL],
-    })
-    parametroAnalisis = new Collection<ParametroAnalisis>(this);
- */
+  @OneToMany(() => TipoAnalisisParametro, (tipoAnalisisParametro) => tipoAnalisisParametro.tipoAnalisis, {
+    cascade: [Cascade.ALL],
+  })
+  parametros = new Collection<TipoAnalisisParametro>(this);
 }

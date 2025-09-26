@@ -1,0 +1,32 @@
+### GET ALL
+GET http://localhost:3000/api/plantillaAnalisis
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/plantillaAnalisis
+Content-Type: application/json
+
+{
+  "hsAyuno": "-",
+  "preparacion": "Realizar de 2 a 5 días de abstinencia sexual. Recolectar la muestra en un recipiente estéril no tóxico. No debe pasar más de 40 minutos desde la toma de la muestra hasta la entrega al momento del turno.",
+  "fechaDesde": "2025-08-08",
+  "tiempoPrevisto": 3
+}
+
+### ID
+@id = 4
+
+### GET ONE 
+GET http://localhost:3000/api/plantillaAnalisis/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/plantillaAnalisis/{{id}}
+Content-Type: application/json
+
+{
+  "denominacion": "Rosario",
+  "codPostal": "2001"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/plantillaAnalisis/{{id}}

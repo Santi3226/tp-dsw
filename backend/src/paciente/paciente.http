@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 2
+@id = 3
 
 ### GET ONE 
 GET http://localhost:3000/api/paciente/{{id}}
@@ -27,13 +27,7 @@ PUT http://localhost:3000/api/paciente/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Santiago",
-  "apellido": "Dedich",
-  "dni": "12345678",
-  "fechaNacimiento": "2003-01-01",
-  "telefono": "123456789",
-  "email": "santiago@example.com",
-  "direccion": "Calle Falsa 123"
+  "usuario": 2
 }
 
 ### DELETE

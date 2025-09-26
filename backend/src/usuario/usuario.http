@@ -1,0 +1,47 @@
+### GET ALL
+GET http://localhost:3000/api/usuario
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/usuario
+Content-Type: application/json
+
+{
+  "email": "titi@mail.com",
+  "contraseña": "123",
+  "role": "user",
+  "paciente": {
+    "nombre": "Titi",
+    "apellido": "Forti",
+    "dni": "45678900",
+    "fechaNacimiento": "2004-05-25T00:00:00.000Z",
+    "telefono": "3467896443",
+    "direccion": "Rivadavia 1000"
+}
+}
+### LOGIN
+POST http://localhost:3000/api/usuario/login
+Content-Type: application/json
+
+{
+  "email": "jp@mail.com",
+  "contraseña": "123"
+}
+
+### ID
+@id = 15
+
+### GET ONE 
+GET http://localhost:3000/api/usuario/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/usuario/{{id}}
+Content-Type: application/json
+
+{
+  "role": "user",
+  "contraseña": "123"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/usuario/{{id}}

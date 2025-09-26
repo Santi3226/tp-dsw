@@ -1,0 +1,314 @@
+/* NotFound.css */
+:root {
+  --lab-green: #2ecc71;
+  --lab-blue: #3498db;
+  --lab-dark-blue: #2c3e50;
+  --lab-grey: #bdc3c7;
+  --lab-dark-grey: #7f8c8d;
+  --text-light: #ecf0f1;
+  --text-dark: #34495e;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: auto;
+  /* Prevent scrollbars from animations */
+}
+
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--lab-dark-blue) 0%, #1f2a38 100%);
+  color: var(--text-light);
+  position: relative;
+  overflow: auto;
+}
+
+.lab-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  opacity: 0.2;
+  /* Subtle background elements */
+  pointer-events: none;
+  /* Make sure they don't interfere with clicks */
+}
+
+/* Beaker 1 */
+.beaker-1 {
+  position: absolute;
+  width: 120px;
+  height: 160px;
+  background-color: var(--lab-grey);
+  border-radius: 0 0 40px 40px;
+  bottom: -50px;
+  left: 10%;
+  transform: rotate(15deg);
+  animation: floatBeaker 10s ease-in-out infinite alternate;
+}
+
+.beaker-1::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background-color: #169bd5;
+  /* Liquid color */
+  border-radius: 40px 40px 0 0;
+  opacity: 0.8;
+}
+
+/* Beaker 2 */
+.beaker-2 {
+  position: absolute;
+  width: 100px;
+  height: 140px;
+  background-color: var(--lab-grey);
+  border-radius: 0 0 30px 30px;
+  top: -40px;
+  right: 15%;
+  transform: rotate(-10deg);
+  animation: floatBeaker 12s ease-in-out infinite alternate-reverse;
+}
+
+.beaker-2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 25px;
+  background-color: var(--lab-blue);
+  /* Different liquid color */
+  border-radius: 30px 30px 0 0;
+  opacity: 0.8;
+}
+
+/* Microscope */
+.microscope {
+  position: absolute;
+  width: 80px;
+  height: 150px;
+  background-color: var(--lab-dark-grey);
+  border-radius: 10px;
+  bottom: 0px;
+  right: 5%;
+  transform: rotate(5deg);
+  animation: floatMicroscope 15s ease-in-out infinite alternate;
+}
+
+.microscope::before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 60px;
+  background-color: var(--lab-grey);
+  top: -20px;
+  left: 25px;
+  border-radius: 5px;
+  transform: rotate(-20deg);
+}
+
+.microscope::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #000;
+  border-radius: 50%;
+  top: 5px;
+  left: 30px;
+}
+
+/* Test Tube 1 */
+.test-tube-1 {
+  position: absolute;
+  width: 30px;
+  height: 100px;
+  background-color: var(--lab-grey);
+  border-radius: 0 0 15px 15px;
+  top: 15%;
+  left: 5%;
+  transform: rotate(-25deg);
+  animation: floatTestTube 8s ease-in-out infinite alternate;
+}
+
+.test-tube-1::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background-color: #169bd5;
+  border-radius: 15px 15px 0 0;
+  opacity: 0.7;
+}
+
+/* Test Tube 2 */
+.test-tube-2 {
+  position: absolute;
+  width: 25px;
+  height: 90px;
+  background-color: var(--lab-grey);
+  border-radius: 0 0 12px 12px;
+  bottom: 10%;
+  right: 20%;
+  transform: rotate(30deg);
+  animation: floatTestTube 9s ease-in-out infinite alternate-reverse;
+}
+
+.test-tube-2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 35px;
+  background-color: #3498db;
+  border-radius: 12px 12px 0 0;
+  opacity: 0.7;
+}
+
+/* Content styling */
+.content-wrapper {
+  text-align: center;
+  z-index: 10;
+  /* Ensure content is above background elements */
+  padding: 20px;
+  background-color: rgba(0,
+      0,
+      0,
+      0.4);
+  /* Slightly dark overlay for text readability */
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.error-code {
+  font-size: 8em;
+  margin-bottom: 0.1em;
+  font-weight: bold;
+  text-shadow: 0 0 15px #169bd5;
+  animation: pulse 2s infinite alternate;
+}
+
+.error-message {
+  font-size: 14px;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+.lab-quote {
+  font-size: 1.2em;
+  font-style: italic;
+  margin-bottom: 1.5em;
+  color: #169bd5;
+}
+
+.back-button {
+  background-color: #169bd5;
+  color: var(--text-dark);
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.back-button:hover {
+  background-color: #169bd5;
+  transform: translateY(-2px);
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes floatBeaker {
+  0% {
+    transform: translateY(0) rotate(15deg);
+  }
+
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(15deg);
+  }
+}
+
+@keyframes floatMicroscope {
+  0% {
+    transform: translateY(0) rotate(5deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(10deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(5deg);
+  }
+}
+
+@keyframes floatTestTube {
+  0% {
+    transform: translateY(0) rotate(-25deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(-30deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(-25deg);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: #169bd5;
+  }
+
+  100% {
+    text-shadow: 0 0 25px #61dafb, 0 0 35px #169bd5;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .error-code {
+    font-size: 6em;
+  }
+
+  .error-message {
+    font-size: 1.5em;
+  }
+
+  .lab-background {
+    opacity: 0.1;
+    /* Reduce intensity on smaller screens */
+  }
+
+  .beaker-1,
+  .beaker-2,
+  .microscope,
+  .test-tube-1,
+  .test-tube-2 {
+    display: none;
+    /* Hide complex background elements on smaller screens */
+  }
+}

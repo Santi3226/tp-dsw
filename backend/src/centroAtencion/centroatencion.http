@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 4
+@id = 10
 
 ### GET ONE 
 GET http://localhost:3000/api/centroAtencion/{{id}}
@@ -23,9 +23,7 @@ PUT http://localhost:3000/api/centroAtencion/{{id}}
 Content-Type: application/json
 
 {
-  "nombre": "Retiro",
-  "domicilio": "San Martin 1600",
-  "localidad": 1
+  "domicilio": "Zuviría 55"
 }
 
 ### DELETE

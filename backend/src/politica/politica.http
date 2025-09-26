@@ -1,0 +1,31 @@
+### GET ALL
+GET http://localhost:3000/api/politica
+
+### POST
+//Tener cuidado con la extra linea desp de content-type
+POST http://localhost:3000/api/politica   
+Content-Type: application/json 
+
+{
+  "diaHabilitacionTurnos": 30,
+  "horaInicioTurnos": "8:00",
+  "horaFinTurnos": "20:00"
+}
+
+### ID
+@id = 1
+
+### GET ONE 
+GET http://localhost:3000/api/politica/{{id}}
+
+### PUT
+PUT http://localhost:3000/api/politica/{{id}}
+Content-Type: application/json
+
+{
+  "denominacion": "Rosario",
+  "codPostal": "2001"
+}
+
+### DELETE
+DELETE http://localhost:3000/api/politica/{{id}}

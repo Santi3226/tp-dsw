@@ -1,0 +1,65 @@
+#Dropdown {
+  width: 210px;
+  height: 61px;
+  padding: 210px 61px;
+  font-weight: 700;
+  text-align: center;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+}
+
+#dropdown-basic:hover {
+  box-sizing: border-box;
+  background-color: rgba(27, 74, 160, 0.99);
+  border: 1px solid rgba(27, 74, 160, 0.99);
+}
+
+#dropdown-basic:checked {
+  box-sizing: border-box;
+  background-color: rgba(27, 74, 160, 0.99);
+  border: 1px solid rgba(27, 74, 160, 0.99);
+}
+
+#dropdown-basic {
+  background-color: #169bd5;
+  border: #169bd5 solid 1px;
+  color: white;
+  padding: auto;
+  width: 210px;
+  text-align: center;
+}
+
+.DropMenu {
+  background-color: #f1f1f1;
+  /* Fondo del menú */
+  border: 1px solid #ccc;
+  text-align: left;
+
+  /* Borde del menú */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Sombra para el efecto de elevación */
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+/* Estilo de los elementos del menú */
+.DropItem {
+  color: #333;
+  /* Color del texto del ítem */
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo al pasar el cursor sobre un ítem */
+.DropItem:hover {
+  background-color: #ddd;
+  /* Color de fondo al pasar el cursor */
+  color: #000;
+}
+
+/* Estilo para los divisores (si los usas) */
+.DropDivider {
+  border-top: 1px solid #e1e1e1;
+  /* Borde superior del divisor */
+}
