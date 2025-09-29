@@ -18,8 +18,7 @@
 Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar el desarrollo de un sistema de información relacionado con la gestión de los análisis y el reporte de sus resultados. También interesa que el sistema realice el manejo de datos del cliente, junto a sus turnos para atenciones futuras.
 
 ### Modelo
-
-![MD](https://github.com/user-attachments/assets/178a0e9a-c953-4d24-a656-563d0963d97b)
+<img width="1141" height="668" alt="ART_DCML_Entrega_03" src="https://github.com/user-attachments/assets/79042b99-bd3a-4b20-a3dd-ef7fd219dfc3" />
 
 
 ## Alcance Funcional
@@ -47,3 +46,4 @@ Adicionales para Aprobación
 | Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis |
 | CUU/Epic | 1. Carga de Plantillas de Análisis<br>2. Cancelación de reserva                                                                   |
 | Otros    | 1. Envío de recordatorio de turno por email                                                                                       |
+

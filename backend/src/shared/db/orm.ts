@@ -1,13 +1,14 @@
 import { MikroORM } from '@mikro-orm/core';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { MySqlDriver } from '@mikro-orm/mysql';
+import "dotenv/config";
 
 export const orm = await MikroORM.init({
   entities: ['./dist/**/*Entity.js'],
   entitiesTs: ['./src/**/*Entity.ts'],
-  dbName: 'laboratorio',
+  dbName: process.env.dbName,
   driver: MySqlDriver,
-  clientUrl: 'mysql://root:Santitomi1@localhost:3306/laboratorio',
+  clientUrl: process.env.clientUrl, //Secreto de la bdd en .env
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {

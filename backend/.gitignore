@@ -17,6 +17,9 @@ uploads/*
 # ignore built ts files
 dist/**/*
 
+#images
+uploads/*
+
 # vscode
 .vscode/*
 !.vscode/settings.json

@@ -1,0 +1,236 @@
+.main-layout {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-header {
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+  color: white;
+  box-shadow: 0 5px 10px rgba(14, 24, 38, 0.256);
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2000;
+}
+
+.header-content {
+  width: 100%;
+  height: 120px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.titulo h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-right: 50px;
+}
+
+.logo {
+  height: 120px;
+  width: 120px;
+  padding: 0px;
+  margin-right: 50px;
+  cursor: pointer;
+}
+
+.main-nav {
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 210px;
+  height: 61px;
+  padding: 0px;
+}
+
+.nav-link {
+  width: 210px;
+  height: 61px;
+  padding: 2px 2px 2px 2px;
+  display: flex;
+  color: #2c3e50;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-btn {
+  width: 210px;
+  height: 37px;
+  padding: 0px 100px;
+  margin-left: 0px;
+  margin-right: 20px;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  text-align: center;
+  background-color: #169bd5;
+  align-items: center;
+  justify-content: center;
+  font: revert;
+}
+
+.dashboard-btn:hover {
+  background-color: rgba(27, 74, 160, 0.99);
+  color: white;
+}
+
+.nav-link:hover {
+  background-color: rgba(44, 62, 80, 0.1);
+  transform: translateY(-2px);
+}
+
+.login-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.login-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.logout-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 150px;
+  height: 61px;
+  padding: 0px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+  flex: 1;
+  max-width: 100%;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  /* width: 100%; */
+  padding-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    width: 100%;
+  }
+}
+
+.main-footer {
+  background-color: #d7d7d7;
+  padding: 2rem 0;
+  text-align: center;
+  color: #6c757d;
+  border-top: 1px solid #e9ecef;
+  position: 0 0 0 fixed;
+}
+
+.main-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-header {
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+    color: white;
+    box-shadow: 0 5px 10px rgba(14, 24, 38, 0.256);
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+  }
+
+  .header-content {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .dashboard-btn {
+    width: 210px;
+    height: 37px;
+    padding: 0px 100px;
+    margin-left: 0px;
+    margin-right: 20px;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    text-align: center;
+    background-color: #169bd5;
+    align-items: center;
+    justify-content: center;
+    font: revert;
+  }
+
+  .logo {
+    height: 60px;
+    width: 60px;
+    padding: 0px;
+    margin-right: 0px;
+    cursor: pointer;
+  }
+
+  .titulo h1 {
+    color: #2c3e50;
+    font-size: 1.0rem;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+
+  .main-nav {
+    width: 100%;
+    height: auto;
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .drop {
+    flex-shrink: 0;
+    padding: 0.75rem 1rem;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .main-content {
+    padding: 0.5rem;
+    margin: auto 0px;
+  }
+
+  .main-footer {
+    background-color: #d7d7d7;
+    padding: 2rem 0;
+    text-align: center;
+    color: #6c757d;
+    border-top: 1px solid #e9ecef;
+    order: 3;
+  }
+
+  .login-formReg {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 90px 90px;
+    gap: 1.2rem;
+  }
+
+  .main-footer p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}

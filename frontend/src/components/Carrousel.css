@@ -1,0 +1,27 @@
+.Carrousel {
+  width: 100%;
+  height: 410px;
+  object-fit: cover;
+  padding: 2px 2px 2px 2px;
+  background-color: rgba(255, 255, 255, 0);
+  box-sizing: border-box;
+  margin-bottom: 50px;
+}
+
+.CarrouselImg {
+  width: 100%;
+  height: 410px;
+  object-fit: cover;
+}
+
+.CarrouselCaption {
+  width: auto;
+  height: auto;
+  padding: auto;
+  font: bold;
+
+  font-display: swap;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.423);
+  backdrop-filter: blur(10px);
+}

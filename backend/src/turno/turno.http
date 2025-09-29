@@ -1,24 +1,27 @@
 ### GET ALL
 GET http://localhost:3000/api/turno
 
+### FILTER
+GET http://localhost:3000/api/turno/filter?estado=Pendiente
+
 ### POST
 //Tener cuidado con la extra linea desp de content-type
 POST http://localhost:3000/api/turno   
 Content-Type: application/json 
 
 {
-  "recibeMail": false,
+  "recibeMail": true,
   "estado": "Pendiente",
-  "receta": "S/Receta",
-  "observacion": "Falta receta",
-  "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
+  "receta": "uploads/santi.png",
+  "observacion": "-",
+  "fechaHoraReserva": "2025-08-15",
   "paciente": 1,
   "centroAtencion": 1,
-  "tipoAnalisis": 2
+  "tipoAnalisis": 1
 }
 
 ### ID
-@id = 2
+@id = 24
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}
@@ -28,14 +31,7 @@ PUT http://localhost:3000/api/turno/{{id}}
 Content-Type: application/json
 
 {
-  "recibeMail": true,
-  "estado": "Completo",
-  "receta": "Receta",
-  "observacion": "S/Observaciones",
-  "fechaHoraExtraccion": "2025-07-27T00:00:00Z",
-  "paciente": 1,
-  "centroAtencion": 1,
-   "tipoAnalisis": 2
+"tipoAnalisis": 7
 }
 
 ### DELETE
