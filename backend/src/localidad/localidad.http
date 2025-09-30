@@ -22,8 +22,8 @@ PUT http://localhost:3000/api/localidad/{{id}}
 Content-Type: application/json
 
 {
-  "denominacion": "Rosario",
-  "codPostal": "2001"
+  "denominacion": "Villa Gobernador Gálvez",
+  "codPostal": "2100"
 }
 
 ### DELETE

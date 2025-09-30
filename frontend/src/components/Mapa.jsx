@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -19,13 +18,12 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-
 // Componente para centrar el mapa cuando se selecciona un centro
 const MapController = ({ selectedCentro }) => {
   const map = useMap();
   
   useEffect(() => {
-    if (selectedCentro) {
+    if (selectedCentro && selectedCentro.lat && selectedCentro.lng) {
       map.setView([selectedCentro.lat, selectedCentro.lng], 15);
     }
   }, [selectedCentro, map]);
@@ -33,77 +31,150 @@ const MapController = ({ selectedCentro }) => {
   return null;
 };
 
-// Implementacion del Servicio usando Nominatim
+// Servicio de geocodificación optimizado con cache
 const geocodeAddress = async (direccion, localidad) => {
   try {
-    const query = encodeURIComponent(`${direccion}, ${localidad}, Argentina`);
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`;
+    // Crear una clave única para el cache
+    const cacheKey = `${direccion}_${localidad}`;
     
+    // Verificar si ya tenemos las coordenadas en cache (localStorage o memoria)
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) {
+      console.log(`Coordenadas obtenidas del cache para: ${cacheKey}`);
+      return JSON.parse(cached);
+    }
+
+    console.log(`Geocodificando: ${direccion}, ${localidad}`);
+    
+    const query = encodeURIComponent(`${direccion} ${localidad} Argentina`);
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=1`;
+
     const response = await fetch(url);
     const data = await response.json();
-    
-    if (data && data.length > 0) {
-      return {
+
+    if (data && data.length > 0 && data[0].lat && data[0].lon) {
+      const coordinates = {
         lat: parseFloat(data[0].lat),
-        lng: parseFloat(data[0].lon)
+        lng: parseFloat(data[0].lon),
       };
+      
+      // Guardar en cache para futuras consultas
+      sessionStorage.setItem(cacheKey, JSON.stringify(coordinates));
+      
+      return coordinates;
+    } else {
+      // Fallback con coordenadas de la región con offset aleatorio
+      const fallbackCoords = {
+        lat: -32.9468 + (Math.random() - 0.5) * 0.05,
+        lng: -60.6393 + (Math.random() - 0.5) * 0.05,
+      };
+      
+      console.warn(`No se encontraron coordenadas para: ${direccion}, ${localidad}. Usando fallback.`);
+      
+      // También guardamos el fallback en cache para evitar repetir requests
+      sessionStorage.setItem(cacheKey, JSON.stringify(fallbackCoords));
+      
+      return fallbackCoords;
     }
-    
-    // Fallback a coordenadas de Rosario con offset aleatorio
-    return {
-      lat: -32.9468 + (Math.random() - 0.5) * 0.02,
-      lng: -60.6393 + (Math.random() - 0.5) * 0.02
-    };
   } catch (error) {
-    console.error('Error geocoding:', error);
+    console.error('Error al obtener las coordenadas:', error);
+    
+    // En caso de error, devolver coordenadas de fallback
     return {
-      lat: -32.9468 + (Math.random() - 0.5) * 0.02,
-      lng: -60.6393 + (Math.random() - 0.5) * 0.02
+      lat: -32.9468 + (Math.random() - 0.5) * 0.05,
+      lng: -60.6393 + (Math.random() - 0.5) * 0.05,
     };
   }
 };
 
-// Componente del Minimapa con Leaflet
+// Componente del Minimapa optimizado
 const MinimapaCentros = () => {
-  const { isLoading, isError,error,centros = [] } = useCentros();  
-  const [centrosConCoordenadas, setCentrosConCoordenadas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoading, isError, error, centros = [] } = useCentros();  
+  const [centrosConCoordenadas, setCentrosConCoordenadas] = useState(new Map());
   const [selectedCentro, setSelectedCentro] = useState(null);
+  const [geocodingInProgress, setGeocodingInProgress] = useState(new Set());
 
-  // Cargar centros y obtener coordenadas
-  const loadCentros = async () => {
+  // Función para geocodificar un centro específico on-demand
+  const geocodeCentroIfNeeded = async (centro) => {
+    const centroId = centro.id;
+    
+    // Si ya tenemos las coordenadas, no hacer nada
+    if (centrosConCoordenadas.has(centroId)) {
+      return centrosConCoordenadas.get(centroId);
+    }
+    
+    // Si ya está en progreso, esperar
+    if (geocodingInProgress.has(centroId)) {
+      return null;
+    }
+
+    // Marcar como en progreso
+    setGeocodingInProgress(prev => new Set(prev).add(centroId));
+
     try {
+      const coords = await geocodeAddress(centro.direccion, centro.localidad.denominacion);
+      const centroConCoordenadas = {
+        ...centro,
+        lat: coords.lat,
+        lng: coords.lng
+      };
+
+      // Actualizar el estado con las nuevas coordenadas
+      setCentrosConCoordenadas(prev => new Map(prev).set(centroId, centroConCoordenadas));
       
-      // Geocodificar direcciones
-      const centrosGeocodificados = await Promise.all(
-          centros.map(async (centro) => {
-          const coords = await geocodeAddress(centro.direccion, centro.localidad.nombre);
-          return {
-            ...centro,
-            lat: coords.lat,
-            lng: coords.lng
-          };
-        })
-      );
-      setCentrosConCoordenadas(centrosGeocodificados);
-      
-    } catch (err) {
-      error('Error al cargar los centros de atención');
-      console.error('Error loading centros:', err);
+      return centroConCoordenadas;
+    } catch (error) {
+      console.error(`Error geocodificando centro ${centroId}:`, error);
+      return null;
     } finally {
-      setLoading(false);
+      // Remover de la lista de en progreso
+      setGeocodingInProgress(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(centroId);
+        return newSet;
+      });
     }
   };
 
-  useEffect(() => {
-    loadCentros();
-  }, []);
-
-  const handleCentroClick = (centro) => {
+  // Manejar click en centro (geocodificar si es necesario)
+  const handleCentroClick = async (centro) => {
     setSelectedCentro(centro);
+    
+    // Geocodificar el centro si no tiene coordenadas
+    if (!centrosConCoordenadas.has(centro.id)) {
+      const centroConCoordenadas = await geocodeCentroIfNeeded(centro);
+      if (centroConCoordenadas) {
+        setSelectedCentro(centroConCoordenadas);
+      }
+    } else {
+      setSelectedCentro(centrosConCoordenadas.get(centro.id));
+    }
   };
 
-   if (isLoading) {
+  // Geocodificar centros visibles en el mapa de forma lazy
+  const geocodeVisibleCentros = async () => {
+    // Solo geocodificar los primeros 3-5 centros para mostrar en el mapa inicialmente
+    const centrosAGeocodificar = centros.slice(0, 5);
+    
+    const promises = centrosAGeocodificar.map(async (centro) => {
+      if (!centrosConCoordenadas.has(centro.id) && !geocodingInProgress.has(centro.id)) {
+        return await geocodeCentroIfNeeded(centro);
+      }
+      return null;
+    });
+
+    await Promise.all(promises);
+  };
+
+  // Efecto para geocodificar algunos centros iniciales (opcional)
+  useEffect(() => {
+    if (centros.length > 0) {
+      // Geocodificar solo algunos centros iniciales para mostrar en el mapa
+      geocodeVisibleCentros();
+    }
+  }, [centros]);
+
+  if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>Cargando centros...</p>
@@ -115,11 +186,15 @@ const MinimapaCentros = () => {
   if (isError) {
     return (
       <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.errorMessage}>Ha ocurrido un error y no se pudieron obtener los centros: {error.message}</p>
+        <p style={pageStyles.errorMessage}>
+          Ha ocurrido un error y no se pudieron obtener los centros: {error?.message}
+        </p>
       </div>
     );
   }
 
+  // Obtener solo los centros que ya tienen coordenadas para mostrar en el mapa
+  const centrosParaMapa = Array.from(centrosConCoordenadas.values());
 
   return (
     <div>
@@ -134,26 +209,43 @@ const MinimapaCentros = () => {
               </h5>
             </div>
             <div className="card-body p-0" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-              {centros.map((centro) => (
-                <div
-                  key={centro.id}
-                  className={`list-group-item list-group-item-action ${
-                    selectedCentro?.id === centro.id ? 'active' : ''
-                  }`}
-                  onClick={() => handleCentroClick(centro)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <h6 className="mb-1">🏥 {centro.nombre}</h6>
-                      <p className="mb-1 small">📍 {centro.direccion}</p>
-                      <small className="text-muted">
-                        🏙️ {centro.localidad.nombre}
-                      </small>
+              {centros.map((centro) => {
+                const isGeocoding = geocodingInProgress.has(centro.id);
+                const hasCoordinates = centrosConCoordenadas.has(centro.id);
+                
+                return (
+                  <div
+                    key={centro.id}
+                    className={`list-group-item list-group-item-action ${
+                      selectedCentro?.id === centro.id ? 'active' : ''
+                    }`}
+                    onClick={() => handleCentroClick(centro)}
+                    style={{ cursor: 'pointer', position: 'relative' }}
+                  >
+                    <div className="d-flex justify-content-between align-items-start">
+                      <div style={{ flex: 1 }}>
+                        <h6 className="mb-1">🏥 {centro.nombre}</h6>
+                        <p className="mb-1 small">📍 {centro.direccion}</p>
+                        <small className="text-muted">
+                          🏙️ {centro.localidad.denominacion}
+                        </small>
+                      </div>
+                      
+                      {/* Indicador de estado de geocodificación */}
+                      <div style={{ fontSize: '12px', color: '#666' }}>
+                        {isGeocoding && (
+                          <div className="spinner-border spinner-border-sm" role="status">
+                            <span className="visually-hidden">Cargando ubicación...</span>
+                          </div>
+                        )}
+                        {hasCoordinates && !isGeocoding && (
+                          <span style={{ color: '#28a745' }}>📍</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -164,7 +256,7 @@ const MinimapaCentros = () => {
             <div className="card-body p-0">
               <MapContainer
                 center={[-32.9468, -60.6393]} // Rosario, Santa Fe
-                zoom={12}
+                zoom={centrosParaMapa.length > 0 ? 12 : 10}
                 style={{ height: '400px', width: '100%' }}
               >
                 <TileLayer
@@ -172,12 +264,13 @@ const MinimapaCentros = () => {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 
-                {centrosConCoordenadas.map((centro) => (
+                {/* Solo mostrar marcadores de centros que ya tienen coordenadas */}
+                {centrosParaMapa.map((centro) => (
                   <Marker
                     key={centro.id}
                     position={[centro.lat, centro.lng]}
                     eventHandlers={{
-                      click: () => handleCentroClick(centro)
+                      click: () => setSelectedCentro(centro)
                     }}
                   >
                     <Popup>
@@ -191,7 +284,7 @@ const MinimapaCentros = () => {
                         </p>
                         <p style={{ margin: '4px 0', fontSize: '14px' }}>
                           <strong>🏙️ Localidad:</strong><br />
-                          {centro.localidad.nombre}
+                          {centro.localidad.denominacion}
                         </p>
                       </div>
                     </Popup>
@@ -202,6 +295,15 @@ const MinimapaCentros = () => {
               </MapContainer>
             </div>
           </div>
+          
+          {/* Estado del mapa */}
+          {centrosParaMapa.length === 0 && (
+            <div className="card-footer text-muted text-center">
+              <small>
+                🗺️ Haz clic en un centro de la lista para ver su ubicación en el mapa
+              </small>
+            </div>
+          )}
         </div>
       </div>
 
@@ -211,7 +313,7 @@ const MinimapaCentros = () => {
           <div className="col">
             <div className="card border-primary">
               <div className="card-header bg-primary text-white">
-                <h5 className="mb-0">Centro Seleccionado</h5>
+                <h5 className="mb-0">📍 Centro Seleccionado</h5>
               </div>
               <div className="card-body">
                 <div className="row">
@@ -220,44 +322,44 @@ const MinimapaCentros = () => {
                     <p><strong>Dirección:</strong> {selectedCentro.direccion}</p>
                   </div>
                   <div className="col-md-6">
-                    <p><strong>Localidad:</strong> {selectedCentro.localidad.nombre}</p>
-                    <p><strong>Coordenadas:</strong> {selectedCentro.lat.toFixed(4)}, {selectedCentro.lng.toFixed(4)}</p>
+                    <p><strong>Localidad:</strong> {selectedCentro.localidad.denominacion}</p>
+                    {selectedCentro.lat && selectedCentro.lng && (
+                      <p><strong>Coordenadas:</strong> {selectedCentro.lat.toFixed(4)}, {selectedCentro.lng.toFixed(4)}</p>
+                    )}
                   </div>
                 </div>
-                <div className="row mt-2">
-                  <div className="col">
-                    <a 
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${selectedCentro.lat},${selectedCentro.lng}`}
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="btn btn-outline-primary btn-sm me-2"
-                    >
-                      🗺️ Cómo llegar
-                    </a>
+                
+                {/* Botones de acción solo si tenemos coordenadas */}
+                {selectedCentro.lat && selectedCentro.lng && (
+                  <div className="row mt-2">
+                    <div className="col">
+                      <a 
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${selectedCentro.lat},${selectedCentro.lng}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="btn btn-outline-primary btn-sm me-2"
+                      >
+                        🗺️ Cómo llegar
+                      </a>
+                      <button 
+                        className="btn btn-outline-info btn-sm"
+                        onClick={() => geocodeCentroIfNeeded(selectedCentro)}
+                        disabled={geocodingInProgress.has(selectedCentro.id)}
+                      >
+                        {geocodingInProgress.has(selectedCentro.id) ? '⏳ Localizando...' : '🔄 Actualizar ubicación'}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Información adicional */}
-      <div className="row mt-3">
-        <div className="col">
-          <div className="alert alert-info" role="alert">
-            <small>
-              <strong>💡 Información:</strong> Este mapa utiliza OpenStreetMap, un servicio gratuito y de código abierto. 
-              Las ubicaciones son aproximadas basadas en las direcciones proporcionadas.
-            </small>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
-// Componente TabBar actualizado con Leaflet
 function TabBar(props) {
   const [politicas, setPoliticas] = useState([]);
   
@@ -286,8 +388,7 @@ function TabBar(props) {
       <Tab eventKey="centrosdeatencion" title="Centros de Atención">
         <h2 className='titulo'>Nuestras Instalaciones</h2>
         
-        {/* Sección de imágenes existente */}
-        <div style={{ display: "block", marginBottom: "2rem" }}>
+          <div style={{ display: "block", marginBottom: "2rem" }}>
           <div className='divFoto'>
             <img className='foto' src="/frente-1.jpg" alt="centro1" />
           </div>
@@ -297,12 +398,11 @@ function TabBar(props) {
           </div>
         </div>
 
-        {/* Nueva sección del minimapa */}
-        <div className="mt-4">
+          <div className="mt-4">
           <h3 className="mb-3">🗺️ Encuentra Nuestros Centros</h3>
           <p className="text-muted mb-4">
-            Explora la ubicación de nuestros centros médicos. Haz clic en los marcadores 
-            o en la lista para obtener más información y direcciones.
+            Explora la ubicación de nuestros centros médicos. Haz clic en los centros 
+            de la lista para ver su ubicación exacta en el mapa.
           </p>
           <MinimapaCentros />
         </div>
@@ -367,7 +467,7 @@ const pageStyles = {
   grid: {
     marginTop:"50px",
     display: "flex",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", // Diseño responsivo en cuadrícula
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
     justifyItems: "center",
   },
   message: {
@@ -381,7 +481,6 @@ const pageStyles = {
     padding: "50px 0",
   },
   spinner: {
-    // Un spinner CSS simple
     border: "4px solid rgba(0, 0, 0, 0.1)",
     borderLeftColor: "#007bff",
     borderRadius: "50%",

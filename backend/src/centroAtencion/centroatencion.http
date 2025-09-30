@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 10
+@id = 8
 
 ### GET ONE 
 GET http://localhost:3000/api/centroAtencion/{{id}}
