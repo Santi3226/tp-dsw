@@ -1,4 +1,4 @@
-import TabBar from "../components/Mapa.jsx";
+import TabLaboratorio from "../components/TabLaboratorio.jsx";
 //import TabBar from "../components/TabLaboratorio.jsx";
 import "./Paciente.css";
 import { useParams } from 'react-router-dom';
@@ -12,7 +12,7 @@ const Laboratorio = () => {
           <p className="p">Sección dedicada a nuestra marca, descubre todos nuestras instalaciones
             y detalles particulares como políticas y presupuestos.</p>
     <div className="tabPaciente">
-        <TabBar inicio={tab}/>         
+        <TabLaboratorio inicio={tab}/>         
       </div>
     </div>
     </div>
