@@ -7,15 +7,14 @@ POST http://localhost:3000/api/plantillaAnalisis
 Content-Type: application/json
 
 {
-  "hsAyuno": "-",
+  "hsAyuno": "Sin ayuno",
   "preparacion": "Realizar de 2 a 5 días de abstinencia sexual. Recolectar la muestra en un recipiente estéril no tóxico. No debe pasar más de 40 minutos desde la toma de la muestra hasta la entrega al momento del turno.",
   "fechaDesde": "2025-08-08",
   "tiempoPrevisto": 3
 }
 
 ### ID
-@id = 4
-
+@id = 14
 ### GET ONE 
 GET http://localhost:3000/api/plantillaAnalisis/{{id}}
 
@@ -24,8 +23,7 @@ PUT http://localhost:3000/api/plantillaAnalisis/{{id}}
 Content-Type: application/json
 
 {
-  "denominacion": "Rosario",
-  "codPostal": "2001"
+  "hsAyuno": "Sin ayuno"
 }
 
 ### DELETE

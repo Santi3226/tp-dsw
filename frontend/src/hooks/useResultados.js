@@ -14,7 +14,7 @@ const addResultados = async (data) => {
   for(const i in data.resultados){
   let resultadoData = {
     turno: data.id,
-    parametro: i === '' ? undefined : i,
+    parametroAnalisis: i === '' ? undefined : i,
     valor: data.resultados[i] === '' ? undefined : data.resultados[i],
   };
   try {
@@ -31,7 +31,7 @@ const addResultados = async (data) => {
     throw error;
   }
 };
-if(!error) alert('Resultados cargados Correctamente!');
+alert('Resultados cargados Correctamente!');
 };
 
 const getTurnosQuery = async (data) => {

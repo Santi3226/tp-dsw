@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import "./TurnoAdmin.css";
-import { addTipos, deleteTipos, modifyTipos, useTiposAnalisis } from "../hooks/useTiposAnalisis";
 import Tabs from "react-bootstrap/esm/Tabs";
 import { Tab } from "bootstrap";
 import { useEffect, useState } from "react";
 import axiosInstance from "../helpers/api";
+import { addPlantillas,deletePlantillas,modifyPlantillas, usePlantillasAnalisis } from "../hooks/usePlantillasAnalisis";
 
-function TiposAdmin() {
+function PlantillasAdmin() {
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
@@ -27,7 +27,7 @@ useEffect(() => {
 
 const onSubmitModify = async (data) => {
 try { 
-  await modifyTipos(data);
+  await modifyPlantillas(data);
   location.reload(); 
 } 
 catch (error) {
@@ -37,8 +37,8 @@ catch (error) {
 
 const onSubmitAdd = async (data) => {
 try { 
-  await addTipos(data);
-  location.reload(); 
+  await addPlantillas(data);
+  //location.reload(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -47,7 +47,7 @@ catch (error) {
 
 const onSubmitDelete = async (data) => {
 try { 
-  await deleteTipos(data);
+  await deletePlantillas(data);
   location.reload(); 
 } 
 catch (error) {
@@ -55,12 +55,12 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();  
+const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
 
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>Cargando tipos...</p>
+        <p style={pageStyles.message}>Cargando plantillas...</p>
         <div style={pageStyles.spinner}></div>
       </div>
     );
@@ -74,34 +74,36 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
     );
   }
 
-  if (tipos.length === 0) {
+  if (plantillas.length === 0) {
     return (
       <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron tipos.</p>
+        <p style={pageStyles.message}>No se encontraron plantillas.</p>
       </div>
     );
   }
 
   return (
     <div style={pageStyles.container}>
-      <h1 style={pageStyles.header}>Nuestros Tipos de Análisis</h1>
+      <h1 style={pageStyles.header}>Nuestras Plantillas de Análisis</h1>
       <div style={pageStyles.grid}>
       <table className="table">
               <thead>
                 <tr>
                   <th>Id</th>
-                  <th>Nombre</th>
-                  <th>Importe</th>
-                  <th>Plantilla</th>
+                  <th>Hs. Ayuno</th>
+                  <th>Preparación</th>
+                  <th>Tiempo Previsto</th>
+                  <th>Fecha Desde</th>
                 </tr>
               </thead>
               <tbody>
-              {tipos.map((ta) => (
+              {plantillas.map((ta) => (
                 <tr key={ta.id}>
                   <td>{ta.id}</td>
-                  <td>{ta.nombre}</td>
-                  <td>{ta.importe}</td>
-                  <td>{ta.plantillaAnalisis.id}</td>
+                  <td>{ta.hsAyuno}</td>
+                  <td>{ta.preparacion}</td>
+                  <td>{ta.tiempoPrevisto.toString()} días</td>
+                  <td>{new Date(ta.fechaDesde).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
@@ -116,7 +118,7 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
       style={{marginTop:"30px"}}
     >
       <Tab eventKey="modificar" title="Modificar">
-          <h2 className='titulo'>Modificar los tipos</h2>
+          <h2 className='titulo'>Modificar las plantillas</h2>
           <form
           className="login-formReg"
           onSubmit={handleSubmitModify(onSubmitModify)}
@@ -135,9 +137,9 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           className="form-input"
         >
         <option value="">-</option>
-        {tipos.map((ta, index) => (
+        {plantillas.map((ta, index) => (
         <option key={index} value={ta.id}>
-          {ta.id} - {ta.nombre}
+          {ta.id}
         </option>
               ))}
 
@@ -199,61 +201,51 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
         </form>
       </Tab>
       <Tab eventKey="agregar" title="Agregar">
-          <h2 className='titulo'>Agregar un tipo</h2>
+          <h2 className='titulo'>Agregar una plantilla</h2>
           <form
           className="login-formReg"
           onSubmit={handleSubmitAdd(onSubmitAdd)}
           noValidate
         >
           <div className="form-group" id="uno">
-            <label htmlFor="text">Nombre</label>
+            <label htmlFor="text">Hs. Ayuno</label>
             <input
               type="text"
-              id="nombreA"
-              {...registerAdd("nombre", {
-                required:"Nombre requerido",
-              })}
+              id="hsAyuno"
+              {...registerAdd("hsAyuno")}
               className="form-input"
             />
-            {errorsAdd.nombre && (
-              <div className="error-message">{errorsAdd.nombre.message}</div>
+            {errorsAdd.hsAyuno && (
+              <div className="error-message">{errorsAdd.hsAyuno.message}</div>
             )}
           </div>
 
           <div className="form-group" id="dos">
-            <label htmlFor="text">Importe</label>
+            <label htmlFor="text">Preparacion</label>
             <input
               type="text"
-              id="importe"
-              {...registerAdd("importe", {
-                required:"Importe requerido",
-              })}
+              id="preparacion"
+              {...registerAdd("preparacion")}
               className="form-input"
             />
-            {errorsAdd.importe && (
-              <div className="error-message">{errorsAdd.importe.message}</div>
+            {errorsAdd.preparacion && (
+              <div className="error-message">{errorsAdd.preparacion.message}</div>
             )}
           </div>
           <div className="form-group" id="tres">
-          <label htmlFor="text">Nro. de Plantilla</label>
-          <select
-              id="plantillaAnalisis"
-              
-              {...registerAdd("plantillaAnalisis")}
+            <label htmlFor="number">Tiempo Previsto (en Dias)</label>
+            <input
+              type="number"
+              id="tiempoPrevisto"
+              {...registerAdd("tiempoPrevisto", {
+                required: "Tiempo previsto es requerido"
+              })}
               className="form-input"
-            >
-            <option value="">-</option>
-            {plantillaAnalisis.map((pa, index) => (
-            <option key={index} value={pa.id}>
-              {pa.id} - {pa.hsAyuno} - {pa.tiempoPrevisto} dias - {new Date(pa.fechaDesde).toLocaleDateString()}
-            </option>
-            ))}
-
-            </select> 
-            {errorsAdd.plantillaAnalisis && (
-              <div className="error-message">{errorsAdd.plantillaAnalisis.message}</div>
+            />
+            {errorsAdd.tiempoPrevisto && (
+              <div className="error-message">{errorsAdd.tiempoPrevisto.message}</div>
             )}
-            </div>
+          </div>
 
           <button id="login" type="submit" className="login-btn" disabled={isSubmittingAdd}>
             {isSubmittingAdd ? "Un momento..." : "Agregar"}
@@ -275,9 +267,9 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           className="form-input"
         >
         <option value="">-</option>
-        {tipos.map((p, index) => (
+        {plantillas.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id} - {p.nombre}
+          {p.id}
         </option>
         ))}
 
@@ -358,4 +350,4 @@ const pageStyles = {
   },
 };
 
-export default TiposAdmin;
+export default PlantillasAdmin;

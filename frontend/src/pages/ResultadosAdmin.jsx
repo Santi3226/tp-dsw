@@ -30,14 +30,10 @@ function ResultadosAdmin() {
 
   const onSubmitAdd = async (data) => {
     try {
-
       console.log('Datos a enviar:', data);
-      /*
       await addResultados(data);
       data.estado = "Completado";
       await modifyTurnos(data);
-      location.reload();
-      */
     } catch (error) {
       console.error('Fallo al agregar:', error);
     }
@@ -218,7 +214,7 @@ function ResultadosAdmin() {
         </Tab>
 
         <Tab eventKey="resultado" title="Resultado">
-          <h2 className="titulo">Cargar Resultados</h2>
+          <h2 className="titulo" style={{marginTop: '40px', marginBottom: '40px'}}>Cargar Resultados</h2>
           <form
             className="login-formReg"
             onSubmit={handleSubmitAdd(onSubmitAdd)}
@@ -233,7 +229,7 @@ function ResultadosAdmin() {
               <option value="">-</option>
               {turnosFiltrados.map((turno) => (
                 <option key={turno.id} value={turno.id}>
-                  {turno.id}
+                  {turno.id} - {turno.paciente.apellido}, {turno.paciente.nombre} - {turno.tipoAnalisis.nombre}
                 </option>
               ))}
             </select>
@@ -242,29 +238,25 @@ function ResultadosAdmin() {
             )}
 
             {idSeleccionado && (
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
-              {/* Busco el turno q seleccione */}
-              {turnosFiltrados.find((t) => t.id === Number(idSeleccionado))
-                ?.tipoAnalisis.parametros.map((parametro) => (
-                  <div key={parametro.id} className="form-group" >
-                    <label htmlFor={`parametro-${parametro.id}`}>
-
-                      {parametro.parametroAnalisis.nombre} ({parametro.parametroAnalisis.unidad}) {/*Mapear los parametros y mostrarlos*/}
-                      
-                    </label>
-
-                    <input
-                      type="text"
-                      id={`parametro-${parametro.id}`}
-                      className="form-input"
-                      {...registerAdd(
-                        `resultados.${parametro.parametroAnalisis.id}`,
-                        { required: true }
-                      )}
-                    />
-                  </div>
-                ))}
-            </div>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
+                {turnosFiltrados.find((t) => t.id === Number(idSeleccionado))
+                  ?.tipoAnalisis.parametros.map((parametro) => (
+                    <div key={parametro.parametroAnalisis.id} className="form-group">
+                      <label htmlFor={`parametro-${parametro.parametroAnalisis.id}`}>
+                        {parametro.parametroAnalisis.nombre} ({parametro.parametroAnalisis.unidad})
+                      </label>
+                      <input
+                        type="text"
+                        id={`parametro-${parametro.parametroAnalisis.id}`}
+                        className="form-input"
+                        {...registerAdd(
+                          `resultados.${parametro.parametroAnalisis.id}`,
+                          { required: true }
+                        )}
+                      />
+                    </div>
+                  ))}
+              </div>
           )}
 
             <button
@@ -272,7 +264,7 @@ function ResultadosAdmin() {
               type="submit"
               className="login-btn"
               disabled={isSubmittingAdd}
-              style={{ gridRow: 1 }}
+              style={{ gridRow: 1, marginTop: '30px' }}
             >
               {isSubmittingAdd ? 'Un momento...' : 'Registrar'}
             </button>

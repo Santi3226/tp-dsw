@@ -7,7 +7,7 @@ import '../pages/Register.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
 import { useEffect, useState } from 'react';
-import { getTurnosQuery, modifyTurnos } from '../hooks/useTurnos.js';
+import { getTurnosQuery, modifyTurnos, useTurnos } from '../hooks/useTurnos.js';
 import { usePolitica } from '../hooks/usePolitica.js';
 
 function TabBar(props) {
@@ -34,7 +34,6 @@ function TabBar(props) {
   const [centros, setCentros] = useState([]);
   const { isLoading, isError, error, politicas = [] } = usePolitica();
   const [tiposAnalisis, setTiposAnalisis] = useState([]);
-  const [turnos, setTurnos] = useState([]);
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
@@ -156,6 +155,7 @@ function TabBar(props) {
     }
   };
 
+  const { turnos = [] } = useTurnos();
   const { inicio } = props;
   return (
     <Tabs
@@ -241,14 +241,16 @@ function TabBar(props) {
               textAlign: 'center',
               minWidth: '300px'
             }}>
-              <h4>Confirmar Cancelación</h4>
-              <p>¿Estás seguro de que quieres cancelar este turno?</p>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Confirmar Cancelación</h4>
+              <p>
+                ¿Estás seguro de que quieres cancelar este turno?</p>
               <div style={{ marginTop: '20px' }}>
-                <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginRight: '10px' }}>
-                  Confirmar
-                </button>
                 <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
-                  Cancelar
+                  Volver
+                </button>
+                 <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginLeft: '10px' }}>
+                  Confirmar
                 </button>
               </div>
             </div>
@@ -275,7 +277,7 @@ function TabBar(props) {
               <option value="">-</option>
               {tiposAnalisis.map((ta, index) => (
                 <option key={index} value={ta.id}>
-                  {ta.nombre}
+                  {ta.id} - {ta.nombre}
                 </option>
               ))}
             </select>

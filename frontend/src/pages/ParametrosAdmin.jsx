@@ -1,23 +1,25 @@
 import { useForm } from "react-hook-form";
 import "./TurnoAdmin.css";
-import { addTipos, deleteTipos, modifyTipos, useTiposAnalisis } from "../hooks/useTiposAnalisis";
+import { useParametrosAnalisis, addParametros, deleteParametros, modifyParametros, addVinculo } from "../hooks/useParametrosAnalisis";
 import Tabs from "react-bootstrap/esm/Tabs";
 import { Tab } from "bootstrap";
 import { useEffect, useState } from "react";
 import axiosInstance from "../helpers/api";
+import { useTiposAnalisis } from "../hooks/useTiposAnalisis";
 
-function TiposAdmin() {
+function ParametrosAdmin() {
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
-//3 forms distintos pq se solapan los errores y los botones
-const [plantillaAnalisis, setPlantillaAnalisis] = useState([]);
-
+const { register: registerVinculo, handleSubmit: handleSubmitVinculo, formState: { errors: errorsVinculo, isSubmittingVinculo }, } = useForm({ mode: "onBlur" });
+const { tipos = [] } = useTiposAnalisis();  
+ 
+const [parametrosAnalisis, setParametrosAnalisis] = useState([]);
 useEffect(() => {
     const getDatos = async () => {
       try {
-        const plantillaAnalisis = await axiosInstance.get('/plantillaAnalisis'); 
-        setPlantillaAnalisis(plantillaAnalisis.data.data);
+        const parametrosAnalisis = await axiosInstance.get('/parametroAnalisis'); 
+        setParametrosAnalisis(parametrosAnalisis.data.data);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }
@@ -27,7 +29,7 @@ useEffect(() => {
 
 const onSubmitModify = async (data) => {
 try { 
-  await modifyTipos(data);
+  await modifyParametros(data);
   location.reload(); 
 } 
 catch (error) {
@@ -37,7 +39,7 @@ catch (error) {
 
 const onSubmitAdd = async (data) => {
 try { 
-  await addTipos(data);
+  await addParametros(data);
   location.reload(); 
 } 
 catch (error) {
@@ -47,7 +49,7 @@ catch (error) {
 
 const onSubmitDelete = async (data) => {
 try { 
-  await deleteTipos(data);
+  await deleteParametros(data);
   location.reload(); 
 } 
 catch (error) {
@@ -55,7 +57,18 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();  
+const onSubmitVinculo = async (data) => {
+try {
+  await addVinculo(data);
+  //location.reload();
+}
+catch (error) {
+  console.error("Fallo al vincular:", error);
+}
+};
+
+  const { isLoading, isError, error, parametros = [] } = useParametrosAnalisis();
+
 
   if (isLoading) {
     return (
@@ -74,34 +87,34 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
     );
   }
 
-  if (tipos.length === 0) {
+  if (parametros.length === 0) {
     return (
       <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron tipos.</p>
+        <p style={pageStyles.message}>No se encontraron parámetros.</p>
       </div>
     );
   }
 
   return (
     <div style={pageStyles.container}>
-      <h1 style={pageStyles.header}>Nuestros Tipos de Análisis</h1>
+      <h1 style={pageStyles.header}>Nuestros Parámetros de Análisis</h1>
       <div style={pageStyles.grid}>
       <table className="table">
               <thead>
                 <tr>
                   <th>Id</th>
                   <th>Nombre</th>
-                  <th>Importe</th>
-                  <th>Plantilla</th>
+                  <th>Referencia</th>
+                  <th>Unidad</th>
                 </tr>
               </thead>
               <tbody>
-              {tipos.map((ta) => (
-                <tr key={ta.id}>
-                  <td>{ta.id}</td>
-                  <td>{ta.nombre}</td>
-                  <td>{ta.importe}</td>
-                  <td>{ta.plantillaAnalisis.id}</td>
+              {parametros.map((pa) => (
+                <tr key={pa.id}>
+                  <td>{pa.id}</td>
+                  <td>{pa.nombre}</td>
+                  <td>{pa.referencia}</td>
+                  <td>{pa.unidad}</td>
                 </tr>
               ))}
             </tbody>
@@ -116,28 +129,28 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
       style={{marginTop:"30px"}}
     >
       <Tab eventKey="modificar" title="Modificar">
-          <h2 className='titulo'>Modificar los tipos</h2>
+          <h2 className='titulo'>Modificar los parametros</h2>
           <form
           className="login-formReg"
           onSubmit={handleSubmitModify(onSubmitModify)}
           noValidate
         >
         <div className="form-group" id="uno">
-        <label htmlFor="text">Id Tipo de Analisis</label>
+        <label htmlFor="text">Id Parametro de Analisis</label>
         <select
           id="id"
           
           {...registerModify("id", {
-            required:"Id del Tipo de Analisis requerido",
+            required:"Id del Parametro de Analisis requerido",
             pattern: {
             },
           })}
           className="form-input"
         >
         <option value="">-</option>
-        {tipos.map((ta, index) => (
-        <option key={index} value={ta.id}>
-          {ta.id} - {ta.nombre}
+        {parametros.map((pa, index) => (
+        <option key={index} value={pa.id}>
+          {pa.id} - {pa.nombre}
         </option>
               ))}
 
@@ -161,45 +174,37 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           </div>
 
           <div className="form-group" id="tres">
-            <label htmlFor="text">Importe</label>
+            <label htmlFor="text">Referencia</label>
             <input
               type="text"
-              id="importe"
-              {...registerModify("importe")}
+              id="referencia"
+              {...registerModify("referencia")}
               className="form-input"
             />
-            {errorsModify.importe && (
-              <div className="error-message">{errorsModify.importe.message}</div>
+            {errorsModify.referencia && (
+              <div className="error-message">{errorsModify.referencia.message}</div>
             )}
           </div>
-          <div className="form-group" id="cuatro">
-          <label htmlFor="text">Nro. de Plantilla</label>
-          <select
-              id="plantillaAnalisis"
-              
-              {...registerModify("plantillaAnalisis")}
+           <div className="form-group" style={{gridRow:"2", gridColumn:"2"}}>
+            <label htmlFor="text">Unidad de Medición</label>
+            <input
+              type="text"
+              id="unidad"
+              {...registerModify("unidad")}
               className="form-input"
-            >
-            <option value="">-</option>
-            {plantillaAnalisis.map((pa, index) => (
-            <option key={index} value={pa.id}>
-              {pa.id}
-            </option>
-            ))}
-
-            </select> 
-            {errorsModify.plantillaAnalisis && (
-              <div className="error-message">{errorsModify.plantillaAnalisis.message}</div>
+            />
+            {errorsModify.unidad && (
+              <div className="error-message">{errorsModify.unidad.message}</div>
             )}
-            </div>
+          </div>
 
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify}>
+          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow:"3", gridColumn:"2"}}>
             {isSubmittingModify ? "Un momento..." : "Modificar"}
           </button>
         </form>
       </Tab>
       <Tab eventKey="agregar" title="Agregar">
-          <h2 className='titulo'>Agregar un tipo</h2>
+          <h2 className='titulo'>Agregar un Parametro</h2>
           <form
           className="login-formReg"
           onSubmit={handleSubmitAdd(onSubmitAdd)}
@@ -209,7 +214,7 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
             <label htmlFor="text">Nombre</label>
             <input
               type="text"
-              id="nombreA"
+              id="nombre"
               {...registerAdd("nombre", {
                 required:"Nombre requerido",
               })}
@@ -221,39 +226,31 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           </div>
 
           <div className="form-group" id="dos">
-            <label htmlFor="text">Importe</label>
+            <label htmlFor="text">Referencia</label>
             <input
               type="text"
-              id="importe"
-              {...registerAdd("importe", {
-                required:"Importe requerido",
+              id="referencia"
+              {...registerAdd("referencia", {
+                required:"Referencia requerida",
               })}
               className="form-input"
             />
-            {errorsAdd.importe && (
-              <div className="error-message">{errorsAdd.importe.message}</div>
+            {errorsAdd.referencia && (
+              <div className="error-message">{errorsAdd.referencia.message}</div>
             )}
           </div>
-          <div className="form-group" id="tres">
-          <label htmlFor="text">Nro. de Plantilla</label>
-          <select
-              id="plantillaAnalisis"
-              
-              {...registerAdd("plantillaAnalisis")}
+          <div className="form-group" id="cuatro">
+            <label htmlFor="text">Unidad de Medición</label>
+            <input
+              type="text"
+              id="unidad"
+              {...registerAdd("unidad")}
               className="form-input"
-            >
-            <option value="">-</option>
-            {plantillaAnalisis.map((pa, index) => (
-            <option key={index} value={pa.id}>
-              {pa.id} - {pa.hsAyuno} - {pa.tiempoPrevisto} dias - {new Date(pa.fechaDesde).toLocaleDateString()}
-            </option>
-            ))}
-
-            </select> 
-            {errorsAdd.plantillaAnalisis && (
-              <div className="error-message">{errorsAdd.plantillaAnalisis.message}</div>
+            />
+            {errorsAdd.unidad && (
+              <div className="error-message">{errorsAdd.unidad.message}</div>
             )}
-            </div>
+          </div>
 
           <button id="login" type="submit" className="login-btn" disabled={isSubmittingAdd}>
             {isSubmittingAdd ? "Un momento..." : "Agregar"}
@@ -261,29 +258,29 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
         </form>
       </Tab>
       <Tab eventKey="eliminar" title="Eliminar">
-        <h2 className='titulo'>Eliminar un tipo</h2>
+        <h2 className='titulo'>Eliminar un Parametro</h2>
         <form
         className="login-formReg"
         onSubmit={handleSubmitDelete(onSubmitDelete)}
         noValidate
       >
       <div className="form-group">
-        <label htmlFor="text">Tipo</label>
+        <label htmlFor="text">Id Parametro</label>
         <select
           id="id"
           {...registerDelete("id", {required:"Id requerido"})}
           className="form-input"
         >
         <option value="">-</option>
-        {tipos.map((p, index) => (
+        {parametros.map((p, index) => (
         <option key={index} value={p.id}>
           {p.id} - {p.nombre}
         </option>
         ))}
 
         </select>
-        {errorsDelete.tipoAnalisis && (
-          <div className="error-message">{errorsDelete.tipoAnalisis.message}</div>
+        {errorsDelete.parametroAnalisis && (
+          <div className="error-message">{errorsDelete.parametroAnalisis.message}</div>
         )}
       </div>
 
@@ -292,7 +289,59 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
       </button>
       </form>
       </Tab>
+    <Tab eventKey="vincular" title="Vincular">
+        <h2 className='titulo'>Vincular un Parametro y un Tipo de Análisis</h2>
+        <form
+        className="login-formReg"
+        onSubmit={handleSubmitVinculo(onSubmitVinculo)}
+        noValidate
+      >
+      <div className="form-group">
+        <label htmlFor="text">Id Parámetro de Análisis</label>
+        <select
+          id="parametroAnalisis"
+          {...registerVinculo("parametroAnalisis", {required:"Id Parametro requerido"})}
+          className="form-input"
+        >
+        <option value="">-</option>
+        {parametros.map((p, index) => (
+        <option key={index} value={p.id}>
+          {p.id} - {p.nombre}
+        </option>
+        ))}
+
+        </select>
+        {errorsVinculo.parametroAnalisis && (
+          <div className="error-message">{errorsVinculo.parametroAnalisis.message}</div>
+        )}
+      </div>
+            <div className="form-group">
+        <label htmlFor="text">Id Tipo de Análisis</label>
+        <select
+          id="tipoAnalisis"
+          {...registerVinculo("tipoAnalisis", {required:"Id Tipo de Análisis requerido"})}
+          className="form-input"
+        >
+        <option value="">-</option>
+        {tipos.map((t, index) => (
+        <option key={index} value={t.id}>
+          {t.id} - {t.nombre}
+        </option>
+        ))}
+
+        </select>
+        {errorsVinculo.tipoAnalisis  && (
+          <div className="error-message">{errorsVinculo.tipoAnalisis.message}</div>
+        )}
+      </div>
+
+      <button id="vincular" type="submit" className="login-btn" disabled={isSubmittingVinculo}>
+        {isSubmittingVinculo ? "Un momento..." : "Vincular"}
+      </button>
+      </form>
+      </Tab>
     </Tabs>
+
     </div>
   );
 }
@@ -358,4 +407,4 @@ const pageStyles = {
   },
 };
 
-export default TiposAdmin;
+export default ParametrosAdmin;

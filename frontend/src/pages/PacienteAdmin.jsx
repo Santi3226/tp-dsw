@@ -187,7 +187,7 @@ useEffect(() => {
         <option value="">-</option>
         {pacientes.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id}
+          {p.id} - {p.nombre} {p.apellido}
         </option>
         ))}
         </select>
@@ -408,7 +408,7 @@ useEffect(() => {
         <option value="">-</option>
         {pacientes.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id}
+          {p.id} - {p.nombre} {p.apellido}
         </option>
         ))}
         </select>

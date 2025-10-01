@@ -28,7 +28,7 @@ const addTipos = async (data) => {
     };
 try {
     const response = await axiosInstance.post("/tipoAnalisis", tiposData); 
-    alert("Tipo de Analisis n°:" + response.id +" creado correctamente");
+    alert("Tipo de Analisis n°:" + response.data.data.id +" creado correctamente");
   } catch (error) {
     console.error("Error al crear los datos:", error);
   }

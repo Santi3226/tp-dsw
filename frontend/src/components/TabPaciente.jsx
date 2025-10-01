@@ -87,7 +87,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
             <option value="">-</option>
             {tiposAnalisis.map((ta, index) => (
             <option key={index} value={ta.id}>
-              {ta.nombre}
+              {ta.id} - {ta.nombre}
             </option>
             ))}
             </select>

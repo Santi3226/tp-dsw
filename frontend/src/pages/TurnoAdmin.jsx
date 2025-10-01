@@ -269,7 +269,7 @@ useEffect(() => {
         <option value="">-</option>
         {turnosFiltrados.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id}
+          {p.id} - {p.paciente.apellido}, {p.paciente.nombre} - {p.tipoAnalisis.nombre}
         </option>
         ))}
         </select>
@@ -391,7 +391,7 @@ useEffect(() => {
               <option value="">-</option>
               {tipos.map((ta, index) => (
                 <option key={index} value={ta.id}>
-                  {ta.nombre}
+                  {ta.id} - {ta.nombre}
                 </option>
               ))}
             </select>
@@ -549,7 +549,7 @@ useEffect(() => {
         <option value="">-</option>
         {turnos.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id}
+          {p.id} - {p.paciente.apellido}, {p.paciente.nombre} - {p.tipoAnalisis.nombre}
         </option>
         ))}
         </select>

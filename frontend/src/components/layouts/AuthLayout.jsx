@@ -41,13 +41,17 @@ const AuthLayout = () => {
             <span className="icon">💉</span>
             Tipos de Analisis
           </Link>
+          <Link to="/dashboard/parametroAnalisis" className="sidebar-link">
+            <span className="icon">🩸</span>
+            Parametros de Analisis
+          </Link>
           <Link to="/dashboard/politica" className="sidebar-link">
             <span className="icon">🛠</span>
             Politicas
           </Link>
-          <Link to="/dashboard/profile" className="sidebar-link">
-            <span className="icon">👤</span>
-            Perfil
+          <Link to="/dashboard/plantillaAnalisis" className="sidebar-link">
+            <span className="icon">📄</span>
+            Plantillas de Analisis
           </Link>
           <Link to="/" className="sidebar-link">
             <span className="icon">🏠</span>

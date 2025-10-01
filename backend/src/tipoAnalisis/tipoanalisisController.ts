@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { TipoAnalisis } from './tipoanalisisEntity.js';
 import { orm } from '../shared/db/orm.js';
+import { TipoAnalisisParametro } from './tipoanalisisparametroEntity.js';
 
 const em = orm.em; //EntityManager
 
@@ -14,7 +15,9 @@ function sanitizeTipoAnalisisInput(
     importe: req.body.importe,
     plantillaAnalisis: req.body.plantillaAnalisis,
     resultadoAnalisis: req.body.resultadoAnalisis,
-    tipoAnalisisParametro: req.body.tipoAnalisisParametro
+    tipoAnalisisParametro: req.body.tipoAnalisisParametro,
+    tipoAnalisis: req.body.tipoAnalisis,
+    parametroAnalisis: req.body.parametroAnalisis
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -110,5 +113,19 @@ async function deleteOne(req: Request, res: Response) {
       .json({ message: 'Error deleting tipoAnalisis', error: error.message });
   }
 }
+async function vincular(req: Request, res: Response) {
+  try {
+    const tipoAnalisisParametro = em.create(TipoAnalisisParametro, req.body.sanitizedInput);
+    await em.flush();
+    res.status(201).json({
+      message: 'TipoAnalisisParametro creado exitosamente',
+      data: tipoAnalisisParametro,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ message: 'Error creating tipoAnalisisParametro', error: error.message });
+  }
+}
 
-export { sanitizeTipoAnalisisInput, findAll, findOne, deleteOne, add, update };
+export { sanitizeTipoAnalisisInput, findAll, findOne, deleteOne, add, update , vincular };

@@ -82,7 +82,7 @@ const { isLoading, isError, error, centros = [] } = useCentros();
         <option value="">-</option>
         {centros.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id}
+          {p.id} - {p.nombre}
         </option>
         ))}
 

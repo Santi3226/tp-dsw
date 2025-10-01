@@ -12,12 +12,12 @@ import Laboratorio from "./pages/Laboratorio";
 
 // Protected Pages
 import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile"; 
 import TurnoAdmin from "./pages/TurnoAdmin";
 import CentroAdmin from "./pages/CentroAdmin";
 import PacienteAdmin from "./pages/PacienteAdmin";
 import PoliticaAdmin from "./pages/PoliticaAdmin";
 import ResultadosAdmin from "./pages/ResultadosAdmin";
+import ParametrosAdmin from "./pages/ParametrosAdmin";
 
 // Other components
 import Login from "./pages/Login";
@@ -29,6 +29,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TiposAdmin from "./pages/TiposAdmin";
+import PlantillasAdmin from "./pages/PlantillasAdmin";
 
 
 const client = new QueryClient();
@@ -64,13 +65,14 @@ function App() {
               
               <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["admin"]} />}>
                 <Route index element={<Dashboard />} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="plantillaAnalisis" element={<PlantillasAdmin />} />
                 <Route path="turno" element={<TurnoAdmin />} />
                 <Route path="paciente" element={<PacienteAdmin />} />
                 <Route path="centro" element={<CentroAdmin />} />
                 <Route path="politica" element={<PoliticaAdmin />} />
                 <Route path="tipoAnalisis" element={<TiposAdmin />} />
                 <Route path="resultado" element={<ResultadosAdmin />} />
+                <Route path="parametroAnalisis" element={<ParametrosAdmin />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />
