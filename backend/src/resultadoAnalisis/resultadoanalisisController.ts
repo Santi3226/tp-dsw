@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { ResultadoAnalisis } from './resultadoanalisisEntity.js';
 import { orm } from '../shared/db/orm.js';
+import { populate } from 'dotenv';
 
 const em = orm.em; //EntityManager
 
@@ -25,7 +26,7 @@ function sanitizeResultadoAnalisisInput(
 // Get all localidades
 async function findAll(req: Request, res: Response) {
   try {
-    const resultados = await em.find(ResultadoAnalisis, {});
+    const resultados = await em.find(ResultadoAnalisis, {}, { populate: ['parametroAnalisis', 'turno', 'turno.paciente', 'turno.centroAtencion', 'turno.tipoAnalisis'] });
     res.status(200).json({
       message: 'Todos los resultados encontrados: ',
       data: resultados,
@@ -41,7 +42,7 @@ async function findOne(req: Request, res: Response) {
     const resultados = await em.findOneOrFail(ResultadoAnalisis, {
       turno: Number(req.params.turno),
       parametroAnalisis: Number(req.params.parametro),
-    });
+    }, { populate: ['parametroAnalisis', 'turno', 'turno.paciente', 'turno.centroAtencion', 'turno.tipoAnalisis'] });
     res.status(200).json({
       message: 'Resultado encontrado: ',
       data: resultados,

@@ -34,6 +34,7 @@ function ResultadosAdmin() {
       await addResultados(data);
       data.estado = "Completado";
       await modifyTurnos(data);
+      location.reload();
     } catch (error) {
       console.error('Fallo al agregar:', error);
     }

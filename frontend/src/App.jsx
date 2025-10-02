@@ -18,6 +18,7 @@ import PacienteAdmin from "./pages/PacienteAdmin";
 import PoliticaAdmin from "./pages/PoliticaAdmin";
 import ResultadosAdmin from "./pages/ResultadosAdmin";
 import ParametrosAdmin from "./pages/ParametrosAdmin";
+import Muestras from "./pages/Muestras";
 
 // Other components
 import Login from "./pages/Login";
@@ -73,6 +74,8 @@ function App() {
                 <Route path="tipoAnalisis" element={<TiposAdmin />} />
                 <Route path="resultado" element={<ResultadosAdmin />} />
                 <Route path="parametroAnalisis" element={<ParametrosAdmin />} />
+                <Route path="muestras" element={<Muestras />} />
+
               </Route>
               
               <Route path="*" element={<NotFound />} />

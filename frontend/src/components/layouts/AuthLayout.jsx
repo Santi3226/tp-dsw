@@ -25,6 +25,10 @@ const AuthLayout = () => {
             <span className="icon">👨‍🔬</span>
             Turnos
           </Link>
+          <Link to="/dashboard/muestras" className="sidebar-link">
+            <span className="icon">🧪</span>
+            Muestras
+          </Link>
           <Link to="/dashboard/resultado" className="sidebar-link">
             <span className="icon">📄</span>
             Resultados

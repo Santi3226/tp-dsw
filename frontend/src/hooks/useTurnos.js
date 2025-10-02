@@ -50,17 +50,32 @@ const modifyTurnos = async (data) => {
 
 const getTurnosQuery = async (data) => {
   try {
-    let [year, month, day] = data.fechaInicio.split('-').map(Number);
-    const fechaInicioUTC = new Date(year, month - 1, day);
-    [year, month, day] = data.fechaFin.split('-').map(Number);
-    const fechaFinUTC = new Date(year, month - 1, day);
-    const params = {
-      fechaHoraReserva:
-        data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
-      estado: data.estado === '' ? undefined : data.estado,
-      fechaInicio: data.fechaInicio === '' ? undefined : fechaInicioUTC,
-      fechaFin: data.fechaFin === '' ? undefined : fechaFinUTC,
-    };
+    const params = {};
+
+    // Si solo se proporciona fechaHoraReserva (para buscar turnos de un día específico)
+    if (data.fechaHoraReserva && !data.fechaInicio && !data.fechaFin) {
+      params.fechaHoraReserva = data.fechaHoraReserva;
+    } 
+    // Si se proporcionan fechas de rango (filtrado por rango de fechas)
+    else if (data.fechaInicio && data.fechaFin) {
+      let [year, month, day] = data.fechaInicio.split('-').map(Number);
+      const fechaInicioUTC = new Date(year, month - 1, day);
+      
+      [year, month, day] = data.fechaFin.split('-').map(Number);
+      const fechaFinUTC = new Date(year, month - 1, day);
+      
+      params.fechaInicio = fechaInicioUTC;
+      params.fechaFin = fechaFinUTC;
+    }
+
+    // Agregar estado si está presente
+    if (data.estado && data.estado !== '') {
+      params.estado = data.estado;
+    }
+    if (data.paciente && data.paciente !== '') {
+      params.paciente = data.paciente;
+    }
+
     const response = await axiosInstance.get('/turno/filter', { params });
     return response.data.data;
   } catch (error) {

@@ -1,9 +1,9 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
-import { set, useForm, useWatch } from "react-hook-form";
-import { Tab } from "bootstrap";
-import Tabs from "react-bootstrap/esm/Tabs";
+import { useForm, useWatch } from "react-hook-form";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import { useTiposAnalisis } from "../hooks/useTiposAnalisis.js";
 import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
@@ -16,15 +16,16 @@ const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
 const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
-const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
-const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
-const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmittingDelete }, } = useForm({ mode: "onBlur" });
-const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmittingFilter }, } = useForm({ mode: "onBlur" });
+const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
+const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
+const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
+const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 const fechaHoraReserva = useWatch({
     control,
     name: "fechaHoraReserva"
   });
+
 const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
     const horarios = [];
     let horaActual = horaInicio;
@@ -39,15 +40,17 @@ const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
     }
     return horarios;
   };
+
   const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
+  
   useEffect(() => {
     if (fechaHoraReserva) {
       const turnosFecha = async () => {
         try {
           const data = { fechaHoraReserva: fechaHoraReserva };
           const response = await getTurnosQuery(data);
-          console.log(turnos);
-          console.log(response);
+          console.log('Turnos de la fecha seleccionada:', response);
+          
           // Extrae los horarios ocupados de los turnos recibidos
           const occupiedTimes = response
             .filter(turno => turno.estado !== "Anulado")
@@ -93,7 +96,9 @@ catch (error) {
 };
 
 const onSubmitAdd = async (data) => {
-try { 
+try {
+  data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
+  console.log("Datos del formulario:", data);
   await addTurnos(data);
   location.reload(); 
 } 
@@ -125,15 +130,6 @@ useEffect(() => {
       </div>
     );
   }
-  
-  if (isLoading) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>Cargando turnos...</p>
-        <div style={pageStyles.spinner}></div>
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -147,11 +143,9 @@ useEffect(() => {
     return (
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <a href="">
         <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
             Volver
         </button>
-        </a>
       </div>
     );
   }
@@ -178,11 +172,11 @@ useEffect(() => {
               {turnosFiltrados.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
-                  <td>{turno.paciente.apellido + ", " + turno.paciente.nombre}</td>
-                  <td>{turno.tipoAnalisis.nombre}</td>
-                  <td>{turno.centroAtencion.nombre}</td>
+                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
+                  <td>{turno.tipoAnalisis?.nombre}</td>
+                  <td>{turno.centroAtencion?.nombre}</td>
                   <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  <td>{new Date(turno.fechaHoraExtraccion).toLocaleString() !== "31/12/1969, 09:00:00" ? new Date(turno.fechaHoraExtraccion).toLocaleString() : "-"}</td>
+                  <td>{turno.fechaHoraExtraccion && new Date(turno.fechaHoraExtraccion).toLocaleString() !== "31/12/1969, 09:00:00" ? new Date(turno.fechaHoraExtraccion).toLocaleString() : "-"}</td>
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td>{turno.recibeMail ? "Si" : "No"}</td>
@@ -205,13 +199,31 @@ useEffect(() => {
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
           >
+            <div className="form-group" id="uno">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerFilter("paciente")}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((pa, index) => (
+                <option key={index} value={pa.id}>
+                  {pa.id} - {pa.nombre} {pa.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsAdd.paciente && (
+              <div className="error-message">{errorsAdd.paciente.message}</div>
+            )}
+          </div>
+
             <div id="fechaNac" className="form-group">
               <label htmlFor="date">Fecha de Inicio</label>
               <input
                 type="date"
                 id="fechaInicio"
                 {...registerFilter('fechaInicio', {
-                  required: 'Fecha de inicio requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"
@@ -228,7 +240,6 @@ useEffect(() => {
                 type="date"
                 id="fechaFin"
                 {...registerFilter('fechaFin', {
-                  required: 'Fecha de fin requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"
@@ -251,7 +262,6 @@ useEffect(() => {
             </button>
           </form>
         </Tab>
-
       <Tab eventKey="modificar" title="Modificar">
           <h2 className='titulo'>Modificar los datos del Turno</h2>
           <form
@@ -269,7 +279,7 @@ useEffect(() => {
         <option value="">-</option>
         {turnosFiltrados.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id} - {p.paciente.apellido}, {p.paciente.nombre} - {p.tipoAnalisis.nombre}
+          {p.id} - {p.paciente?.apellido}, {p.paciente?.nombre} - {p.tipoAnalisis?.nombre}
         </option>
         ))}
         </select>
@@ -350,6 +360,7 @@ useEffect(() => {
               id="fechaNacimiento"
               {...registerModify("fechaNacimiento", {
                 validate: (value) => {
+                  if (!value) return true;
                   const selectedDate = new Date(value);
                   const currentDate = new Date();
                   currentDate.setHours(0, 0, 0, 0);
@@ -549,7 +560,7 @@ useEffect(() => {
         <option value="">-</option>
         {turnos.map((p, index) => (
         <option key={index} value={p.id}>
-          {p.id} - {p.paciente.apellido}, {p.paciente.nombre} - {p.tipoAnalisis.nombre}
+          {p.id} - {p.paciente?.apellido}, {p.paciente?.nombre} - {p.tipoAnalisis?.nombre}
         </option>
         ))}
         </select>

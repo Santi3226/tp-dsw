@@ -35,7 +35,7 @@ async function findAll(req: Request, res: Response) {
       Turno,
       {},
       {
-        populate: ['paciente', 'centroAtencion', 'tipoAnalisis','paciente.usuario'], }
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis','paciente.usuario', 'resultados.parametroAnalisis'], }
     );
     res.status(200).json({
       message: 'Todos los turnos encontrados: ',
@@ -54,7 +54,7 @@ async function findOne(req: Request, res: Response) {
       Turno,
       { id },
       {
-        populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'paciente.usuario'],
+        populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'paciente.usuario', 'resultados.parametroAnalisis'],
       }
     );
     res.status(200).json({
@@ -81,7 +81,10 @@ async function findSome(req: Request, res: Response) {
       const fechaFin = new Date(req.query.fechaFin as string);
       filtros.fechaHoraReserva = { $gte: fechaInicio, $lte: fechaFin };
     }
-    const turnos = await em.find(Turno, filtros, { populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'resultados', 'tipoAnalisis.parametros.parametroAnalisis'] });
+    if (req.query.paciente && req.query.paciente !== '') {
+      filtros.paciente = { $like: `${req.query.paciente as string}` };
+    }
+    const turnos = await em.find(Turno, filtros, { populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'resultados', 'tipoAnalisis.parametros.parametroAnalisis', 'resultados.parametroAnalisis'] });
     res.status(200).json({
       message: 'Turnos encontrados',
       data: turnos,

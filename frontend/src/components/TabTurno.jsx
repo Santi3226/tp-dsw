@@ -7,7 +7,7 @@ import '../pages/Register.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
 import { useEffect, useState } from 'react';
-import { getTurnosQuery, modifyTurnos, useTurnos } from '../hooks/useTurnos.js';
+import { getTurnosQuery, modifyTurnos } from '../hooks/useTurnos.js';
 import { usePolitica } from '../hooks/usePolitica.js';
 
 function TabBar(props) {
@@ -37,9 +37,17 @@ function TabBar(props) {
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
+  const [resultadosId, setResultadosId] = useState(null);
+  const [turnosPaciente, setTurnosPaciente] = useState([]);
 
   const handleEliminarClick = (id) => {
     setTurnoAEliminarId(id);
+    setShowModal(true);
+  };
+
+  const handleResultadosClick = (id) => {
+    setResultadosId(id);
+    console.log("Resultados del turno seleccionado:", turnosPaciente.find((t) => t.id === Number(id)).resultados);
     setShowModal(true);
   };
 
@@ -76,7 +84,7 @@ function TabBar(props) {
 
   // Generamos una lista estática de todos los horarios posibles
   const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
-
+  
   // Efecto para cargar los horarios disponibles cuando se selecciona una fecha
   useEffect(() => {
     if (fechaHoraReserva) {
@@ -84,8 +92,8 @@ function TabBar(props) {
         try {
           const data = { fechaHoraReserva: fechaHoraReserva };
           const response = await getTurnosQuery(data);
-          console.log(turnos);
-          console.log(response);
+          console.log('Turnos de la fecha seleccionada:', response);
+          
           // Extrae los horarios ocupados de los turnos recibidos
           const occupiedTimes = response
             .filter(turno => turno.estado !== "Anulado")
@@ -117,8 +125,10 @@ function TabBar(props) {
         setCentros(centros.data.data);
         const tipos = await axiosInstance.get('/tipoAnalisis');
         setTiposAnalisis(tipos.data.data);
-        const turnos = await axiosInstance.get('/paciente/' + user.paciente.id);
-        setTurnos(turnos.data.data.turnos);
+        const data = { paciente: user.paciente.id };
+        const response = await getTurnosQuery(data);
+        setTurnosPaciente(response);
+        console.log("Turnos del paciente:", response);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }
@@ -155,7 +165,6 @@ function TabBar(props) {
     }
   };
 
-  const { turnos = [] } = useTurnos();
   const { inicio } = props;
   return (
     <Tabs
@@ -166,7 +175,7 @@ function TabBar(props) {
     >
       <Tab eventKey="gestiondeturnos" title="Gestión de Turnos">
         <h2 className='titulo'>Mis turnos</h2>
-        {turnos.length > 0 ? (
+        {turnosPaciente.length > 0 ? (
           <div style={{ marginTop: '20px' }}>
             <table className="table">
               <thead>
@@ -182,17 +191,15 @@ function TabBar(props) {
                 </tr>
               </thead>
               <tbody style={{ verticalAlign: 'middle' }}>
-                {turnos.map((turno) => {
-                  const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
-                  const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                {turnosPaciente.map((turno) => {
                   if (turno.estado === "Anulado") {
                     return null;
                   }
                   return (
                     <tr key={turno.id}>
                       <td>{turno.id}</td>
-                      <td>{tipoAnalisisEncontrado?.nombre}</td>
-                      <td>{centroAtencionEncontrado?.nombre}</td>
+                      <td>{turno.tipoAnalisis?.nombre || '-'}</td>
+                      <td>{turno.centroAtencion?.nombre || '-'}</td>
                       <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
                       <td>{turno.estado}</td>
                       <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
@@ -400,7 +407,7 @@ function TabBar(props) {
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
-        {turnos.length > 0 ? (
+        {turnosPaciente.length > 0 ? (
           <div style={{ marginTop: '20px' }}>
             <table className="table" style={{ verticalAlign: 'middle' }}>
               <thead>
@@ -416,23 +423,22 @@ function TabBar(props) {
                 </tr>
               </thead>
               <tbody>
-                {turnos.map((turno) => {
-                  const tipoAnalisisEncontrado = tiposAnalisis.find(ta => ta.id === turno.tipoAnalisis);
-                  const centroAtencionEncontrado = centros.find(ca => ca.id === turno.centroAtencion);
+                {turnosPaciente.map((turno) => {
                   if (turno.estado !== "Completado") {
                     return null;
                   }
                   return (
                     <tr key={turno.id}>
                       <td>{turno.id}</td>
-                      <td>{tipoAnalisisEncontrado?.nombre}</td>
-                      <td>{centroAtencionEncontrado?.nombre}</td>
+                      <td>{turno.tipoAnalisis?.nombre || '-'}</td>
+                      <td>{turno.centroAtencion?.nombre || '-'}</td>
                       <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
                       <td>{turno.estado}</td>
                       <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                       <td>{turno.recibeMail ? "Sí" : "No"}</td>
                       <td>
                         <button
+                        onClick={() => handleResultadosClick(turno.id)}
                           style={{
                             background: 'none',
                             border: 'none',
@@ -453,6 +459,49 @@ function TabBar(props) {
           </div>
         ) : (
           <p style={{ marginTop: "30px" }}>No tienes resultados disponibles.</p>
+        )}
+        {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '300px'
+            }}>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Resultados</h4>
+                {resultadosId && (
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
+                    {turnosPaciente.find((t) => t.id === Number(resultadosId))
+                      .resultados.map((resultado) => (
+                        <div key={resultado.parametroAnalisis.id} className="form-group">
+                          <label>
+                            {resultado.parametroAnalisis.nombre} ({resultado.parametroAnalisis.unidad})
+                          </label>
+                          <label>{resultado.valor}</label>
+                        </div>
+                      ))}
+                  </div>
+              )}
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </Tab>
     </Tabs>
