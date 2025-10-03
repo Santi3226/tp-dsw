@@ -6,12 +6,13 @@ import fs from 'fs';
 
 // Función para obtener el CA certificate
 const getCACertificate = () => {
-  const certPath = process.env.TIDB_CA_CERTIFICATE;
+  // Intentar con variable de entorno primero
+  let certPath = process.env.TIDB_CA_CERTIFICATE;
   
+  // Si no está definida, usar la ruta por defecto de Render
   if (!certPath) {
-    console.error('⚠️  TIDB_CA_CERTIFICATE no está definido en las variables de entorno');
-    console.error('⚠️  Asegúrate de configurar esta variable en Render apuntando a /etc/secrets/ca.pem');
-    throw new Error('TIDB_CA_CERTIFICATE no está configurado');
+    certPath = '/etc/secrets/isrgrootx1.pem';
+    console.log('⚠️  TIDB_CA_CERTIFICATE no definido, usando ruta por defecto:', certPath);
   }
   
   try {
