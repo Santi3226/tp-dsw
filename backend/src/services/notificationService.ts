@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-import { mailFormat } from "./mailFormat.js";
+import { mailFormatProx } from "./mailFormatTurnoProx.js";
+import { mailFormatPrev } from "./mailFormatTurnoPrev.js";
 
 /* METODO OFICIAL
 const transporter = nodemailer.createTransport({
@@ -25,7 +26,7 @@ var transport = nodemailer.createTransport({
 });
 
 
-const sendNotification = async (mail: string, message: string, subject: string) => {
+const sendNotification = async (mail: string, message: string, subject: string, tipo: "prox" | "prev") => {
     console.log(`Enviando notificacion a ${mail}: ${message}`);
     // Logica del mail
     (async () => {
@@ -33,7 +34,7 @@ const sendNotification = async (mail: string, message: string, subject: string) 
     from: '"Laboratorio Genérico" <laboratorio@ethereal.email>',
     to: mail,
     subject: subject,
-    html: mailFormat(message, subject),
+    html: tipo === "prox" ? mailFormatProx(message, subject) : mailFormatPrev(message, subject),
   });
 
   console.log("Message sent:", info.messageId);

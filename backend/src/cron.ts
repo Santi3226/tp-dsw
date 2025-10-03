@@ -29,7 +29,7 @@ const recordatoriosDiarios = () => {
                     }
                 );
                 for (const turno of turnos) {
-                    await sendNotification(turno.paciente.usuario.email || "Usuario", '¡Mañana es tu turno en Laboratorio Genérico!, recorda leer la preparación para tu visita y revisar el horario para evitar demoras!', 'Turno Proximo');
+                    await sendNotification(turno.paciente.usuario.email || "Usuario", '¡Mañana es tu turno en Laboratorio Genérico!, recorda leer la preparación para tu visita y revisar el horario para evitar demoras!', 'Turno Proximo', "prox");
                     turno.notificacionEnviada = true;
                     await em.persistAndFlush(turno);
                 }
@@ -41,4 +41,54 @@ const recordatoriosDiarios = () => {
     console.log('Scheduler de recordatorios de turnos iniciado.');
 };
 
-export {recordatoriosDiarios}
+const recordatoriosPrevistos = () => {
+    cron.schedule('0 9 * * *', async () => { // Ejecuta diariamente a las 9 AM
+        console.log('Ejecutando tarea diaria de verificación de previstos...');
+        try {
+            await orm.em.fork().transactional(async (em) => {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0); // Normalizar a medianoche
+                
+                const turnos = await em.find(
+                    Turno,
+                    {
+                        fechaHoraExtraccion: { $ne: null } // Que tengan fecha de extracción
+                    },
+                    {
+                        populate: ['paciente', 'centroAtencion', 'tipoAnalisis', 'tipoAnalisis.plantillaAnalisis', 'paciente.usuario'],
+                    }
+                );
+
+                // Filtrar turnos donde ya pasaron los días previstos
+                const turnosListos = turnos.filter(turno => {
+                    const fechaExtraccion = new Date(turno.fechaHoraExtraccion);
+                    fechaExtraccion.setHours(0, 0, 0, 0);
+                    
+                    const diasPrevistos = turno.tipoAnalisis.plantillaAnalisis.tiempoPrevisto;
+                    const fechaEsperada = new Date(fechaExtraccion);
+                    fechaEsperada.setDate(fechaEsperada.getDate() + diasPrevistos);
+                    
+                    return hoy >= fechaEsperada;
+                });
+
+                for (const turno of turnosListos) {
+                    const nombrePaciente = `${turno.paciente.nombre} ${turno.paciente.apellido}`;
+                    
+                    await sendNotification(
+                        "laboratoriogenerico@mail.com",
+                        `Estimado/a Asistente, El turno N° ${turno.id}, ${turno.tipoAnalisis.nombre} del paciente ${nombrePaciente} esta disponible para evaluación o carga de resultados.`,
+                        'Turno Previsto',
+                        "prev"
+                    );
+                }
+
+                console.log(`Se procesaron ${turnosListos.length} turnos con resultados listos.`);
+            });
+        } catch (error) {
+            console.error('Error en la verificación de previstos:', error);
+        }
+    });
+    console.log('Scheduler de verificación de previstos iniciado.');
+};
+
+export {recordatoriosDiarios, recordatoriosPrevistos}
