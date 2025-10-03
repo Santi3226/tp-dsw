@@ -3,27 +3,33 @@ import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import "dotenv/config";
 import fs from 'fs';
+import { URL } from 'url';
+
+// Parsear DATABASE_URL
+const parseDbUrl = (url: string) => {
+  const parsed = new URL(url);
+  return {
+    host: parsed.hostname,
+    port: parseInt(parsed.port || '4000'),
+    user: parsed.username,
+    password: parsed.password,
+    dbName: parsed.pathname.slice(1),
+  };
+};
+
+const dbConfig = parseDbUrl(process.env.DATABASE_URL!);
 
 // Función para obtener el CA certificate
 const getCACertificate = () => {
-  // Intentar con variable de entorno primero
-  let certPath = process.env.TIDB_CA_CERTIFICATE;
-  
-  // Si no está definida, usar la ruta por defecto de Render
-  if (!certPath) {
-    certPath = '/etc/secrets/isrgrootx1.pem';
-    console.log('⚠️  TIDB_CA_CERTIFICATE no definido, usando ruta por defecto:', certPath);
-  }
+  let certPath = process.env.TIDB_CA_CERTIFICATE || '/etc/secrets/isrgrootx1.pem';
   
   try {
-    console.log(`📄 Intentando leer certificado CA desde: ${certPath}`);
+    console.log(`Leyendo certificado CA desde: ${certPath}`);
     const certContent = fs.readFileSync(certPath, 'utf8');
-    console.log('✅ Certificado CA cargado correctamente');
-    console.log(`📝 Tamaño del certificado: ${certContent.length} caracteres`);
+    console.log(`Certificado CA cargado: ${certContent.length} caracteres`);
     return certContent;
   } catch (error) {
-    console.error(`❌ Error al leer el certificado CA desde: ${certPath}`);
-    console.error(error);
+    console.error(`Error al leer certificado desde: ${certPath}`, error);
     throw error;
   }
 };
@@ -31,13 +37,18 @@ const getCACertificate = () => {
 export const orm = await MikroORM.init({
   entities: ['./dist/**/*Entity.js'],
   entitiesTs: ['./src/**/*Entity.ts'],
-  clientUrl: process.env.DATABASE_URL,
   driver: MySqlDriver,
+  host: dbConfig.host,
+  port: dbConfig.port,
+  user: dbConfig.user,
+  password: dbConfig.password,
+  dbName: dbConfig.dbName,
   highlighter: new SqlHighlighter(),
   debug: true,
   driverOptions: {
     ssl: {
       ca: getCACertificate(),
+      minVersion: 'TLSv1.2',
       rejectUnauthorized: true,
     },
   },
