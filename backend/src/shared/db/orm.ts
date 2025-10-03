@@ -9,18 +9,21 @@ const getCACertificate = () => {
   const certPath = process.env.TIDB_CA_CERTIFICATE;
   
   if (!certPath) {
-    console.warn('TIDB_CA_CERTIFICATE no está definido');
-    return undefined;
+    console.error('⚠️  TIDB_CA_CERTIFICATE no está definido en las variables de entorno');
+    console.error('⚠️  Asegúrate de configurar esta variable en Render apuntando a /etc/secrets/ca.pem');
+    throw new Error('TIDB_CA_CERTIFICATE no está configurado');
   }
   
   try {
-    // Leer el contenido del archivo desde la ruta
+    console.log(`📄 Intentando leer certificado CA desde: ${certPath}`);
     const certContent = fs.readFileSync(certPath, 'utf8');
-    console.log('Certificado CA cargado correctamente desde:', certPath);
+    console.log('✅ Certificado CA cargado correctamente');
+    console.log(`📝 Tamaño del certificado: ${certContent.length} caracteres`);
     return certContent;
   } catch (error) {
-    console.error('Error al leer el certificado CA desde:', certPath, error);
-    return undefined;
+    console.error(`❌ Error al leer el certificado CA desde: ${certPath}`);
+    console.error(error);
+    throw error;
   }
 };
 
@@ -33,7 +36,7 @@ export const orm = await MikroORM.init({
   debug: true,
   driverOptions: {
     ssl: {
-      ca: getCACertificate(), // Ahora pasa el CONTENIDO, no la ruta
+      ca: getCACertificate(),
       rejectUnauthorized: true,
     },
   },
