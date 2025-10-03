@@ -10,6 +10,14 @@ export const orm = await MikroORM.init({
   driver: MySqlDriver,
   highlighter: new SqlHighlighter(),
   debug: true,
+  driverOptions: {
+        ssl: {
+            // Esto es crucial para forzar la conexión SSL
+            rejectUnauthorized: true, 
+            // Le pasamos el contenido del certificado CA almacenado en Render
+            ca: process.env.TIDB_CA_CERTIFICATE,
+        },
+    },
   schemaGenerator: {
     disableForeignKeys: true, // Set to true if you want to disable foreign key checks
     createForeignKeyConstraints: true, // Set to true if you want to create foreign key constraints
