@@ -11,26 +11,24 @@ export const orm = await MikroORM.init({
   highlighter: new SqlHighlighter(),
   debug: true,
   driverOptions: {
-        ssl: {
-            // Esto es crucial para forzar la conexión SSL
-            rejectUnauthorized: true, 
-            // Le pasamos el contenido del certificado CA almacenado en Render
-            ca: process.env.TIDB_CA_CERTIFICATE,
+    ssl: process.env.TIDB_CA_CERTIFICATE 
+      ? {
+          rejectUnauthorized: true,
+          ca: process.env.TIDB_CA_CERTIFICATE,
+        }
+      : {
+          rejectUnauthorized: false, // Solo para desarrollo local
         },
-    },
+  },
   schemaGenerator: {
-    disableForeignKeys: true, // Set to true if you want to disable foreign key checks
-    createForeignKeyConstraints: true, // Set to true if you want to create foreign key constraints
+    disableForeignKeys: true,
+    createForeignKeyConstraints: true,
     ignoreSchema: [],
   },
 });
 
 export const syncSchema = async () => {
   const generator = orm.getSchemaGenerator();
-  /*
-  await generator.dropSchema(); // Uncomment to drop the schema
-  await generator.createSchema(); // Uncomment to create the schema
-*/
   await generator.updateSchema();
   console.log('Schema actualizado.');
 };
