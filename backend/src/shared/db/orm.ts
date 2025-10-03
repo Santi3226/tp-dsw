@@ -6,17 +6,8 @@ import "dotenv/config";
 export const orm = await MikroORM.init({
   entities: ['./dist/**/*Entity.js'],
   entitiesTs: ['./src/**/*Entity.ts'],
-  dbName: process.env.DATABASE,
-  host: process.env.HOST,
-  port: parseInt(process.env.PORT as string, 10),
-  user: process.env.USERNAME,
-  password: process.env.PASSWORD,
+  clientUrl: process.env.DATABASE_URL,
   driver: MySqlDriver,
-  driverOptions: {
-        ssl: {
-            rejectUnauthorized: false, // Configuracion para TiBD
-        },
-    },
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {
