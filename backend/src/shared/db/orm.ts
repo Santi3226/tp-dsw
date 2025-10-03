@@ -12,6 +12,11 @@ export const orm = await MikroORM.init({
   user: process.env.USERNAME,
   password: process.env.PASSWORD,
   driver: MySqlDriver,
+  driverOptions: {
+        ssl: {
+            rejectUnauthorized: false, // Configuracion para TiBD
+        },
+    },
   highlighter: new SqlHighlighter(),
   debug: true,
   schemaGenerator: {
