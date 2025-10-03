@@ -125,7 +125,7 @@ async function add(req: Request, res: Response) {
     console.log(turnoData);
     const turno = em.create(Turno, turnoData);
     await em.flush();
-    await sendNotification(turnoData.email || "Usuario", `¡Tu turno ha sido creado exitosamente! Recuerda revisar la preparación para tu visita y presentarte ${turno.fechaHoraReserva} para evitar demoras!`, 'Turno Creado');
+    await sendNotification(turnoData.email || "Usuario", `¡Tu turno ha sido creado exitosamente! Recuerda revisar la preparación para tu visita y presentarte ${turno.fechaHoraReserva} para evitar demoras!`, 'Turno Creado', "prox");
     res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
   } catch (error: any) {
     res

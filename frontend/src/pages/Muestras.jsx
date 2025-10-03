@@ -12,6 +12,7 @@ function Muestras() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
 const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
+const [showModal, setShowModal] = useState(false);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
@@ -24,10 +25,34 @@ const handleRecetaClick = (id) => {
 };
 */
 
-const handleConfirmacionClick = async (id) => {
+const handleMuestrasClick = async (id) => {
   const confirmacion = window.confirm("¿Estás seguro de que deseas registrar la muestra para el turno n° " + id + "?");
   if (confirmacion) {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
+    console.log("Datos para modificar el turno:", data);
+    await modifyTurnos(data);
+    //Abrir nueva pestaña para imprimir etiqueta
+    location.reload();
+  }
+};
+
+const handleConfirmarClick = async (id) => {
+  const confirmacion = window.confirm("¿Estás seguro de que deseas confirmar el turno n° " + id + "?");
+  if (confirmacion) {
+    const data = { id:id, estado: "Confirmado" };
+    console.log("Datos para modificar el turno:", data);
+    await modifyTurnos(data);
+    //Abrir nueva pestaña para imprimir etiqueta
+    location.reload();
+  }
+};
+
+const handleObservarClick = async (id) => {
+  setShowModal(true);
+
+  
+  if (confirmacion) {
+    const data = { id:id, estado: "Confirmado" };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
@@ -81,7 +106,16 @@ useEffect(() => {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Turnos</h1>
-      <div style={pageStyles.grid}>
+      <Tabs
+      defaultActiveKey="muestras"
+      id="justify-tab-example"
+      className="mb-3"
+      justify
+      style={{marginTop:"30px"}}
+      >
+    <Tab eventKey="muestras" title="Muestras">
+          <div style={pageStyles.grid}>
+
       <table className="table">
               <thead>
                 <tr>
@@ -90,7 +124,6 @@ useEffect(() => {
                   <th>Tipo de Analisis</th>
                   <th>Centro de Atencion</th>
                   <th>Fecha y Hora Reserva</th>
-                  {/*<th>Receta</th>*/}
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Registrar Muestra </th>
@@ -104,11 +137,10 @@ useEffect(() => {
                   <td>{turno.tipoAnalisis?.nombre}</td>
                   <td>{turno.centroAtencion?.nombre}</td>
                   <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  {/* <td><label onClick={() => handleRecetaClick(turno.id)}>Ver Receta</label></td> */}
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td><button
-                          onClick={() => handleConfirmacionClick(turno.id)}
+                          onClick={() => handleMuestrasClick(turno.id)}
                           style={{
                             background: 'none',
                             border: 'none',
@@ -124,8 +156,7 @@ useEffect(() => {
               ))}
             </tbody>
             </table>
-      </div>
-      <h2 className="titulo">Filtrar turnos</h2>
+      </div>      
           <form
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
@@ -193,7 +224,176 @@ useEffect(() => {
               {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
             </button>
           </form>
-    </div>
+   
+    </Tab>
+    <Tab eventKey="confirmar" title="Confirmar">
+          <div style={pageStyles.grid}>
+
+      <table className="table">
+              <thead>
+                <tr>
+                  <th>Numero de Turno</th>
+                  <th>Paciente</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora Reserva</th>
+                  {<th>Receta</th>}
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Confirmar Turno</th>
+                  <th>Observar Turno</th>
+                </tr>
+              </thead>
+              <tbody>
+              {turnosFiltrados.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
+                  <td>{turno.tipoAnalisis?.nombre}</td>
+                  <td>{turno.centroAtencion?.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  {<td><button onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                  <td><button
+                  onClick={() => handleObservarClick(turno.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'red',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    fontStyle: 'underline'
+                  }}
+                >
+                  ✔️ 
+                </button></td>
+                <td><button
+                  onClick={() => handleConfirmarClick(turno.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'red',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    fontStyle: 'underline'
+                  }}
+                >
+                  X
+                </button></td>
+                </tr>
+                
+              ))}
+            </tbody>
+            </table>
+      </div>      
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '300px'
+            }}>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Confirmar Cancelación</h4>
+              <p>
+                Estatar Observacion</p>
+              <div style={{ marginTop: '20px' }}>
+                const observacion = <input type="text" />
+                <button onClick={handleCerrarModal(observacion)} className='login-btn' style={{ backgroundColor: 'red' }}>
+                  Volver
+                </button>
+                 <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginLeft: '10px' }}>
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+          <form
+            className="login-formReg"
+            onSubmit={handleSubmitFilter(onSubmitFilter)}
+            noValidate
+          >
+            <div className="form-group" id="uno">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerFilter("paciente")}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((pa, index) => (
+                <option key={index} value={pa.id}>
+                  {pa.id} - {pa.nombre} {pa.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsFilter.paciente && (
+              <div className="error-message">{errorsFilter.paciente.message}</div>
+            )}
+          </div>
+
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Inicio</label>
+              <input
+                type="date"
+                id="fechaInicio"
+                {...registerFilter('fechaInicio', {
+                  validate: (value) => {},
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaInicio && (
+                <div className="error-message">
+                  {errorsFilter.fechaInicio.message}
+                </div>
+              )}
+            </div>
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Fin</label>
+              <input
+                type="date"
+                id="fechaFin"
+                {...registerFilter('fechaFin', {
+                  validate: (value) => {},
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaFin && (
+                <div className="error-message">
+                  {errorsFilter.fechaFin.message}
+                </div>
+              )}
+            </div>
+
+            <button
+              id="login"
+              type="submit"
+              className="login-btn"
+              disabled={isSubmittingFilter}
+              style={{ alignSelf: 'center' }}
+            >
+              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
+            </button>
+          </form>
+   
+    </Tab>
+    </Tabs>
+     </div>
   );
 }
 
