@@ -2,6 +2,27 @@ import { MikroORM } from '@mikro-orm/core';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import "dotenv/config";
+import fs from 'fs';
+
+// Función para obtener el CA certificate
+const getCACertificate = () => {
+  const certPath = process.env.TIDB_CA_CERTIFICATE;
+  
+  if (!certPath) {
+    console.warn('TIDB_CA_CERTIFICATE no está definido');
+    return undefined;
+  }
+  
+  try {
+    // Leer el contenido del archivo desde la ruta
+    const certContent = fs.readFileSync(certPath, 'utf8');
+    console.log('Certificado CA cargado correctamente desde:', certPath);
+    return certContent;
+  } catch (error) {
+    console.error('Error al leer el certificado CA desde:', certPath, error);
+    return undefined;
+  }
+};
 
 export const orm = await MikroORM.init({
   entities: ['./dist/**/*Entity.js'],
@@ -11,14 +32,10 @@ export const orm = await MikroORM.init({
   highlighter: new SqlHighlighter(),
   debug: true,
   driverOptions: {
-    ssl: process.env.TIDB_CA_CERTIFICATE 
-      ? {
-          rejectUnauthorized: true,
-          ca: process.env.TIDB_CA_CERTIFICATE,
-        }
-      : {
-          rejectUnauthorized: false, // Solo para desarrollo local
-        },
+    ssl: {
+      ca: getCACertificate(), // Ahora pasa el CONTENIDO, no la ruta
+      rejectUnauthorized: true,
+    },
   },
   schemaGenerator: {
     disableForeignKeys: true,
