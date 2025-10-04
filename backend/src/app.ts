@@ -51,7 +51,7 @@ app.use((_, res) => {
   return; //Si no entro en ninguna de las instucciones CRUD, que venga aca
 });
 
-await syncSchema(); //never in production
+//await syncSchema();
 recordatoriosDiarios();
 
 app.listen(3000, () => {
