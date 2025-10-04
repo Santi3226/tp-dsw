@@ -1,7 +1,8 @@
-.table{
+.table {
   align-self: center;
+  vertical-align: middle;
 }
 
-#login{
+#login {
   grid-row: 2;
 }
