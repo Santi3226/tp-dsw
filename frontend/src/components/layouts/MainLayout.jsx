@@ -2,6 +2,7 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import "./MainLayout.css";
 import Drop from "../Dropdown.jsx";
+import { Menu, X, ChevronDown, LogOut, LayoutDashboard } from 'lucide-react';
 
 const MainLayout = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -37,12 +38,13 @@ const MainLayout = () => {
             {isAuthenticated()  ? (
               <>
                 <button onClick={handleLogout} className="logout-btn">
+                  <LogOut className="btn-icon" />
                   Cerrar sesión
                 </button>
               </>
             ) : (
               <Link to="/login" className="nav-link login-btn">
-                Login
+                Iniciar Sesión
               </Link>
             )}
           </nav>

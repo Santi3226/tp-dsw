@@ -16,14 +16,22 @@ const [showModal, setShowModal] = useState(false);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
-/*
+
 const handleRecetaClick = (id) => {
   const turno = turnos.find(t => t.id === id);
   if (turno && turno.receta) {
-    // Traer la receta desde el backend con multer y abrirla en una nueva pestaña
+    const recetaWindow = window.open("", "_blank", "width=600,height=400");
+    recetaWindow.document.write("<html><head><title>Receta</title></head><body>");
+    recetaWindow.document.write("<h2>Receta para el turno n° " + id + "</h2>");
+    recetaWindow.document.write(`<img src=\"http://localhost:3000/uploads/${turno.receta}\"/>`);
+    recetaWindow.document.write("</body></html>");
+    recetaWindow.document.close();
   }
 };
-*/
+
+const handleCerrarModal = () => {
+    setShowModal(false);
+  };
 
 const handleMuestrasClick = async (id) => {
   const confirmacion = window.confirm("¿Estás seguro de que deseas registrar la muestra para el turno n° " + id + "?");
@@ -49,15 +57,6 @@ const handleConfirmarClick = async (id) => {
 
 const handleObservarClick = async (id) => {
   setShowModal(true);
-
-  
-  if (confirmacion) {
-    const data = { id:id, estado: "Confirmado" };
-    console.log("Datos para modificar el turno:", data);
-    await modifyTurnos(data);
-    //Abrir nueva pestaña para imprimir etiqueta
-    location.reload();
-  }
 };
 const onSubmitFilter = async (data) => {
   try {
@@ -66,6 +65,16 @@ const onSubmitFilter = async (data) => {
     setTurnosFiltrados(response || []); 
   } catch (error) {
     console.error("Fallo al filtrar:", error);
+  }
+};
+
+const handleConfirmarObservacion = async (observacion) => {
+  if (confirmacion) {
+    const data = { id:id, estado: "Confirmado" };
+    console.log("Datos para modificar el turno:", data);
+    await modifyTurnos(data);
+    //Abrir nueva pestaña para imprimir etiqueta
+    location.reload();
   }
 };
 
@@ -240,11 +249,11 @@ useEffect(() => {
                   {<th>Receta</th>}
                   <th>Estado</th>
                   <th>Observación</th>
-                  <th>Confirmar Turno</th>
                   <th>Observar Turno</th>
+                  <th>Confirmar Turno</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style={{justifyItems:"center", textAlign:"center", alignItems:"center"}}>
               {turnosFiltrados.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
@@ -252,7 +261,7 @@ useEffect(() => {
                   <td>{turno.tipoAnalisis?.nombre}</td>
                   <td>{turno.centroAtencion?.nombre}</td>
                   <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  {<td><button onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td><button
@@ -266,9 +275,9 @@ useEffect(() => {
                     fontStyle: 'underline'
                   }}
                 >
-                  ✔️ 
+                  X
                 </button></td>
-                <td><button
+                  <td><button
                   onClick={() => handleConfirmarClick(turno.id)}
                   style={{
                     background: 'none',
@@ -279,7 +288,7 @@ useEffect(() => {
                     fontStyle: 'underline'
                   }}
                 >
-                  X
+                  ✔️ 
                 </button></td>
                 </tr>
                 
@@ -305,20 +314,21 @@ useEffect(() => {
               padding: '20px',
               borderRadius: '5px',
               textAlign: 'center',
-              minWidth: '300px'
+              minWidth: '500px'
             }}>
               <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
-                Confirmar Cancelación</h4>
-              <p>
-                Estatar Observacion</p>
+                Establecer Observacion</h4>
               <div style={{ marginTop: '20px' }}>
-                const observacion = <input type="text" />
-                <button onClick={handleCerrarModal(observacion)} className='login-btn' style={{ backgroundColor: 'red' }}>
+                 <textarea style={{ width: '100%', height: '100px' }} id="observacion" type="text" />
+              </div>
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
                   Volver
                 </button>
-                 <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginLeft: '10px' }}>
+                 <button onClick={() => handleConfirmarObservacion(document.getElementById("observacion").value)} className='login-btn' style={{ marginLeft: '10px' }}>
                   Confirmar
                 </button>
+
               </div>
             </div>
           </div>
