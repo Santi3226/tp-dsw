@@ -8,6 +8,7 @@ Esta API REST está desarrollada con Node.js, Express y TypeScript, utilizando M
 
 ```
 http://localhost:3000/api
+https://laboratorio-dsw.onrender.com
 ```
 
 ### Autenticación
