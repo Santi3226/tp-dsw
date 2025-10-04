@@ -21,7 +21,7 @@ app.use(express.json());
 
 //luego de los middleware base
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app'); //Mas adelante cambiar el * por el localhost
+  res.setHeader('Access-Control-Allow-Origin', '*'); //Mas adelante cambiar el * por el localhost
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
    if (req.method === 'OPTIONS') {
@@ -52,9 +52,9 @@ app.use((_, res) => {
   return; //Si no entro en ninguna de las instucciones CRUD, que venga aca
 });
 
-//await syncSchema();
+await syncSchema();
 recordatoriosDiarios();
 
 app.listen(3000, () => {
-  console.log('Server activo en puerto 3000 y URL https://laboratorio-dsw.onrender.com/api');
+  console.log('Server activo en puerto 3000 y http://localhost:3000/api');
 });
