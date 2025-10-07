@@ -30,6 +30,10 @@ const AuthLayout = () => {
             <span className="icon">🏥</span>
             Centros
           </Link>
+          <Link to="/dashboard/localidad" className="sidebar-link">
+            <span className="icon">📍</span>
+            Localidades
+          </Link>
           <Link to="/dashboard/paciente" className="sidebar-link">
             <span className="icon">🧍‍♂️</span>
             Pacientes

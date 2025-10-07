@@ -13,11 +13,11 @@ import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRo
 import { politicaRouter } from './politica/politicaRoutes.js';
 import { usuarioRouter } from './usuario/usuarioRoutes.js';
 import { recordatoriosDiarios, recordatoriosPrevistos } from './cron.js';
+import multer from 'multer';
 
 const app = express();
+
 app.use(express.json());
-
-
 
 //luego de los middleware base
 app.use((req, res, next) => {
@@ -34,6 +34,8 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
 });
+
+app.use(express.static('public'));
 
 //antes de las rutas y middleware de negocio
 app.use('/api/localidad', localidadRouter); //Manda todas las peticiones q comiencen asi al router

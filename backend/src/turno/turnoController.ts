@@ -4,7 +4,7 @@ import { orm } from '../shared/db/orm.js';
 import fs from 'fs';
 import { FilterQuery } from '@mikro-orm/core';
 import { sendNotification } from '../services/notificationService.js';
-
+import path from 'path';
 const em = orm.em; //EntityManager
 
 function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
@@ -102,12 +102,14 @@ async function add(req: Request, res: Response) {
   try {
     const { recibeMail, estado, notificacionEnviada, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis, email } = req.body; 
     //Pq el formdata me desacomoda los datos del sanitizer
-    let filePath = "Sin Receta";
-    if (req.file) {
-      const newPath = `${req.file.destination}${req.file.originalname}`;
-      fs.renameSync(req.file.path, newPath);
-      filePath = newPath;
+    if(req.file) {
+    const newPath = `public\\uploads\\${req.file.filename}${path.extname(req.file.originalname)}`;
+    fs.renameSync(req.file.path, newPath);
     }
+    console.log("Archivo recibido:", req.file);
+    console.log("Cuerpo de la solicitud:", path.extname(req.file? req.file.originalname : ""));
+    const filePath = req.file ? req.file.filename+path.extname(req.file.originalname) : "Sin Receta";
+   
     const turnoData = {
       recibeMail: recibeMail === 'true',
       estado: 'Pendiente', 
@@ -119,15 +121,15 @@ async function add(req: Request, res: Response) {
       paciente: paciente,
       centroAtencion: centroAtencion,
       tipoAnalisis: tipoAnalisis,
-      resultado: undefined,
       email: email
     };
-    console.log(turnoData);
+    console.log("Datos del turno a crear:", turnoData);
+   
     const turno = em.create(Turno, turnoData);
     await em.flush();
     await sendNotification(turnoData.email || "Usuario", `¡Tu turno ha sido creado exitosamente! Recuerda revisar la preparación para tu visita y presentarte ${turno.fechaHoraReserva} para evitar demoras!`, 'Turno Creado', "prox");
     res.status(201).json({ message: 'Turno creado exitosamente', data: turno });
-  } catch (error: any) {
+    } catch (error: any) {
     res
       .status(500)
       .json({ message: 'Error creating turno', error: error.message });

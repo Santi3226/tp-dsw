@@ -8,9 +8,9 @@ import {
   add,
   update,
 } from './turnoController.js';
-import multer from 'multer';
 
-const upload = multer({ dest: 'uploads/' });
+import multer from 'multer';
+const upload = multer({ dest: 'public/uploads/' });
 const turnoRouter = Router();
 
 turnoRouter.get('/', findAll);

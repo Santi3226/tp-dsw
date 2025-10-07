@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
 import { useForm, useWatch } from "react-hook-form";
@@ -7,6 +7,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { useTiposAnalisis } from "../hooks/useTiposAnalisis.js";
 import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
+import axiosInstance from '../helpers/api';
 
 const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
   const horarios = [];
@@ -100,6 +101,9 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try {
   data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
+  const response = await axiosInstance.get("paciente/"+data.paciente);
+  const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
+  data.email = email.data.data.email;
   console.log("Datos del formulario:", data);
   await addTurnos(data);
   location.reload(); 

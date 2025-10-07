@@ -42,4 +42,5 @@
 
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
 
+Cuando creo un turno se rompe el dashboard
 Entregar la proposal actualizada con links al pull request de back y/o front.

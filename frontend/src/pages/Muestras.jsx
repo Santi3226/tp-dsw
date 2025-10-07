@@ -23,11 +23,23 @@ const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: {
 const handleRecetaClick = (id) => {
   const turno = turnos.find(t => t.id === id);
   if (turno && turno.receta) {
+    const recetaURL = `http://localhost:3000/uploads/${turno.receta}`;
     const recetaWindow = window.open("", "_blank", "width=600,height=400");
-    recetaWindow.document.write("<html><head><title>Receta</title></head><body>");
-    recetaWindow.document.write("<h2>Receta para el turno n° " + id + "</h2>");
-    recetaWindow.document.write(`<img src=\"http://localhost:3000/uploads/${turno.receta}\"/>`);
-    recetaWindow.document.write("</body></html>");
+    recetaWindow.document.write(`
+      <html>
+        <head>
+          <title>Receta - Turno ${id}</title>
+          <style>
+            body { font-family: Arial; text-align: center; padding: 20px; }
+            img { max-width: 100%; height: auto; }
+          </style>
+        </head>
+        <body>
+          <h2>Receta para el turno n° ${id}</h2>
+          <img src="${recetaURL}" alt="Receta del turno ${id}" />
+        </body>
+      </html>
+    `);
     recetaWindow.document.close();
   }
 };

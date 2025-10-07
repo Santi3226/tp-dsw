@@ -42,7 +42,7 @@ const recordatoriosDiarios = () => {
 };
 
 const recordatoriosPrevistos = () => {
-    cron.schedule('0 9 * * *', async () => { // Ejecuta diariamente a las 9 AM
+    cron.schedule('0 7 * * *', async () => { // Ejecuta diariamente a las 7 AM
         console.log('Ejecutando tarea diaria de verificación de previstos...');
         try {
             await orm.em.fork().transactional(async (em) => {
@@ -81,8 +81,6 @@ const recordatoriosPrevistos = () => {
                         "prev"
                     );
                 }
-
-                console.log(`Se procesaron ${turnosListos.length} turnos con resultados listos.`);
             });
         } catch (error) {
             console.error('Error en la verificación de previstos:', error);
