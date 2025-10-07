@@ -15,13 +15,39 @@
 }
 
 .CarrouselCaption {
-  width: auto;
-  height: auto;
-  padding: auto;
-  font: bold;
+color: #ffffff;
+  font-family: 'Segoe UI',
+    Tahoma,
+    Geneva,
+    Verdana,
+    sans-serif;
+  font-size: 2.5em;
+  font-weight: 14px;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  background-color: rgba(69, 67, 67, 0.4);
+  padding: 15px 30px;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
 
-  font-display: swap;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.423);
-  backdrop-filter: blur(10px);
+.CarrouselCaption h3 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 400;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);}
+
+.CarrouselCaption p {
+  color: #e0e0e0; /* Un blanco ligeramente menos puro para el subtexto */
+    font-family: 'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    margin-top: 10px; /* Espacio entre el título y el subtexto */
 }

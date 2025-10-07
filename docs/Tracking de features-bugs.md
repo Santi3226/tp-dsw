@@ -22,9 +22,9 @@
 | 15  | CSS de registrar turno                                                               | Completo   | Frontend   | Santi    | 5-9-25  |
 | 16  | Responsive design                                                                    | Pendiente  | Frontend   | Santi    | 13-8-25 |
 | 17  | Setear Variables de entorno p/bd y mailer                                            | Completado | Frontend   | Santi    | 16-8-25 |
-| 18  | Acomodar los estados de un turno (pendiente, anulado, confirmado, completado)        | Pendiente  | Frontend   | Santi    | 6-9-25  |
+| 18  | Acomodar los estados de un turno (pendiente, anulado, confirmado, completado)        | Completado | Frontend   | Santi    | 6-9-25  |
 | 19  | Enviar mail cuando se crea el turno                                                  | Completo   | Backend    | Santi    | 6-9-25  |
-| 20  | Poner dias pendientes al resultado                                                   | Pendiente  | Frontend   | Santi    | 6-9-25  |
+| 20  | Poner dias pendientes al resultado                                                   | Cancelado  | Frontend   | Santi    | 6-9-25  |
 | 21  | Turnos separados en fecha y hora                                                     | Completo   | Frontend   | Santi    | 6-9-25  |
 | 22  | Panel control Dashboard mejorado                                                     | Completo   | Frontend   | Santi    | 6-9-25  |
 | 23  | Turnos Admin , no se pq me hizo renegar tanto                                        | Completo   | Frontend   | Santi    | 6-9-25  |
@@ -36,10 +36,10 @@
 | 29  | Notificar Previstos                                                                  | Pendiente  | Frontend   | Santi    | 30-9-25 |
 | 30  | Reporte de Ganancias                                                                 | Pendiente  | Frontend   | Santi    | 30-9-25 |
 | 31  | Confirmar Turnos                                                                     | Completo   | Frontend   | Santi    | 30-9-25 |
-| 32  | Test Automáticos                                                                     | Completo   | Frontend   | Santi    | 6-10-25 |
+| 32  | Test Automáticos                                                                     | Completo   | Docs       | Santi    | 6-10-25 |
+| 33  | Mostrar Recetas                                                                      | Completo   | Frontend   | Santi    | 6-10-25 |
+| 34  | Video Explicativo                                                                    | Pendiente  | Docs       | Santi    | 6-10-25 |
 
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
-Completar turnos admin para que: se muestre la receta y se confirme el turno
 
-Video explicando el funcionamiento del sistema
 Entregar la proposal actualizada con links al pull request de back y/o front.

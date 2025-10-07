@@ -9,11 +9,12 @@ import './TurnoAdmin.css';
 import { useForm } from 'react-hook-form';
 import { Tab } from 'bootstrap';
 import Tabs from 'react-bootstrap/esm/Tabs';
+import { usePaciente } from '../hooks/usePacientes';
 
 function ResultadosAdmin() {
   const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
   const { isLoading, isError, error, turnos = [] } = useTurnos();
-
+  const { pacientes = [] } = usePaciente();
   const {
     register: registerAdd,
     handleSubmit: handleSubmitAdd,
@@ -161,19 +162,37 @@ function ResultadosAdmin() {
         style={{ marginTop: '30px' }}
       >
         <Tab eventKey="filtrar" title="Filtrar">
-          <h2 className="titulo">Filtrar turnos</h2>
+      <h2 className="titulo">Filtrar turnos</h2>
           <form
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
           >
+            <div className="form-group" id="uno">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerFilter("paciente")}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((pa, index) => (
+                <option key={index} value={pa.id}>
+                  {pa.id} - {pa.nombre} {pa.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsFilter.paciente && (
+              <div className="error-message">{errorsFilter.paciente.message}</div>
+            )}
+          </div>
+
             <div id="fechaNac" className="form-group">
               <label htmlFor="date">Fecha de Inicio</label>
               <input
                 type="date"
                 id="fechaInicio"
                 {...registerFilter('fechaInicio', {
-                  required: 'Fecha de inicio requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"
@@ -190,7 +209,6 @@ function ResultadosAdmin() {
                 type="date"
                 id="fechaFin"
                 {...registerFilter('fechaFin', {
-                  required: 'Fecha de fin requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"

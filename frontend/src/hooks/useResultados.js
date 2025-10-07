@@ -41,6 +41,7 @@ const getTurnosQuery = async (data) => {
     [year, month, day] = data.fechaFin.split('-').map(Number);
     const fechaFinUTC = new Date(year, month - 1, day);
     const params = {
+      paciente: data.paciente === '' ? undefined : data.paciente,
       estado: data.estado === '' ? undefined : data.estado,
       fechaInicio: data.fechaInicio === '' ? undefined : fechaInicioUTC,
       fechaFin: data.fechaFin === '' ? undefined : fechaFinUTC,

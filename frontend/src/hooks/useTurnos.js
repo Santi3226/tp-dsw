@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../helpers/api';
+import { rectangle } from 'leaflet';
 
 const getDatos = async () => {
   try {
@@ -33,14 +34,11 @@ const modifyTurnos = async (data) => {
   const turnoData = {
     /*Cambiar*/
     id: data.id,
-    nombre: data.nombre === '' ? undefined : data.nombre,
-    apellido: data.apellido === '' ? undefined : data.apellido,
-    dni: data.dni === '' ? undefined : data.dni,
-    telefono: data.telefono === '' ? undefined : data.telefono,
-    direccion: data.direccion === '' ? undefined : data.direccion,
-    estado: data.estado === '' ? undefined : data.estado,
-    fechaNacimiento:
-      data.fechaNacimiento === '' ? undefined : data.fechaNacimiento,
+    recibeMail: data.recibeMail === '' ? undefined : data.recibeMail,
+    fechaHoraReserva: data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
+    paciente: data.paciente === '' ? undefined : data.paciente,
+    centroAtencion: data.centroAtencion === '' ? undefined : data.centroAtencion,
+    tipoAnalisis: data.tipoAnalisis === '' ? undefined : data.tipoAnalisis,
   };
   try {
     await axiosInstance.put('/turno/' + turnoData.id, turnoData);

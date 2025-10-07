@@ -12,7 +12,7 @@ import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRo
 import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
 import { politicaRouter } from './politica/politicaRoutes.js';
 import { usuarioRouter } from './usuario/usuarioRoutes.js';
-import { recordatoriosDiarios } from './cron.js';
+import { recordatoriosDiarios, recordatoriosPrevistos } from './cron.js';
 
 const app = express();
 app.use(express.json());
@@ -54,6 +54,7 @@ app.use((_, res) => {
 
 await syncSchema();
 recordatoriosDiarios();
+recordatoriosPrevistos();
 
 app.listen(3000, () => {
   console.log('Server activo en puerto 3000 y http://localhost:3000/api');

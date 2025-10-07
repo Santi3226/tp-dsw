@@ -22,7 +22,7 @@ const MainLayout = () => {
           <img className="logo" src="/logo.png" alt="Logo" href="/"/>
           </Link>
           <div className="titulo">
-            <h1>Laboratorio Genérico</h1>
+            <h1>{"Laboratorio\nGenérico"}</h1>
           </div>
           <nav className="main-nav">
             <Drop className="drop" titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Consultas" />

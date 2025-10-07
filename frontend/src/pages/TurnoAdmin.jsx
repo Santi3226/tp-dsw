@@ -33,23 +33,27 @@ const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
 const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
-const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
-const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
-const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
+const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control: controlAdd } = useForm({ mode: "onBlur" });
+const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify }, control: controlModify } = useForm({ mode: "onBlur" });const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 const fechaHoraReserva = useWatch({
-    control,
+    control: controlAdd,
     name: "fechaHoraReserva"
-  });
-  
+});
+
+
+const fechaHoraReservaModify = useWatch({
+    control: controlModify, 
+    name: "fechaHoraReserva"
+});
   
 useEffect(() => {
     if (!fechaHoraReserva) return; // Early return si no hay fecha
     
     const turnosFecha = async () => {
       try {
-        const data = { fechaHoraReserva: fechaHoraReserva };
+        const data = { fechaHoraReserva: fechaHoraReserva ? fechaHoraReserva : fechaHoraReservaModify };
         const response = await getTurnosQuery(data);
         
         const occupiedTimes = response
@@ -70,7 +74,7 @@ useEffect(() => {
       }
     };
     turnosFecha();
-  }, [fechaHoraReserva]); 
+  }, [fechaHoraReserva, fechaHoraReservaModify]); 
 
 const onSubmitDelete = async (data) => {
 try {
@@ -214,8 +218,8 @@ useEffect(() => {
                 </option>
               ))}
             </select>
-            {errorsAdd.paciente && (
-              <div className="error-message">{errorsAdd.paciente.message}</div>
+            {errorsFilter.paciente && (
+              <div className="error-message">{errorsFilter.paciente.message}</div>
             )}
           </div>
 
@@ -278,7 +282,7 @@ useEffect(() => {
           className="form-input"
         >
         <option value="">-</option>
-        {turnosFiltrados.map((p, index) => (
+        {turnos.map((p, index) => (
         <option key={index} value={p.id}>
           {p.id} - {p.paciente?.apellido}, {p.paciente?.nombre} - {p.tipoAnalisis?.nombre}
         </option>
@@ -289,97 +293,121 @@ useEffect(() => {
         )}
       </div>
 
-          <div className="form-group" id="tres">
-          <label htmlFor="text">Nombre</label>
-          <input
-              type="text"
-              id="nombre"
-              {...registerModify("nombre")}
-              className="form-input"
-            />
-            {errorsModify.nombre && (
-              <div className="error-message">{errorsModify.nombre.message}</div>
-            )}
-            </div>
-            <div className="form-group" id="cuatro">
-            <label htmlFor="text">Apellido</label>
-            <input
-              type="text"
-              id="apellido"
-              {...registerModify("apellido")}
-              className="form-input"
-            />
-            {errorsModify.apellido && (
-              <div className="error-message">{errorsModify.apellido.message}</div>
-            )}</div>
-            <div className="form-group">
-            <label htmlFor="number">DNI</label>
-            <input
-              type="text"
-              id="dni"
-              {...registerModify("dni", {
-                pattern: {
-                  value: undefined||/^\d{8}$/, // Expresión regular para validar dni
-                  message: "Formato de dni no válido",
-                },
+       <div className="form-group" id="uno">
+            <label htmlFor="text">Tipo de Análisis</label>
+            <select
+              id="tipoAnalisis"
+              {...registerModify("tipoAnalisis", {
               })}
               className="form-input"
-            />
-            {errorsModify.dni && (
-              <div className="error-message">{errorsModify.dni.message}</div>
+            >
+              <option value="">-</option>
+              {tipos.map((ta, index) => (
+                <option key={index} value={ta.id}>
+                  {ta.id} - {ta.nombre}
+                </option>
+              ))}
+            </select>
+            {errorsModify.tipoAnalisis && (
+              <div className="error-message">{errorsModify.tipoAnalisis.message}</div>
             )}
           </div>
-          <div className="form-group">
-            <label htmlFor="text">Direccion</label>
+
+          <div id="dos" className="form-group">
+            <label htmlFor="date">Fecha del Turno</label>
             <input
-              type="text"
-              id="direccion"
-              {...registerModify("direccion")}
-              className="form-input"
-            />
-            {errorsModify.direccion && (
-              <div className="error-message">{errorsModify.direccion.message}</div>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="text">Telefono</label>
-            <input
-              type="text"
-              id="telefono"
-              {...registerModify("telefono", {
-              })}
-              className="form-input"
-            />
-            {errorsModify.telefono && (
-              <div className="error-message">{errorsModify.telefono.message}</div>
-            )}
-          </div>
-          <div id="fechaNac" className="form-group">
-            <label htmlFor="date">Fecha de Nacimiento</label>
-            <input
+              style={{ width: "40%" }}
               type="date"
-              id="fechaNacimiento"
-              {...registerModify("fechaNacimiento", {
+              id="fechaHoraReserva"
+              {...registerModify("fechaHoraReserva", {
                 validate: (value) => {
-                  if (!value) return true;
                   const selectedDate = new Date(value);
                   const currentDate = new Date();
                   currentDate.setHours(0, 0, 0, 0);
-                  if (selectedDate > currentDate) {
-                    return "Fecha de nacimiento inválida";
+                  if (selectedDate < currentDate) {
+                    return "Fecha de turno inválida";
                   }
                   return true;
                 },
               })}
               className="form-input"
             />
-            {errorsModify.fechaNacimiento && (
-              <div className="error-message">{errorsModify.fechaNacimiento.message}</div>
+            {errorsModify.fechaHoraReserva && (
+              <div className="error-message">{errorsModify.fechaHoraReserva.message}</div>
+            )}
+            </div>
+              <div id="tres" className="form-group">
+            {(fechaHoraReservaModify && errorsModify.fechaHoraReserva == undefined) && (
+              <>
+                <label htmlFor="time">Hora del Turno</label>
+                <select 
+                  id="horaReserva"
+                  {...registerModify("horaReserva", {
+                  })}
+                  className="form-input"
+                >
+                  <option value="">-</option>
+                  {horariosDisponibles.map((hora, index) => (
+                    <option key={index} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </select>
+                {errorsModify.horaReserva && (
+                  <div className="error-message">{errorsModify.horaReserva.message}</div>
+                )}
+              </>
             )}
           </div>
-          
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow: 4}}>
-            {isSubmittingModify ? "Un momento..." : "Modificar"}
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "2"}} id="tres">
+            <label htmlFor="text">Centro de Atención</label>
+            <select
+              id="centroAtencion"
+              {...registerModify("centroAtencion", {
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {centros.map((ca, index) => (
+                <option key={index} value={ca.id}>
+                  {ca.nombre + " - " + ca.localidad?.denominacion + ", " + ca.domicilio}
+                </option>
+              ))}
+            </select>
+            {errorsModify.centroAtencion && (
+              <div className="error-message">{errorsModify.centroAtencion.message}</div>
+            )}
+          </div>
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "3"}} id="tres">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerModify("paciente", {
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((p, index) => (
+                <option key={index} value={p.id}>
+                  {p.id + " - " + p.nombre + ", " + p.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsModify.paciente && (
+              <div className="error-message">{errorsModify.paciente.message}</div>
+            )}
+          </div>
+
+          <div className="form-options" style={{gridColumn: "1", gridRow : "4"}}>
+            <label className="checkbox-label">
+              <input type="checkbox" {...registerModify("recibeMail")} />
+              <span>Deseo recibir Email recordatorio</span>
+            </label>
+          </div>
+          <button id="turno" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridColumn: "2", gridRow : "4"}}>
+            {isSubmittingModify ? "Un momento..." : "Registrar"}
           </button>
         </form>
       </Tab>

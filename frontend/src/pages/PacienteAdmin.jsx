@@ -392,7 +392,7 @@ useEffect(() => {
         </form>
       </Tab>
       <Tab eventKey="eliminar" title="Eliminar">
-        <h2 className='titulo'>Eliminar un tipo</h2>
+        <h2 className='titulo'>Eliminar un Paciente</h2>
         <form
         className="login-formReg"
         onSubmit={handleSubmitDelete(onSubmitDelete)}
