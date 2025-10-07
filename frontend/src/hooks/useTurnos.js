@@ -11,25 +11,27 @@ const getDatos = async () => {
 };
 
 const addTurnos = async (data) => {
-  const turnoData = {};
+    const formData = new FormData();
+    formData.append('receta', data.receta[0]);
+    formData.append('recibeMail', data.recibeMail);
+    formData.append('estado', 'Pendiente');
+    formData.append('observacion', '-');
+    formData.append('fechaHoraReserva', data.fechaHoraReserva);
+    formData.append('paciente', data.paciente);
+    formData.append('centroAtencion', data.centroAtencion);
+    formData.append('tipoAnalisis', data.tipoAnalisis);
   try {
-    const response = await axiosInstance.post('/turno', turnoData);
+    const response = await axiosInstance.post('/turno', formData);
     alert('Turno creado Correctamente!');
   } catch (error) {
     console.error('Error en Hook:', error);
-    if (error.response && error.response.data && error.response.data.message) {
-      setErrorLogin(error.response.data.message);
-    } else {
-      setErrorLogin(
-        'Error de red o del servidor. Por favor, inténtalo de nuevo.'
-      );
-    }
     throw error;
   }
 };
 
 const modifyTurnos = async (data) => {
   const turnoData = {
+    /*Cambiar*/
     id: data.id,
     nombre: data.nombre === '' ? undefined : data.nombre,
     apellido: data.apellido === '' ? undefined : data.apellido,

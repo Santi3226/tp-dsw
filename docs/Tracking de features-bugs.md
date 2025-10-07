@@ -17,7 +17,7 @@
 | 12  | Cron - Recordar mediante mails                                                       | Completo   | Backend    | Santi    | 15-8-25 |
 | 13  | Como rellenar un componente con datos del bend                                       | Completo   | Frontend   | Santi    | 9-8-25  |
 | 13  | Lista de Turnos                                                                      | Completo   | Frontend   | Santi    | 12-8-25 |
-| 14  | CRUDs en Dashboard                                                                   | Completo  | Frontend   | Santi    | 13-8-25 |
+| 14  | CRUDs en Dashboard                                                                   | Completo   | Frontend   | Santi    | 13-8-25 |
 | 14  | Cancelacion de turnos en gestion de turnos                                           | Completo   | Frontend   | Santi    | 4-9-25  |
 | 15  | CSS de registrar turno                                                               | Completo   | Frontend   | Santi    | 5-9-25  |
 | 16  | Responsive design                                                                    | Pendiente  | Frontend   | Santi    | 13-8-25 |
@@ -32,14 +32,14 @@
 | 25  | Bugfixes Resultados                                                                  | Completo   | Frontend   | Santi    | 30-9-25 |
 | 26  | Creación de Plantillas, Parametros y Tipos_Parametros_Analisis                       | Completo   | Backend    | Santi    | 30-9-25 |
 | 27  | Refactorizacion de minimapas en Componentes                                          | Completo   | Frontend   | Santi    | 30-9-25 |
-| 28  | Mostrar Resultados - Cancelar y Resultados tienen un hotfix, solucionar con filtrado | Completo  | Frontend   | Santi    | 30-9-25 |
+| 28  | Mostrar Resultados - Cancelar y Resultados tienen un hotfix, solucionar con filtrado | Completo   | Frontend   | Santi    | 30-9-25 |
 | 29  | Notificar Previstos                                                                  | Pendiente  | Frontend   | Santi    | 30-9-25 |
 | 30  | Reporte de Ganancias                                                                 | Pendiente  | Frontend   | Santi    | 30-9-25 |
-| 31  | Confirmar Turnos                                                                     | Pendiente  | Frontend   | Santi    | 30-9-25 |
+| 31  | Confirmar Turnos                                                                     | Completo   | Frontend   | Santi    | 30-9-25 |
+| 32  | Test Automáticos                                                                     | Completo   | Frontend   | Santi    | 6-10-25 |
 
 Trabajar el responsive design, el del mainlayout esta a medio hacer -- Bastante mejor, pero falta
 Completar turnos admin para que: se muestre la receta y se confirme el turno
 
 Video explicando el funcionamiento del sistema
-Evidencia del resultado de la ejecución de los tests automáticos
 Entregar la proposal actualizada con links al pull request de back y/o front.

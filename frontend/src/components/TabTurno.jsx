@@ -14,7 +14,9 @@ function TabBar(props) {
   const { user } = useAuth();
   const { register, handleSubmit, formState: { errors, isSubmitting }, control } = useForm({ mode: "onBlur" });
   const [errorLogin, setErrorLogin] = useState(null);
-  
+  const [turnosFiltradosGestion, setTurnosFiltradosGestion] = useState([]);
+  const [turnosFiltradosResultados, setTurnosFiltradosResultados] = useState([]);
+
   // Utiliza useWatch para observar los cambios en el campo de fecha
   const fechaHoraReserva = useWatch({
     control,
@@ -119,22 +121,36 @@ function TabBar(props) {
 
   // Efecto para obtener todos los datos iniciales
   useEffect(() => {
-    const getDatos = async () => {
-      try {
-        const centros = await axiosInstance.get('/centroAtencion');
-        setCentros(centros.data.data);
-        const tipos = await axiosInstance.get('/tipoAnalisis');
-        setTiposAnalisis(tipos.data.data);
-        const data = { paciente: user.paciente.id };
-        const response = await getTurnosQuery(data);
-        setTurnosPaciente(response);
-        console.log("Turnos del paciente:", response);
-      } catch (error) {
-        console.error("Error al obtener los datos:", error);
-      }
-    };
-    getDatos();
-  }, []); // El array vacío asegura que se ejecute solo una vez al montar el componente
+  const getDatos = async () => {
+    try {
+      const centros = await axiosInstance.get('/centroAtencion');
+      setCentros(centros.data.data);
+      const tipos = await axiosInstance.get('/tipoAnalisis');
+      setTiposAnalisis(tipos.data.data);
+      const data = { paciente: user.paciente.id};
+      const response = await getTurnosQuery(data);
+      setTurnosPaciente(response || []);
+    } catch (error) {
+      console.error("Fallo al obtener datos:", error);
+    }
+  };
+  getDatos();
+}, []);
+
+// Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
+useEffect(() => {
+  if (turnosPaciente.length > 0) {
+    const turnosGestion = turnosPaciente.filter(
+      turno => turno.estado === "Pendiente" || turno.estado === "En Proceso"
+    );
+    setTurnosFiltradosGestion(turnosGestion);
+
+    const turnosResultados = turnosPaciente.filter(
+      turno => turno.estado === "Completado"
+    );
+    setTurnosFiltradosResultados(turnosResultados);
+  }
+}, [turnosPaciente]);
 
   const registturno = async (data) => {
     setErrorLogin(null);
@@ -142,7 +158,7 @@ function TabBar(props) {
     formData.append('receta', data.receta[0]);
     formData.append('recibeMail', data.recibeMail);
     formData.append('estado', 'Pendiente');
-    formData.append('observacion', '');
+    formData.append('observacion', '-');
     formData.append('fechaHoraReserva', data.fechaHoraReserva);
     formData.append('paciente', user.paciente.id);
     formData.append('email', user.email);
@@ -191,7 +207,7 @@ function TabBar(props) {
                 </tr>
               </thead>
               <tbody style={{ verticalAlign: 'middle' }}>
-                {turnosPaciente.map((turno) => {
+                {turnosFiltradosGestion.map((turno) => {
                   if (turno.estado === "Anulado") {
                     return null;
                   }
@@ -407,7 +423,7 @@ function TabBar(props) {
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
-        {turnosPaciente.length > 0 ? (
+        {turnosFiltradosResultados.length > 0 ? (
           <div style={{ marginTop: '20px' }}>
             <table className="table" style={{ verticalAlign: 'middle' }}>
               <thead>

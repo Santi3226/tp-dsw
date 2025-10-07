@@ -41,6 +41,7 @@
   display: flex;
   overflow-x: auto;
   padding: 0rem 0;
+  zoom: 110%;
 }
 
 .sidebar-link {
@@ -48,7 +49,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   color: white;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -59,6 +60,26 @@
 .sidebar-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-bottom-color: #3498db;
+  cursor: grab;
+}
+.sidebar-link-logout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(231, 76, 60, 0.8);
+  gap: 0.75rem;
+  padding: 1rem 1rem;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: grab;
+  border-bottom: 3px solid transparent;
+}
+
+.sidebar-link-logout:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(103, 20, 11, 0.8);
+  color: rgba(103, 20, 11, 0.8);
   cursor: grab;
 }
 

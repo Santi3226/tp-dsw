@@ -179,10 +179,10 @@ const MinimapaCentros = () => {
                   >
                     <div className="minimapa-flex-between">
                       <div className="minimapa-centro-content">
-                        <h6 className="minimapa-centro-nombre">🏥 {centro.nombre}</h6>
-                        <p className="minimapa-centro-direccion">📍 {centro.domicilio}</p>
+                        <h6 className="minimapa-centro-nombre"> {centro.nombre}</h6>
+                        <p className="minimapa-centro-direccion"> {centro.domicilio} - {centro.localidad.denominacion}</p>
                         <small className="minimapa-centro-localidad">
-                          🏙️ {centro.localidad.denominacion}
+
                         </small>
                       </div>
                       
@@ -191,9 +191,6 @@ const MinimapaCentros = () => {
                           <div className="spinner-border spinner-border-sm" role="status">
                             <span className="visually-hidden">Cargando ubicación...</span>
                           </div>
-                        )}
-                        {hasCoordinates && !isGeocoding && (
-                          <span className="minimapa-status-geocoded">📍</span>
                         )}
                       </div>
                     </div>
@@ -226,21 +223,6 @@ const MinimapaCentros = () => {
                       click: () => setSelectedCentro(centro)
                     }}
                   >
-                    <Popup>
-                      <div className="minimapa-popup-content">
-                        <h6 className="minimapa-popup-title">
-                          {centro.nombre}
-                        </h6>
-                        <p className="minimapa-popup-info">
-                          <strong>📍 Dirección:</strong><br />
-                          {centro.domicilio}
-                        </p>
-                        <p className="minimapa-popup-info">
-                          <strong>🏙️ Localidad:</strong><br />
-                          {centro.localidad.denominacion}
-                        </p>
-                      </div>
-                    </Popup>
                   </Marker>
                 ))}
                 
@@ -259,7 +241,7 @@ const MinimapaCentros = () => {
         </div>
       </div>
 
-      {/* Información del centro seleccionado */}
+      {/* Centro seleccionado */}
       {selectedCentro && (
         <div className="row mt-4 minimapa-fade-in">
           <div className="col">
@@ -270,7 +252,7 @@ const MinimapaCentros = () => {
               <div className="card-body minimapa-selected-content">
                 <div className="row">
                   <div className="col-md-6">
-                    <h6><strong>Centro:</strong> {selectedCentro.nombre}</h6>
+                    <p><strong>Centro:</strong> {selectedCentro.nombre}</p>
                     <p className="minimapa-centro-info">
                       <strong>Dirección:</strong> {selectedCentro.domicilio}
                     </p>
@@ -297,13 +279,6 @@ const MinimapaCentros = () => {
                     >
                       🗺️ Cómo llegar
                     </a>
-                    <button 
-                      className="minimapa-btn-actualizar"
-                      onClick={() => geocodeCentroIfNeeded(selectedCentro)}
-                      disabled={geocodingInProgress.has(selectedCentro.id)}
-                    >
-                      {geocodingInProgress.has(selectedCentro.id) ? '⏳ Localizando...' : '🔄 Actualizar ubicación'}
-                    </button>
                   </div>
                 )}
               </div>

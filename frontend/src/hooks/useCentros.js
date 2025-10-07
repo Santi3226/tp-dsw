@@ -25,7 +25,6 @@ function useCentros() {
     queryKey: ["centroAtencion"],
     queryFn: getDatos,
   });
-  console.log(data);
   return {
     centros: data,
     isError,

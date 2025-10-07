@@ -13,6 +13,9 @@ const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del est
 const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const [showModal, setShowModal] = useState(false);
+const [activeTab, setActiveTab] = useState("muestras"); 
+const [turnosFiltradosMuestras, setTurnosFiltradosMuestras] = useState([]);
+const [turnosFiltradosConfirmar, setTurnosFiltradosConfirmar] = useState([]);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
@@ -58,32 +61,46 @@ const handleConfirmarClick = async (id) => {
 const handleObservarClick = async (id) => {
   setShowModal(true);
 };
+
 const onSubmitFilter = async (data) => {
-  try {
-    data.estado = "Confirmado";
-    const response = await getTurnosQuery(data); //Filtrado condicional
-    setTurnosFiltrados(response || []); 
-  } catch (error) {
-    console.error("Fallo al filtrar:", error);
-  }
-};
+    try {
+      //Determinar la pestaña activa
+      data.estado = activeTab === "muestras" ? "Confirmado" : "Pendiente"; 
+      const response = await getTurnosQuery(data); //Filtrado condicional
+      
+      if (activeTab === "muestras") {
+        setTurnosFiltradosMuestras(response || []);
+      } else {
+        setTurnosFiltradosConfirmar(response || []);
+      }
+    } catch (error) {
+      console.error("Fallo al filtrar:", error);
+    }
+  };
 
 const handleConfirmarObservacion = async (observacion) => {
   if (confirmacion) {
-    const data = { id:id, estado: "Confirmado" };
+    const data = { id:id, observacion: observacion };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    //Abrir nueva pestaña para imprimir etiqueta
     location.reload();
   }
 };
 
 useEffect(() => {
-    if (Array.isArray(turnos)) {
-      setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-    }
-  }, [turnos]);
+    if (Array.isArray(turnos) && turnos.length > 0) { 
+      const turnosMuestras = turnos.filter(turno => turno.estado === "Confirmado");
+      setTurnosFiltradosMuestras(turnosMuestras); 
 
+      const turnosConfirmar = turnos.filter(turno => turno.estado === "Pendiente");
+      setTurnosFiltradosConfirmar(turnosConfirmar);
+  
+    } else if (!isLoading) {
+      setTurnosFiltradosMuestras([]);
+      setTurnosFiltradosConfirmar([]);
+    }
+  }, [turnos, isLoading]); // Depende de turnos e isLoading
+  
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
@@ -100,17 +117,9 @@ useEffect(() => {
       </div>
     );
   }
+  
 
-  if (turnosFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
-            Volver
-        </button>
-      </div>
-    );
-  }
+  const turnosActivos = activeTab === "muestras" ? turnosFiltradosMuestras : turnosFiltradosConfirmar;
 
   return (
     <div style={pageStyles.container}>
@@ -125,9 +134,9 @@ useEffect(() => {
     <Tab eventKey="muestras" title="Muestras">
           <div style={pageStyles.grid}>
 
-      <table className="table">
+      <table className="table" style={{verticalAlign:"middle", textAlign:"center", justifyItems:"center"}}>
               <thead>
-                <tr>
+                <tr >
                   <th>Numero de Turno</th>
                   <th>Paciente</th>
                   <th>Tipo de Analisis</th>
@@ -139,7 +148,7 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody>
-              {turnosFiltrados.map((turno) => (
+              {turnosFiltradosMuestras.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
                   <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
@@ -254,7 +263,7 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody style={{justifyItems:"center", textAlign:"center", alignItems:"center"}}>
-              {turnosFiltrados.map((turno) => (
+              {turnosFiltradosConfirmar.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
                   <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>

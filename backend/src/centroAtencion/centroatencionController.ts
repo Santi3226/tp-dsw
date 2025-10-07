@@ -57,7 +57,11 @@ async function findOne(req: Request, res: Response) {
       data: centros,
     });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || 'Error fetching centro' });
+    if (error.message.includes('CentroAtencion not found')) {
+      res.status(404).json({ message: 'Centro not found' });
+    } else {
+      res.status(500).json({ message: error.message || 'Error fetching centro' });
+    }
   }
 }
 

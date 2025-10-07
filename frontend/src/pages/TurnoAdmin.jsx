@@ -8,6 +8,23 @@ import { useTiposAnalisis } from "../hooks/useTiposAnalisis.js";
 import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
 
+const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
+  const horarios = [];
+  let horaActual = horaInicio;
+  let minutoActual = 0;
+  while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
+    horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
+    minutoActual += intervalo;
+    if (minutoActual >= 60) {
+      minutoActual = 0;
+      horaActual += 1;
+    }
+  }
+  return horarios;
+};
+
+const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
+
 function TurnoAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
 const { isLoading, isError, error, turnos = [] } = useTurnos();
@@ -25,54 +42,35 @@ const fechaHoraReserva = useWatch({
     control,
     name: "fechaHoraReserva"
   });
-
-const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
-    const horarios = [];
-    let horaActual = horaInicio;
-    let minutoActual = 0;
-    while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
-      horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
-      minutoActual += intervalo;
-      if (minutoActual >= 60) {
-        minutoActual = 0;
-        horaActual += 1;
-      }
-    }
-    return horarios;
-  };
-
-  const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
   
-  useEffect(() => {
-    if (fechaHoraReserva) {
-      const turnosFecha = async () => {
-        try {
-          const data = { fechaHoraReserva: fechaHoraReserva };
-          const response = await getTurnosQuery(data);
-          console.log('Turnos de la fecha seleccionada:', response);
-          
-          // Extrae los horarios ocupados de los turnos recibidos
-          const occupiedTimes = response
-            .filter(turno => turno.estado !== "Anulado")
-            .map(turno => {
-              const date = new Date(turno.fechaHoraReserva);
-              const hour = String(date.getHours()).padStart(2, '0');
-              const minute = String(date.getMinutes()).padStart(2, '0');
-              return `${hour}:${minute}`;
-            });
+  
+useEffect(() => {
+    if (!fechaHoraReserva) return; // Early return si no hay fecha
+    
+    const turnosFecha = async () => {
+      try {
+        const data = { fechaHoraReserva: fechaHoraReserva };
+        const response = await getTurnosQuery(data);
+        
+        const occupiedTimes = response
+          .filter(turno => turno.estado !== "Anulado")
+          .map(turno => {
+            const date = new Date(turno.fechaHoraReserva);
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            return `${hour}:${minute}`;
+          });
 
-          // Filtra todos los horarios para quitar los que ya están ocupados
-          const availableSlots = allTimeSlots.filter(
-            slot => !occupiedTimes.includes(slot)
-          );
-          setHorariosDisponibles(availableSlots);
-        } catch (error) {
-          console.error("Error al obtener los turnos:", error);
-        }
-      };
-      turnosFecha();
-    }
-  }, [fechaHoraReserva]);
+        const availableSlots = allTimeSlots.filter(
+          slot => !occupiedTimes.includes(slot)
+        );
+        setHorariosDisponibles(availableSlots);
+      } catch (error) {
+        console.error("Error al obtener los turnos:", error);
+      }
+    };
+    turnosFecha();
+  }, [fechaHoraReserva]); 
 
 const onSubmitDelete = async (data) => {
 try {
@@ -120,7 +118,10 @@ useEffect(() => {
     if (Array.isArray(turnos)) {
       setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
     }
-  }, [turnos]);
+  else if (!isLoading) {
+      setTurnosFiltrados([]);
+    }
+  }, [turnos, isLoading]); // Depende de turnos e isLoading
 
   if (isLoading) {
     return (

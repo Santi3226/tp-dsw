@@ -50,7 +50,6 @@
 }
 
 .minimapa-centro-item.active {
-  background-color: #f8f9fa !important;
   color: black !important;
 }
 
@@ -59,22 +58,20 @@
 }
 
 .minimapa-centro-nombre {
+  margin-top: 10px;
   margin-bottom: 4px;
   font-weight: 600;
 }
 
 .minimapa-centro-direccion {
   margin-bottom: 4px;
+  margin-top: 6px;
   font-size: 0.875rem;
 }
 
 .minimapa-centro-localidad {
   font-size: 0.75rem;
   color: #6c757d;
-}
-
-.minimapa-centro-item.active .minimapa-centro-localidad {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 .minimapa-status-indicator {

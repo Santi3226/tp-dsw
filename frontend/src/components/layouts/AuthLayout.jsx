@@ -20,7 +20,7 @@ const AuthLayout = () => {
           </Link>
           <Link to="/dashboard/muestras" className="sidebar-link">
             <span className="icon">🧪</span>
-            Muestras
+            Muestras y Confirmación
           </Link>
           <Link to="/dashboard/resultado" className="sidebar-link">
             <span className="icon">📄</span>
@@ -50,7 +50,7 @@ const AuthLayout = () => {
             <span className="icon">📄</span>
             Plantillas de Analisis
           </Link>
-          <Link style={{ background: "rgba(231, 76, 60, 0.8)" }} to="/" className="sidebar-link">
+          <Link style={{ background: "rgba(231, 76, 60, 0.8)" , ":hover": { color: "white" } }} to="/" className="sidebar-link-logout">
             <span className="icon">🏠</span>
             Volver al Inicio
           </Link>
