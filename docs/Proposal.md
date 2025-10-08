@@ -19,7 +19,7 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ### Modelo
 
-<img width="981" height="604" alt="ART_DCML_Entrega_03" src="https://github.com/user-attachments/assets/68e26b96-cf66-4d87-90c8-51e82a798ab2" />
+<img width="982" height="682" alt="imagen" src="https://github.com/user-attachments/assets/8480bc97-f496-41bc-89bb-3f712a501f70" />
 
 ## Alcance Funcional
 
@@ -46,3 +46,4 @@ Adicionales para Aprobación
 | Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis |
 | CUU/Epic | 1. Carga de Plantillas de Análisis<br>2. Cancelación de reserva                                                                   |
 | Otros    | 1. Envío de recordatorios por email (al crear un turno, notificando dias previos y avisando sobre turnos previstos)               |
+
