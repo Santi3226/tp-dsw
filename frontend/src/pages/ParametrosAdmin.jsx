@@ -136,12 +136,12 @@ catch (error) {
           noValidate
         >
         <div className="form-group" id="uno">
-        <label htmlFor="text">Id Parametro de Analisis</label>
+        <label htmlFor="text">Parametro de Analisis</label>
         <select
           id="id"
           
           {...registerModify("id", {
-            required:"Id del Parametro de Analisis requerido",
+            required:"Parametro de Analisis requerido",
             pattern: {
             },
           })}
@@ -265,10 +265,10 @@ catch (error) {
         noValidate
       >
       <div className="form-group">
-        <label htmlFor="text">Id Parametro</label>
+        <label htmlFor="text">Parametro</label>
         <select
           id="id"
-          {...registerDelete("id", {required:"Id requerido"})}
+          {...registerDelete("id", {required:"Parametro requerido"})}
           className="form-input"
         >
         <option value="">-</option>
@@ -297,10 +297,10 @@ catch (error) {
         noValidate
       >
       <div className="form-group">
-        <label htmlFor="text">Id Parámetro de Análisis</label>
+        <label htmlFor="text">Parámetro de Análisis</label>
         <select
           id="parametroAnalisis"
-          {...registerVinculo("parametroAnalisis", {required:"Id Parametro requerido"})}
+          {...registerVinculo("parametroAnalisis", {required:"Parámetro de Análisis requerido"})}
           className="form-input"
         >
         <option value="">-</option>
@@ -316,10 +316,10 @@ catch (error) {
         )}
       </div>
             <div className="form-group">
-        <label htmlFor="text">Id Tipo de Análisis</label>
+        <label htmlFor="text">Tipo de Análisis</label>
         <select
           id="tipoAnalisis"
-          {...registerVinculo("tipoAnalisis", {required:"Id Tipo de Análisis requerido"})}
+          {...registerVinculo("tipoAnalisis", {required:"Tipo de Análisis requerido"})}
           className="form-input"
         >
         <option value="">-</option>

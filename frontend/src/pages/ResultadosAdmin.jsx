@@ -33,7 +33,7 @@ function ResultadosAdmin() {
     try {
       console.log('Datos a enviar:', data);
       await addResultados(data);
-      data.estado = "Completado";
+      data.estado = "Resultado";
       await modifyTurnos(data);
       location.reload();
     } catch (error) {
@@ -43,7 +43,7 @@ function ResultadosAdmin() {
 
   const onSubmitFilter = async (data) => {
     try {
-      data.estado = 'Confirmado';
+      data.estado = 'Completado';
       const response = await getTurnosQuery(data); //Filtrado condicional
       setTurnosFiltrados(response || []);
     } catch (error) {
@@ -55,7 +55,7 @@ function ResultadosAdmin() {
     // Filtrar turnos pendientes al cargar el componente
     const fetchPendientes = async () => {
       try {
-        const data = { estado: 'Confirmado', fechaInicio: '', fechaFin: '' };
+        const data = { estado: 'Completado', fechaInicio: '', fechaFin: '' };
         const response = await getTurnosQuery(data);
         setTurnosFiltrados(response || []);
       } catch (error) {
@@ -240,6 +240,7 @@ function ResultadosAdmin() {
             noValidate
             style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
           >
+            <label htmlFor="text">Turno</label>
             <select
               id="id"
               {...registerAdd('id', { required: 'Id requerido' })}

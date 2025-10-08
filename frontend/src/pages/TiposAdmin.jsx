@@ -123,12 +123,12 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           noValidate
         >
         <div className="form-group" id="uno">
-        <label htmlFor="text">Id Tipo de Analisis</label>
+        <label htmlFor="text">Tipo de Analisis</label>
         <select
           id="id"
           
           {...registerModify("id", {
-            required:"Id del Tipo de Analisis requerido",
+            required:"Tipo de Analisis requerido",
             pattern: {
             },
           })}

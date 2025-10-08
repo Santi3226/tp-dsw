@@ -9,9 +9,9 @@ import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
 
 function Muestras() {
-const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
 const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
+const [turnoAObservarId, setTurnoAObservarId] = useState(null);
 const [showModal, setShowModal] = useState(false);
 const [activeTab, setActiveTab] = useState("muestras"); 
 const [turnosFiltradosMuestras, setTurnosFiltradosMuestras] = useState([]);
@@ -54,7 +54,6 @@ const handleMuestrasClick = async (id) => {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    //Abrir nueva pestaña para imprimir etiqueta
     location.reload();
   }
 };
@@ -66,11 +65,12 @@ const handleConfirmarClick = async (id) => {
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
-    location.reload();
+    //location.reload();
   }
 };
 
 const handleObservarClick = async (id) => {
+  setTurnoAObservarId(id);
   setShowModal(true);
 };
 
@@ -91,11 +91,14 @@ const onSubmitFilter = async (data) => {
   };
 
 const handleConfirmarObservacion = async (observacion) => {
-  if (confirmacion) {
-    const data = { id:id, observacion: observacion };
+  if (observacion) {
+    const data = { id:turnoAObservarId, observacion: observacion };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     location.reload();
+  }
+  else {
+    alert("La observación no puede estar vacía.");
   }
 };
 

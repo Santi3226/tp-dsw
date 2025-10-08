@@ -41,6 +41,11 @@ const modifyTurnos = async (data) => {
     paciente: data.paciente === '' ? undefined : data.paciente,
     centroAtencion: data.centroAtencion === '' ? undefined : data.centroAtencion,
     tipoAnalisis: data.tipoAnalisis === '' ? undefined : data.tipoAnalisis,
+    estado: data.estado === '' ? undefined : data.estado,
+    fechaHoraExtraccion: data.fechaHoraExtraccion === '' ? undefined : data.fechaHoraExtraccion,
+    observacion: data.observacion === '' ? undefined : data.observacion,
+    email: data.email === '' ? undefined : data.email,
+    receta: data.receta === '' ? undefined : data.receta,
   };
   try {
     await axiosInstance.put('/turno/' + turnoData.id, turnoData);
