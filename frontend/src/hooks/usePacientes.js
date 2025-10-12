@@ -15,7 +15,7 @@ const getPacienteQuery = async (data) => {
     const params = {
       nombre: data.nombre === '' ? undefined : data.nombre,
       dni: data.dni === '' ? undefined : data.dni,
-      edad: data.edad === '' ? undefined : data.dni,
+      edad: data.edad === '' ? undefined : data.edad,
     };
     const response = await axiosInstance.get('/paciente/filter', { params });
     return response.data.data;
@@ -82,7 +82,8 @@ const modifyPaciente = async (data) => {
     dni: data.dni === '' ? undefined : data.dni,
     telefono: data.telefono === '' ? undefined : data.telefono,
     direccion: data.direccion === '' ? undefined : data.direccion,
-    fechaNacimiento: data.fechaNacimiento === '' ? undefined : fechaNacimientoUTC,
+    fechaNacimiento:
+      data.fechaNacimiento === '' ? undefined : fechaNacimientoUTC,
   };
   try {
     await axiosInstance.put('/paciente/' + pacienteData.id, pacienteData);

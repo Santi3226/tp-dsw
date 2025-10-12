@@ -74,18 +74,15 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
     );
   }
 
-  if (plantillas.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron plantillas.</p>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestras Plantillas de Análisis</h1>
       <div style={pageStyles.grid}>
+      {plantillas.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron plantillas.</p>
+          </div>
+        ) : (
       <table className="table">
               <thead>
                 <tr>
@@ -108,6 +105,7 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
               ))}
             </tbody>
             </table>
+          )}
       </div>
       
       <Tabs

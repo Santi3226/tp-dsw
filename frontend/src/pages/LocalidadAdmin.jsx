@@ -62,18 +62,15 @@ catch (error) {
     );
   }
 
-  if (localidades.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron localidades.</p>
-      </div>
-    );
-  }
-
-  return (
+ return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestras Localidades</h1>
       <div style={pageStyles.grid}>
+        {localidades.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron localidades.</p>
+          </div>
+        ) : (
       <table className="table">
               <thead>
                 <tr>
@@ -92,6 +89,7 @@ catch (error) {
               ))}
             </tbody>
             </table>
+      )}
       </div>
         <Tabs
       defaultActiveKey="modificar"

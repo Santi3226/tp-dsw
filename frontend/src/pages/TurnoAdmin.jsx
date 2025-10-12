@@ -32,6 +32,8 @@ const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
+const [turnoDetalleId, setTurnoDetalleId] = useState(null);
+const [showModal, setShowModal] = useState(false);
 const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control: controlAdd } = useForm({ mode: "onBlur" });
@@ -49,6 +51,11 @@ const fechaHoraReservaModify = useWatch({
     name: "fechaHoraReserva"
 });
   
+const handleDetalleClick = async (id) => {
+  setTurnoDetalleId(id);
+  setShowModal(true);
+};
+
 useEffect(() => {
     if (!fechaHoraReserva) return; // Early return si no hay fecha
     
@@ -148,26 +155,23 @@ useEffect(() => {
     );
   }
 
-  if (turnosFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
-            Volver
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Turnos</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Numero de Turno</th>
-                  <th>Paciente</th>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+            Volver
+          </button>
+        </div>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Numero de Turno</th>
+              <th>Paciente</th>
                   <th>Tipo de Analisis</th>
                   <th>Centro de Atencion</th>
                   <th>Fecha y Hora Reserva</th>
@@ -175,6 +179,7 @@ useEffect(() => {
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Recibe Mail</th>
+                  <th>Detalle</th>
                 </tr>
               </thead>
               <tbody>
@@ -189,11 +194,79 @@ useEffect(() => {
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td>{turno.recibeMail ? "Si" : "No"}</td>
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleDetalleClick(turno.id)}>Ver Detalle</button></td>}
                 </tr>
               ))}
             </tbody>
             </table>
+          )}
       </div>
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '500px'
+            }}>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Detalles del turno</h4>
+              <div style={{ marginTop: '20px' }}>
+                {turnoDetalleId && (() => {
+                const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
+                if (!turno) return null;
+                return (
+                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px", fontSize: "14px"}}>
+                    <div className="form-group">
+                      <label>
+                        Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
+                      </label>
+                      <label>
+                        DNI: {turno.paciente?.dni} 
+                      </label>
+                      <label>
+                        Fecha Nac: {turno.paciente?.fechaNacimiento ? new Date(turno.paciente.fechaNacimiento).toLocaleDateString() : "-"}
+                      </label>
+                      <label>
+                        Dirección: {turno.paciente?.direccion}
+                      </label>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                      Tel: {turno.paciente?.telefono}
+                      </label>
+                      <label>
+                        Tipo de Análisis: {turno.tipoAnalisis?.nombre} 
+                      </label>
+                      <label>
+                        Importe: {turno.tipoAnalisis?.importe}
+                      </label>
+                      <label>
+                      Plantilla: {turno.tipoAnalisis?.plantillaAnalisis}
+                      </label>
+                    </div>
+                  </div>
+                );
+              })()}
+                <button onClick={() => setShowModal(false)} className='login-btn' style={{ backgroundColor: 'red', marginTop: '20px' }}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <Tabs
       defaultActiveKey="filtrar"
       id="justify-tab-example"

@@ -64,18 +64,15 @@ catch (error) {
     );
   }
 
-  if (centros.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron centros.</p>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Centros</h1>
       <div style={pageStyles.grid}>
+      {centros.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron centros.</p>
+        </div>
+      ) : (
       <table className="table">
               <thead>
                 <tr>
@@ -96,7 +93,8 @@ catch (error) {
               ))}
             </tbody>
             </table>
-      </div>
+    )}
+    </div>
         <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"

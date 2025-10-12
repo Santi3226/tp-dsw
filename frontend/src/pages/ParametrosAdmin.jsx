@@ -87,23 +87,20 @@ catch (error) {
     );
   }
 
-  if (parametros.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron parámetros.</p>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Parámetros de Análisis</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
+        {parametros.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron parámetros.</p>
+          </div>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
                   <th>Referencia</th>
                   <th>Unidad</th>
                 </tr>
@@ -119,8 +116,8 @@ catch (error) {
               ))}
             </tbody>
             </table>
+        )}
       </div>
-      
       <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
