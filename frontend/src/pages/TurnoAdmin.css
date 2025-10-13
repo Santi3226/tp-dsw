@@ -1,6 +1,7 @@
 .table {
   align-self: center;
   vertical-align: middle;
+  overflow-x: scroll;
 }
 
 #login {

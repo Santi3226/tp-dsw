@@ -249,3 +249,33 @@
     font-size: 0.9rem;
   }
 }
+
+.auth-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  height: 100vh;
+  margin-top: 100px;
+  padding-bottom: calc(var(--app-footer-height, 72px) + 8px);
+  /* reserve space for footer */
+}
+
+/* add / override an auth footer fixed to bottom */
+.auth-footer {
+  background-color: #d7d7d7;
+  padding: 12px 0;
+  text-align: center;
+  color: #6c757d;
+  border-top: 1px solid #e9ecef;
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--app-footer-height, 72px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
