@@ -116,7 +116,12 @@ function ResultadosAdmin() {
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Turnos Pendientes de Resultados</h1>
       <div style={pageStyles.grid}>
-        <table className="table">
+        <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
           <thead>
             <tr>
               <th>Numero de Turno</th>

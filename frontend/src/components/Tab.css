@@ -60,10 +60,67 @@
   height: 576px;
   width: 768px;
   text-align: left;
+  object-fit: cover;
 }
 
 .divFoto {
   box-sizing: border-box;
+}
+
+/* Layout for instalaciones section */
+.instalaciones-content {
+  display: grid;
+  grid-template-columns: 768px 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.columna {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Breakpoints */
+/* Large: desktop (>=1025px) keeps the big image */
+@media (min-width: 1025px) {
+  .instalaciones-content {
+    grid-template-columns: 768px 1fr;
+  }
+  .foto {
+    width: 768px;
+    height: 576px;
+  }
+}
+
+/* Medium: tablet (768px - 1024px) reduce image size */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .instalaciones-content {
+    grid-template-columns: 420px 1fr;
+    gap: 1rem;
+  }
+  .foto {
+    width: 420px;
+    height: 315px;
+  }
+}
+
+/* Small: mobile (<768px) stack vertically */
+@media (max-width: 767px) {
+  .instalaciones-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .foto {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+  }
+  .columna {
+    font-size: 0.95rem;
+  }
+  .politicas-table-container .table {
+    font-size: 0.9rem;
+  }
 }
 
 .error-message {

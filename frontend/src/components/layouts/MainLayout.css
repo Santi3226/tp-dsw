@@ -14,6 +14,11 @@
   left: 0;
   right: 0;
   z-index: 2000;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .header-content {
@@ -23,6 +28,11 @@
   padding: 0 2rem;
   display: flex;
   align-items: center;
+  padding: 0;
+  gap: 0; /*OVERFLOW X E Y TAPAN EL DROPDOWN*/
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
 }
 
 .titulo h1 {
@@ -138,7 +148,7 @@
 }
 
 .main-footer {
-  background-color: #d7d7d7;
+  background-color: #d7d7d7ba;
   padding: 2rem 0;
   text-align: center;
   color: #6c757d;
@@ -166,6 +176,10 @@
   }
 
   .titulo {
+    display: none;
+  }
+
+  .CarrouselCaption h3 {
     display: none;
   }
 
@@ -250,32 +264,3 @@
   }
 }
 
-.auth-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-  height: 100vh;
-  margin-top: 100px;
-  padding-bottom: calc(var(--app-footer-height, 72px) + 8px);
-  /* reserve space for footer */
-}
-
-/* add / override an auth footer fixed to bottom */
-.auth-footer {
-  background-color: #d7d7d7;
-  padding: 12px 0;
-  text-align: center;
-  color: #6c757d;
-  border-top: 1px solid #e9ecef;
-
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--app-footer-height, 72px);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}

@@ -167,7 +167,12 @@ useEffect(() => {
           </button>
         </div>
       ) : (
-        <table className="table">
+        <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
           <thead>
             <tr>
               <th>Numero de Turno</th>
@@ -710,7 +715,7 @@ const pageStyles = {
   grid: {
     marginTop:"50px",
     display: "flex",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", // Diseño responsivo en cuadrícula
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
     justifyItems: "center",
   },
   message: {

@@ -149,7 +149,12 @@ useEffect(() => {
     <Tab eventKey="muestras" title="Muestras">
           <div style={pageStyles.grid}>
 
-      <table className="table" style={{verticalAlign:"middle", textAlign:"center", justifyItems:"center"}}>
+      <table className="table" style={{verticalAlign:"middle", textAlign:"center", justifyItems:"center", display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
               <thead>
                 <tr >
                   <th>Numero de Turno</th>
@@ -262,7 +267,12 @@ useEffect(() => {
     <Tab eventKey="confirmar" title="Confirmar">
           <div style={pageStyles.grid}>
 
-      <table className="table">
+      <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
               <thead>
                 <tr>
                   <th>Numero de Turno</th>

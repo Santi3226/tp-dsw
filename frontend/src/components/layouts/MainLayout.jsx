@@ -21,13 +21,18 @@ const MainLayout = () => {
           <Link to="/">
           <img className="logo" src="/logo.png" alt="Logo" href="/"/>
           </Link>
+          <Link className="titulo" to="/">
           <div className="titulo">
-            <h1>{"Laboratorio\nGenérico"}</h1>
+            <h1 style={{textDecoration:"none"}}>{"Laboratorio\nGenérico"}</h1>
           </div>
+          </Link>
+
           <nav className="main-nav">
+
             <Drop className="drop" titulo="paciente" uno="Preparacion" dos="Gestion de Paciente" tres="Consultas" />
             <Drop className="drop" titulo="turno" uno="Gestion de Turnos" dos="Registrar Turno" tres="Resultados"/>
             <Drop className="drop" titulo="laboratorio" uno="Centros de Atencion" dos="Presupuestos" tres="Politicas"/>
+           
             {(isAuthenticated() && user.role==="admin")  && (
               <>
                 <Link to="/dashboard" className="dashboard-btn">
@@ -37,7 +42,7 @@ const MainLayout = () => {
             
             {isAuthenticated()  ? (
               <>
-                <button onClick={handleLogout} className="logout-btn">
+                <button onClick={handleLogout} className="logout-btn" style={{'marginRight':'20px'}}>
                   <LogOut className="btn-icon" />
                   Cerrar sesión
                 </button>
