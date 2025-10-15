@@ -78,6 +78,9 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
     return (
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>No se encontraron tipos.</p>
+        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
       </div>
     );
   }

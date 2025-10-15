@@ -44,7 +44,7 @@ const modifyPlantillas = async (data) => {
     hsAyuno: (data.hsAyuno==="" ? "Sin ayuno" : data.hsAyuno),
     preparacion: (data.preparacion==="" ? "Sin preparación especial" : data.preparacion),
     tiempoPrevisto: (Number(data.tiempoPrevisto)===0 ? undefined : Number(data.tiempoPrevisto)),
-    fechaDesde: now().toISOString()
+    fechaDesde: Date.now()
     };
   try {
     await axiosInstance.put(

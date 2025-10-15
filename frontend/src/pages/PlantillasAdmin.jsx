@@ -38,7 +38,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try { 
   await addPlantillas(data);
-  //location.reload(); 
+  location.reload(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -177,13 +177,12 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
               <div className="error-message">{errorsModify.preparacion.message}</div>
             )}
           </div>
-          <div className="form-group" id="cuatro">
+          <div className="form-group" style={{gridRow:"2", gridColumn:"2"}}>
           <label htmlFor="number">Tiempo Previsto (en Dias)</label>
             <input
               type="number"
               id="tiempoPrevisto"
               {...registerModify("tiempoPrevisto", {
-                required: "Tiempo previsto es requerido"
               })}
               className="form-input"
             />
@@ -192,7 +191,7 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
             )}
             </div>
 
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify}>
+          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow:"3", gridColumn:"2"}}>
             {isSubmittingModify ? "Un momento..." : "Modificar"}
           </button>
         </form>

@@ -9,7 +9,6 @@ function LocalidadAdmin() {
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
-const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 
 const { isLoading, isError, error, localidades = [] } = useLocalidad();
@@ -69,6 +68,9 @@ catch (error) {
         {localidades.length === 0 ? (
           <div style={pageStyles.containerCentered}>
             <p style={pageStyles.message}>No se encontraron localidades.</p>
+              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
           </div>
         ) : (
       <table className="table" style={{display: "block",

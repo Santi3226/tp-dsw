@@ -107,7 +107,7 @@ function ResultadosAdmin() {
               className="login-btn"
               onClick={() => window.location.reload()}
             >
-              Volver
+              Limpiar Filtros
             </button>
           </a>
         </div>
@@ -158,7 +158,7 @@ function ResultadosAdmin() {
         </div>
       )}
       <Tabs
-        defaultActiveKey="resultado"
+        defaultActiveKey="filtrar"
         id="justify-tab-example"
         className="mb-3"
         justify

@@ -41,6 +41,4 @@
 | 34  | Video Explicativo                                                                    | Pendiente | Docs       | Santi    | 6-10-25  |
 
 El responsive design esta casi completo, pero no puedo manejar los dropdowns en el navbar
-
-Cuando creo un turno se rompe el dashboard
 Entregar la proposal actualizada con links al pull request de back y/o front.

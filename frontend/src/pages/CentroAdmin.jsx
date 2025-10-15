@@ -71,6 +71,9 @@ catch (error) {
       {centros.length === 0 ? (
         <div style={pageStyles.containerCentered}>
           <p style={pageStyles.message}>No se encontraron centros.</p>
+              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
         </div>
       ) : (
       <table className="table" style={{display: "block",

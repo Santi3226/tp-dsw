@@ -163,7 +163,7 @@ useEffect(() => {
         <div style={pageStyles.containerCentered}>
           <p style={pageStyles.message}>No se encontraron turnos.</p>
           <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
-            Volver
+            Limpiar Filtros
           </button>
         </div>
       ) : (

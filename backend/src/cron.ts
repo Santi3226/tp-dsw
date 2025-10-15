@@ -4,7 +4,7 @@ import { Turno } from './turno/turnoEntity.js';
 import { orm } from './shared/db/orm.js';
 
 const recordatoriosDiarios = () => {
-    cron.schedule('* * * * *', async () => {
+    cron.schedule('* * * * *', async () => { //Min, hr, dia, mes, dia de la semana -> C/1min
         console.log('Ejecutando tarea diaria de recordatorios de turnos...');
         try {
             const hoy = new Date();

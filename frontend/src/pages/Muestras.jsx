@@ -18,6 +18,7 @@ const [turnosFiltradosMuestras, setTurnosFiltradosMuestras] = useState([]);
 const [turnosFiltradosConfirmar, setTurnosFiltradosConfirmar] = useState([]);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
+const { register: registerFilterConfirmar, handleSubmit: handleSubmitFilterConfirmar, formState: { errors: errorsFilterConfirmar, isSubmitting: isSubmittingFilterConfirmar } } = useForm({ mode: "onBlur" });
 
 
 const handleRecetaClick = (id) => {
@@ -78,6 +79,7 @@ const onSubmitFilter = async (data) => {
     try {
       //Determinar la pestaña activa
       data.estado = activeTab === "muestras" ? "Confirmado" : "Pendiente"; 
+      console.log("Datos para filtrar:", data);
       const response = await getTurnosQuery(data); //Filtrado condicional
       
       if (activeTab === "muestras") {
@@ -147,10 +149,11 @@ useEffect(() => {
       style={{marginTop:"30px"}}
       >
     <Tab eventKey="muestras" title="Muestras">
-          <div style={pageStyles.grid}>
+      {turnosFiltradosMuestras.length > 0 ? (
+
+      <div style={pageStyles.grid}>
 
       <table className="table"  style={{display: "block",
-              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
@@ -195,6 +198,9 @@ useEffect(() => {
             </tbody>
             </table>
       </div>      
+       ) : (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
+        )}
           <form
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
@@ -226,7 +232,6 @@ useEffect(() => {
                 type="date"
                 id="fechaInicio"
                 {...registerFilter('fechaInicio', {
-                  validate: (value) => {},
                 })}
                 className="form-input"
               />
@@ -242,7 +247,6 @@ useEffect(() => {
                 type="date"
                 id="fechaFin"
                 {...registerFilter('fechaFin', {
-                  validate: (value) => {},
                 })}
                 className="form-input"
               />
@@ -259,6 +263,7 @@ useEffect(() => {
               className="login-btn"
               disabled={isSubmittingFilter}
               style={{ alignSelf: 'center' }}
+              onClick={() => setActiveTab("muestras")}
             >
               {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
             </button>
@@ -266,6 +271,7 @@ useEffect(() => {
    
     </Tab>
     <Tab eventKey="confirmar" title="Confirmar">
+      {turnosFiltradosConfirmar.length > 0 ? (
           <div style={pageStyles.grid}>
 
       <table className="table" style={{display: "block",
@@ -331,6 +337,9 @@ useEffect(() => {
             </tbody>
             </table>
       </div>      
+             ) : (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
+        )}
       {showModal && (
           <div style={{
             position: 'fixed',
@@ -370,7 +379,7 @@ useEffect(() => {
         )}
           <form
             className="login-formReg"
-            onSubmit={handleSubmitFilter(onSubmitFilter)}
+            onSubmit={handleSubmitFilterConfirmar(onSubmitFilter)}
             noValidate
             style={{ marginTop: "30px" }}
 
@@ -379,7 +388,7 @@ useEffect(() => {
             <label htmlFor="text">Paciente</label>
             <select
               id="paciente"
-              {...registerFilter("paciente")}
+              {...registerFilterConfirmar("paciente")}
               className="form-input"
             >
               <option value="">-</option>
@@ -389,8 +398,8 @@ useEffect(() => {
                 </option>
               ))}
             </select>
-            {errorsFilter.paciente && (
-              <div className="error-message">{errorsFilter.paciente.message}</div>
+            {errorsFilterConfirmar.paciente && (
+              <div className="error-message">{errorsFilterConfirmar.paciente.message}</div>
             )}
           </div>
 
@@ -399,12 +408,12 @@ useEffect(() => {
               <input
                 type="date"
                 id="fechaInicio"
-                {...registerFilter('fechaInicio', {
+                {...registerFilterConfirmar('fechaInicio', {
                   validate: (value) => {},
                 })}
                 className="form-input"
               />
-              {errorsFilter.fechaInicio && (
+              {errorsFilterConfirmar.fechaInicio && (
                 <div className="error-message">
                   {errorsFilter.fechaInicio.message}
                 </div>
@@ -415,14 +424,14 @@ useEffect(() => {
               <input
                 type="date"
                 id="fechaFin"
-                {...registerFilter('fechaFin', {
+                {...registerFilterConfirmar('fechaFin', {
                   validate: (value) => {},
                 })}
                 className="form-input"
               />
-              {errorsFilter.fechaFin && (
+              {errorsFilterConfirmar.fechaFin && (
                 <div className="error-message">
-                  {errorsFilter.fechaFin.message}
+                  {errorsFilterConfirmar.fechaFin.message}
                 </div>
               )}
             </div>
@@ -431,10 +440,11 @@ useEffect(() => {
               id="login"
               type="submit"
               className="login-btn"
-              disabled={isSubmittingFilter}
+              disabled={isSubmittingFilterConfirmar}
               style={{ alignSelf: 'center' }}
+              onClick={() => setActiveTab("confirmar")}
             >
-              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
+              {isSubmittingFilterConfirmar ? 'Un momento...' : 'Filtrar'}
             </button>
           </form>
    

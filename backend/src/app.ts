@@ -55,6 +55,7 @@ app.use((_, res) => {
 });
 
 await syncSchema();
+
 recordatoriosDiarios();
 recordatoriosPrevistos();
 
