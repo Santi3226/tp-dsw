@@ -153,7 +153,7 @@ Gestión de tipos de análisis médicos disponibles.
 | PUT/PATCH | `/:id`   | Actualizar tipo de análisis         |
 | DELETE    | `/:id`   | Eliminar tipo de análisis           |
 
-### 📋 Plantillas de Análisis
+### Plantillas de Análisis
 
 Plantillas predefinidas para análisis médicos.
 

@@ -34,7 +34,7 @@
 | 27  | Refactorizacion de minimapas en Componentes                                          | Completo  | Frontend   | Santi    | 30-9-25  |
 | 28  | Mostrar Resultados - Cancelar y Resultados tienen un hotfix, solucionar con filtrado | Completo  | Frontend   | Santi    | 30-9-25  |
 | 29  | Notificar Previstos                                                                  | Completo  | Backend    | Santi    | 30-9-25  |
-| 30  | Reporte de Ganancias                                                                 | Pendiente | Frontend   | Santi    | 30-9-25  |
+| 30  | Reporte de Ganancias                                                                 | Cancelado | Frontend   | Santi    | 30-9-25  |
 | 31  | Confirmar Turnos                                                                     | Completo  | Frontend   | Santi    | 30-9-25  |
 | 32  | Test Automáticos                                                                     | Completo  | Docs       | Santi    | 6-10-25  |
 | 33  | Mostrar Recetas                                                                      | Completo  | Frontend   | Santi    | 6-10-25  |

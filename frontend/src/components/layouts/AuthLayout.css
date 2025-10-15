@@ -52,7 +52,6 @@
   height: 100%;
 }
 
-/* Estilo del scrollbar */
 .sidebar-nav::-webkit-scrollbar {
   height: 4px;
 }
@@ -222,10 +221,6 @@
   margin: 0;
   font-size: 0.9rem;
 }
-
-/* ===========================
-   BREAKPOINTS
-   =========================== */
 
 /* LG - Large (1025px y más) */
 @media (min-width: 1025px) {

@@ -32,45 +32,36 @@
 
 .DropMenu {
   background-color: #f1f1f1;
-  /* Fondo del menú */
+
   border: 1px solid #ccc;
   text-align: left;
 
-  /* Borde del menú */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Sombra para el efecto de elevación */
   border-radius: 5px;
   padding: 5px 0;
 }
 
-/* Estilo de los elementos del menú */
 .DropItem {
   color: #333;
-  /* Color del texto del ítem */
   font-size: 14px;
   transition: background-color 0.3s ease;
 }
 
-/* Estilo al pasar el cursor sobre un ítem */
 .DropItem:hover {
   background-color: #ddd;
-  /* Color de fondo al pasar el cursor */
   color: #000;
 }
 
-/* Estilo para los divisores (si los usas) */
 .DropDivider {
   border-top: 1px solid #e1e1e1;
-  /* Borde superior del divisor */
 }
 
 
-/* Mobile: dropdown as fixed full-width panel under header */
 @media (max-width: 762px) {
   .DropMenu,
   .dropdown-menu {
     position: fixed !important;
-    top: 80px; /* adjust if your mobile header height differs */
+    top: 80px; 
     left: 0;
     right: 0;
     width: 100%;

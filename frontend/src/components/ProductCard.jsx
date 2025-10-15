@@ -10,7 +10,7 @@ function ProductCard({ product }) {
   );
 }
 
-// Estilos básicos para la tarjeta
+// Estilos básicos para la tarjeta, deberia pasarlos a un CSS
 const cardStyles = {
   card: {
     border: '1px solid #ddd',
@@ -45,7 +45,7 @@ const cardStyles = {
     color: '#666',
     marginBottom: '15px',
     textAlign: 'center',
-    flexGrow: 1, // Permite que la descripción ocupe el espacio disponible
+    flexGrow: 1, 
   },
   price: {
     fontSize: '1.3em',
@@ -63,7 +63,7 @@ const cardStyles = {
     fontSize: '1em',
     transition: 'background-color 0.2s ease-in-out',
   },
-  cardHover: { // Ejemplo de estilo para hover (se aplicaría en CSS o con lógica JS)
+  cardHover: {
     transform: 'translateY(-5px)',
   }
 };

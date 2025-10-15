@@ -27,10 +27,8 @@
   margin-top: 10px;
 }
 
-/* Efecto al pasar el cursor */
 .Card:hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* Eleva la tarjeta ligeramente */
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
