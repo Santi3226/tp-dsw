@@ -79,22 +79,17 @@ button:focus-visible {
 }
 
 :root {
-  /* footer height used to keep spacing consistent */
   --app-footer-height: 72px;
 }
 
-/* ensure main content does not get hidden behind fixed footer */
 .main-content {
   flex: 1;
   max-width: 100%;
   margin: 0 auto;
   padding-bottom: calc(var(--app-footer-height) + 8px);
-  /* leave room for footer */
   padding-bottom: 2rem;
-  /* ...existing code... (keeps previous spacing if larger) */
 }
 
-/* footer fixed to bottom of viewport */
 .main-footer {
   background-color: #d7d7d7;
   padding: 12px 0;
@@ -108,13 +103,11 @@ button:focus-visible {
   justify-content: center;
 }
 
-/* adjust footer text style if needed */
 .main-footer p {
   margin: 0;
   font-size: 0.9rem;
 }
 
-/* Responsive: keep footer same behavior on small screens */
 @media (max-width: 768px) {
   .main-content {
     padding-bottom: calc(var(--app-footer-height) + 12px);

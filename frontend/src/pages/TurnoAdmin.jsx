@@ -167,12 +167,7 @@ useEffect(() => {
           </button>
         </div>
       ) : (
-        <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
+        <table className="table responsive-table">
           <thead>
             <tr>
               <th>Numero de Turno</th>
@@ -219,13 +214,7 @@ useEffect(() => {
             alignItems: 'center',
             zIndex: 1000,
           }}>
-            <div style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '5px',
-              textAlign: 'center',
-              minWidth: '500px'
-            }}>
+            <div className="detalle-modal">
               <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
                 Detalles del turno</h4>
               <div style={{ marginTop: '20px' }}>
@@ -233,7 +222,7 @@ useEffect(() => {
                 const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
                 if (!turno) return null;
                 return (
-                  <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px", fontSize: "14px"}}>
+                  <div className="turno-detalle-grid">
                     <div className="form-group">
                       <label>
                         Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
@@ -398,7 +387,6 @@ useEffect(() => {
           <div id="dos" className="form-group">
             <label htmlFor="date">Fecha del Turno</label>
             <input
-              style={{ width: "40%" }}
               type="date"
               id="fechaHoraReserva"
               {...registerModify("fechaHoraReserva", {
@@ -525,7 +513,6 @@ useEffect(() => {
           <div id="dos" className="form-group">
             <label htmlFor="date">Fecha del Turno</label>
             <input
-              style={{ width: "40%" }}
               type="date"
               id="fechaHoraReserva"
               {...registerAdd("fechaHoraReserva", {
@@ -696,9 +683,6 @@ const pageStyles = {
     maxWidth: "1200px",
     margin: "0 auto",
     textAlign: "center",
-  },
-  table: {
-    justifyItems:"center"
   },
   containerCentered: {
     fontFamily: "Arial, sans-serif",

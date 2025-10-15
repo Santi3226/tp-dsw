@@ -271,7 +271,6 @@ useEffect(() => {
           <div id="dos" className="form-group">
             <label htmlFor="date">Fecha del Turno</label>
             <input
-              style={{ width: "40%" }}
               type="date"
               id="fechaHoraReserva"
               {...registerAdd("fechaHoraReserva", {

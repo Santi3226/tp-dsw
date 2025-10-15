@@ -173,6 +173,11 @@
     left: 0;
     right: 0;
     z-index: 2000;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
 
   .titulo {
@@ -222,11 +227,8 @@
   }
 
   .main-nav {
-    width: 100%;
     height: auto;
-    display: flex;
-    overflow-x: scroll;
-  }
+    }
 
   .drop {
     flex-shrink: 0;

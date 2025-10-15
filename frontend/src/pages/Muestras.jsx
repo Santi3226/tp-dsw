@@ -65,7 +65,7 @@ const handleConfirmarClick = async (id) => {
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
-    //location.reload();
+    location.reload();
   }
 };
 
@@ -149,7 +149,7 @@ useEffect(() => {
     <Tab eventKey="muestras" title="Muestras">
           <div style={pageStyles.grid}>
 
-      <table className="table" style={{verticalAlign:"middle", textAlign:"center", justifyItems:"center", display: "block",
+      <table className="table"  style={{display: "block",
               maxWidth: "-moz-fit-content",
               maxWidth: "fit-content",
               margin: "0 auto",
@@ -199,6 +199,7 @@ useEffect(() => {
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
+            style={{ marginTop: "30px" }}
           >
             <div className="form-group" id="uno">
             <label htmlFor="text">Paciente</label>
@@ -371,6 +372,8 @@ useEffect(() => {
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
+            style={{ marginTop: "30px" }}
+
           >
             <div className="form-group" id="uno">
             <label htmlFor="text">Paciente</label>
