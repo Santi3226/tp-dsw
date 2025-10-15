@@ -150,7 +150,7 @@ useEffect(() => {
           <div style={pageStyles.grid}>
 
       <table className="table"  style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
@@ -269,7 +269,7 @@ useEffect(() => {
           <div style={pageStyles.grid}>
 
       <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",

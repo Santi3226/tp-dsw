@@ -74,7 +74,7 @@ catch (error) {
         </div>
       ) : (
       <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",

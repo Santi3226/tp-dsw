@@ -87,7 +87,7 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
       <h1 style={pageStyles.header}>Nuestros Tipos de Análisis</h1>
       <div style={pageStyles.grid}>
       <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",

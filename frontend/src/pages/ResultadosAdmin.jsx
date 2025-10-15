@@ -114,7 +114,7 @@ function ResultadosAdmin() {
       ) : (
         <div style={pageStyles.grid}>
           <table className="table" style={{display: "block",
-                maxWidth: "-moz-fit-content",
+                
                 maxWidth: "fit-content",
                 margin: "0 auto",
                 overflowX: "auto",
@@ -261,7 +261,7 @@ function ResultadosAdmin() {
             )}
 
             {idSeleccionado && (
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
+              <div className='parametros'>
                 {turnosFiltrados.find((t) => t.id === Number(idSeleccionado))
                   ?.tipoAnalisis.parametros.map((parametro) => (
                     <div key={parametro.parametroAnalisis.id} className="form-group">
