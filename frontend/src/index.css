@@ -29,6 +29,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   width: 100%;
+  zoom: 90%;
 }
 
 h1 {
@@ -74,5 +75,41 @@ button:focus-visible {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+:root {
+  --app-footer-height: 72px;
+}
+
+.main-content {
+  flex: 1;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: calc(var(--app-footer-height) + 8px);
+  padding-bottom: 2rem;
+}
+
+.main-footer {
+  background-color: #d7d7d7;
+  padding: 12px 0;
+  text-align: center;
+  color: #6c757d;
+  border-top: 1px solid #e9ecef;
+  height: var(--app-footer-height);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-bottom: calc(var(--app-footer-height) + 12px);
   }
 }

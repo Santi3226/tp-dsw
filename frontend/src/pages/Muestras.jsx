@@ -9,21 +9,44 @@ import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
 
 function Muestras() {
-const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
 const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
+const [turnoAObservarId, setTurnoAObservarId] = useState(null);
 const [showModal, setShowModal] = useState(false);
+const [activeTab, setActiveTab] = useState("muestras"); 
+const [turnosFiltradosMuestras, setTurnosFiltradosMuestras] = useState([]);
+const [turnosFiltradosConfirmar, setTurnosFiltradosConfirmar] = useState([]);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
-/*
+
 const handleRecetaClick = (id) => {
   const turno = turnos.find(t => t.id === id);
   if (turno && turno.receta) {
-    // Traer la receta desde el backend con multer y abrirla en una nueva pestaña
+    const recetaURL = `http://localhost:3000/uploads/${turno.receta}`;
+    const recetaWindow = window.open("", "_blank", "width=600,height=400");
+    recetaWindow.document.write(`
+      <html>
+        <head>
+          <title>Receta - Turno ${id}</title>
+          <style>
+            body { font-family: Arial; text-align: center; padding: 20px; }
+            img { max-width: 100%; height: auto; }
+          </style>
+        </head>
+        <body>
+          <h2>Receta para el turno n° ${id}</h2>
+          <img src="${recetaURL}" alt="Receta del turno ${id}" />
+        </body>
+      </html>
+    `);
+    recetaWindow.document.close();
   }
 };
-*/
+
+const handleCerrarModal = () => {
+    setShowModal(false);
+  };
 
 const handleMuestrasClick = async (id) => {
   const confirmacion = window.confirm("¿Estás seguro de que deseas registrar la muestra para el turno n° " + id + "?");
@@ -31,7 +54,6 @@ const handleMuestrasClick = async (id) => {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    //Abrir nueva pestaña para imprimir etiqueta
     location.reload();
   }
 };
@@ -48,33 +70,52 @@ const handleConfirmarClick = async (id) => {
 };
 
 const handleObservarClick = async (id) => {
+  setTurnoAObservarId(id);
   setShowModal(true);
+};
 
-  
-  if (confirmacion) {
-    const data = { id:id, estado: "Confirmado" };
+const onSubmitFilter = async (data) => {
+    try {
+      //Determinar la pestaña activa
+      data.estado = activeTab === "muestras" ? "Confirmado" : "Pendiente"; 
+      const response = await getTurnosQuery(data); //Filtrado condicional
+      
+      if (activeTab === "muestras") {
+        setTurnosFiltradosMuestras(response || []);
+      } else {
+        setTurnosFiltradosConfirmar(response || []);
+      }
+    } catch (error) {
+      console.error("Fallo al filtrar:", error);
+    }
+  };
+
+const handleConfirmarObservacion = async (observacion) => {
+  if (observacion) {
+    const data = { id:turnoAObservarId, observacion: observacion };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    //Abrir nueva pestaña para imprimir etiqueta
     location.reload();
   }
-};
-const onSubmitFilter = async (data) => {
-  try {
-    data.estado = "Confirmado";
-    const response = await getTurnosQuery(data); //Filtrado condicional
-    setTurnosFiltrados(response || []); 
-  } catch (error) {
-    console.error("Fallo al filtrar:", error);
+  else {
+    alert("La observación no puede estar vacía.");
   }
 };
 
 useEffect(() => {
-    if (Array.isArray(turnos)) {
-      setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-    }
-  }, [turnos]);
+    if (Array.isArray(turnos) && turnos.length > 0) { 
+      const turnosMuestras = turnos.filter(turno => turno.estado === "Confirmado");
+      setTurnosFiltradosMuestras(turnosMuestras); 
 
+      const turnosConfirmar = turnos.filter(turno => turno.estado === "Pendiente");
+      setTurnosFiltradosConfirmar(turnosConfirmar);
+  
+    } else if (!isLoading) {
+      setTurnosFiltradosMuestras([]);
+      setTurnosFiltradosConfirmar([]);
+    }
+  }, [turnos, isLoading]); // Depende de turnos e isLoading
+  
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
@@ -91,17 +132,9 @@ useEffect(() => {
       </div>
     );
   }
+  
 
-  if (turnosFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
-            Volver
-        </button>
-      </div>
-    );
-  }
+  const turnosActivos = activeTab === "muestras" ? turnosFiltradosMuestras : turnosFiltradosConfirmar;
 
   return (
     <div style={pageStyles.container}>
@@ -116,9 +149,14 @@ useEffect(() => {
     <Tab eventKey="muestras" title="Muestras">
           <div style={pageStyles.grid}>
 
-      <table className="table">
+      <table className="table"  style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
               <thead>
-                <tr>
+                <tr >
                   <th>Numero de Turno</th>
                   <th>Paciente</th>
                   <th>Tipo de Analisis</th>
@@ -130,7 +168,7 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody>
-              {turnosFiltrados.map((turno) => (
+              {turnosFiltradosMuestras.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
                   <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
@@ -161,6 +199,7 @@ useEffect(() => {
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
+            style={{ marginTop: "30px" }}
           >
             <div className="form-group" id="uno">
             <label htmlFor="text">Paciente</label>
@@ -229,7 +268,12 @@ useEffect(() => {
     <Tab eventKey="confirmar" title="Confirmar">
           <div style={pageStyles.grid}>
 
-      <table className="table">
+      <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
               <thead>
                 <tr>
                   <th>Numero de Turno</th>
@@ -240,19 +284,19 @@ useEffect(() => {
                   {<th>Receta</th>}
                   <th>Estado</th>
                   <th>Observación</th>
-                  <th>Confirmar Turno</th>
                   <th>Observar Turno</th>
+                  <th>Confirmar Turno</th>
                 </tr>
               </thead>
-              <tbody>
-              {turnosFiltrados.map((turno) => (
+              <tbody style={{justifyItems:"center", textAlign:"center", alignItems:"center"}}>
+              {turnosFiltradosConfirmar.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
                   <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
                   <td>{turno.tipoAnalisis?.nombre}</td>
                   <td>{turno.centroAtencion?.nombre}</td>
                   <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  {<td><button onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td><button
@@ -266,9 +310,9 @@ useEffect(() => {
                     fontStyle: 'underline'
                   }}
                 >
-                  ✔️ 
+                  X
                 </button></td>
-                <td><button
+                  <td><button
                   onClick={() => handleConfirmarClick(turno.id)}
                   style={{
                     background: 'none',
@@ -279,7 +323,7 @@ useEffect(() => {
                     fontStyle: 'underline'
                   }}
                 >
-                  X
+                  ✔️ 
                 </button></td>
                 </tr>
                 
@@ -305,20 +349,21 @@ useEffect(() => {
               padding: '20px',
               borderRadius: '5px',
               textAlign: 'center',
-              minWidth: '300px'
+              minWidth: '500px'
             }}>
               <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
-                Confirmar Cancelación</h4>
-              <p>
-                Estatar Observacion</p>
+                Establecer Observacion</h4>
               <div style={{ marginTop: '20px' }}>
-                const observacion = <input type="text" />
-                <button onClick={handleCerrarModal(observacion)} className='login-btn' style={{ backgroundColor: 'red' }}>
+                 <textarea style={{ width: '100%', height: '100px' }} id="observacion" type="text" />
+              </div>
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
                   Volver
                 </button>
-                 <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginLeft: '10px' }}>
+                 <button onClick={() => handleConfirmarObservacion(document.getElementById("observacion").value)} className='login-btn' style={{ marginLeft: '10px' }}>
                   Confirmar
                 </button>
+
               </div>
             </div>
           </div>
@@ -327,6 +372,8 @@ useEffect(() => {
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
+            style={{ marginTop: "30px" }}
+
           >
             <div className="form-group" id="uno">
             <label htmlFor="text">Paciente</label>

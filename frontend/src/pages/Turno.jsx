@@ -1,8 +1,8 @@
-import TabBar from "../components/TabTurno.jsx";
+import { TabTurno } from "../components/TabTurno.jsx";
 import "./Turno.css";
 import { useParams } from 'react-router-dom';
 
-const Paciente = () => {
+const Turno = () => {
   let { tab } = useParams();
   return (
     <div className="about-page">
@@ -11,11 +11,11 @@ const Paciente = () => {
           <p className="p">Sección dedicada a nuestros turnos, solicita tu proximo turno en Laboratorio Genérico, 
             o consulta aquellos ya reservados.</p>
     <div className="tabPaciente">
-        <TabBar inicio={tab}/>         
+        <TabTurno inicio={tab}/>         
       </div>
     </div>
     </div>
   );
 };
 
-export default Paciente;
+export default Turno;

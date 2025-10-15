@@ -4,7 +4,7 @@ import './Dropdown.css';
 function Drop(props) {
   const { titulo, uno, dos, tres, cuatro } = props;
   return (
-    <Dropdown className='Drop'>
+    <Dropdown className='Drop' popperConfig={{ strategy: 'fixed' }}>
       <Dropdown.Toggle className='DropToggle' variant="success" id="dropdown-basic">
         {titulo[0].toUpperCase() + titulo.slice(1)}
       </Dropdown.Toggle>

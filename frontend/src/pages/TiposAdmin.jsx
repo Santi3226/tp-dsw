@@ -86,7 +86,12 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Tipos de Análisis</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
+      <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
               <thead>
                 <tr>
                   <th>Id</th>
@@ -123,12 +128,12 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
           noValidate
         >
         <div className="form-group" id="uno">
-        <label htmlFor="text">Id Tipo de Analisis</label>
+        <label htmlFor="text">Tipo de Analisis</label>
         <select
           id="id"
           
           {...registerModify("id", {
-            required:"Id del Tipo de Analisis requerido",
+            required:"Tipo de Analisis requerido",
             pattern: {
             },
           })}

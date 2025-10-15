@@ -1,21 +1,22 @@
 import nodemailer from "nodemailer";
 import { mailFormatProx } from "./mailFormatTurnoProx.js";
 import { mailFormatPrev } from "./mailFormatTurnoPrev.js";
+import dotenv from "dotenv";
 
-/* METODO OFICIAL
-const transporter = nodemailer.createTransport({
-  service: "gmail",
+
+dotenv.config();
+
+const transport = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || "smtp.gmail.com",
+  port: Number(process.env.SMTP_PORT) || 587,
+  secure: Number(process.env.SMTP_PORT) === 465, // true for 465, false for 587
   auth: {
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: true, // Usa SSL/TLS
-    auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
 });
-*/
 
+/* TESTER EN DESARROLLO
 var transport = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
   port: 2525,
@@ -24,7 +25,7 @@ var transport = nodemailer.createTransport({
     pass: "2b1bfd843c48ba"
   }
 });
-
+*/
 
 const sendNotification = async (mail: string, message: string, subject: string, tipo: "prox" | "prev") => {
     console.log(`Enviando notificacion a ${mail}: ${message}`);

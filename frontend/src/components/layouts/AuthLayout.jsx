@@ -3,12 +3,6 @@ import { useAuth } from "../../hooks/useAuth";
 import "./AuthLayout.css";
 
 const AuthLayout = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
 
   return (
     <div className="auth-layout">
@@ -16,7 +10,6 @@ const AuthLayout = () => {
         <div className="sidebar-header">
         <nav className="sidebar-nav">
           <h2>Laboratorio Genérico</h2>
-          <p>Bienvenido, {user?.paciente?.nombre || "Usuario"}!</p>
           <Link to="/dashboard" className="sidebar-link">
             <span className="icon">📊</span>
             Panel de Control
@@ -27,7 +20,7 @@ const AuthLayout = () => {
           </Link>
           <Link to="/dashboard/muestras" className="sidebar-link">
             <span className="icon">🧪</span>
-            Muestras
+            Muestras y Confirmación
           </Link>
           <Link to="/dashboard/resultado" className="sidebar-link">
             <span className="icon">📄</span>
@@ -36,6 +29,10 @@ const AuthLayout = () => {
           <Link to="/dashboard/centro" className="sidebar-link">
             <span className="icon">🏥</span>
             Centros
+          </Link>
+          <Link to="/dashboard/localidad" className="sidebar-link">
+            <span className="icon">📍</span>
+            Localidades
           </Link>
           <Link to="/dashboard/paciente" className="sidebar-link">
             <span className="icon">🧍‍♂️</span>
@@ -57,14 +54,10 @@ const AuthLayout = () => {
             <span className="icon">📄</span>
             Plantillas de Analisis
           </Link>
-          <Link to="/" className="sidebar-link">
+          <Link style={{ background: "rgba(231, 76, 60, 0.8)" , ":hover": { color: "white" } }} to="/" className="sidebar-link-logout">
             <span className="icon">🏠</span>
             Volver al Inicio
           </Link>
-             <button onClick={handleLogout} className="logout-btn">
-            <span className="icon">🚫 </span>
-            Cerrar sesión
-          </button>
         </nav>
      
       </div>

@@ -12,16 +12,16 @@ import { parametroAnalisisRouter } from './parametroAnalisis/parametroanalisisRo
 import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRoutes.js';
 import { politicaRouter } from './politica/politicaRoutes.js';
 import { usuarioRouter } from './usuario/usuarioRoutes.js';
-import { recordatoriosDiarios } from './cron.js';
+import { recordatoriosDiarios, recordatoriosPrevistos } from './cron.js';
+import multer from 'multer';
 
 const app = express();
+
 app.use(express.json());
-
-
 
 //luego de los middleware base
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app'); //Mas adelante cambiar el * por el localhost
+  res.setHeader('Access-Control-Allow-Origin', '*'); //Mas adelante cambiar el * por el localhost
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
    if (req.method === 'OPTIONS') {
@@ -34,6 +34,8 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
 });
+
+app.use(express.static('public'));
 
 //antes de las rutas y middleware de negocio
 app.use('/api/localidad', localidadRouter); //Manda todas las peticiones q comiencen asi al router
@@ -52,9 +54,10 @@ app.use((_, res) => {
   return; //Si no entro en ninguna de las instucciones CRUD, que venga aca
 });
 
-//await syncSchema();
+await syncSchema();
 recordatoriosDiarios();
+recordatoriosPrevistos();
 
 app.listen(3000, () => {
-  console.log('Server activo en puerto 3000 y URL https://laboratorio-dsw.onrender.com/api');
+  console.log('Server activo en puerto 3000 y http://localhost:3000/api');
 });

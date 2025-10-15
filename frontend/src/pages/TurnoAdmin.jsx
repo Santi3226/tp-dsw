@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
 import "./TurnoAdmin.css";
 import { useForm, useWatch } from "react-hook-form";
@@ -7,6 +7,24 @@ import Tabs from "react-bootstrap/Tabs";
 import { useTiposAnalisis } from "../hooks/useTiposAnalisis.js";
 import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
+import axiosInstance from '../helpers/api';
+
+const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
+  const horarios = [];
+  let horaActual = horaInicio;
+  let minutoActual = 0;
+  while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
+    horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
+    minutoActual += intervalo;
+    if (minutoActual >= 60) {
+      minutoActual = 0;
+      horaActual += 1;
+    }
+  }
+  return horarios;
+};
+
+const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
 
 function TurnoAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
@@ -14,65 +32,57 @@ const { isLoading, isError, error, turnos = [] } = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
+const [turnoDetalleId, setTurnoDetalleId] = useState(null);
+const [showModal, setShowModal] = useState(false);
 const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
-const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
-const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
-const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
+const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control: controlAdd } = useForm({ mode: "onBlur" });
+const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify }, control: controlModify } = useForm({ mode: "onBlur" });const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 const fechaHoraReserva = useWatch({
-    control,
+    control: controlAdd,
     name: "fechaHoraReserva"
-  });
+});
 
-const generateTimeSlots = (horaInicio, horaFin, intervalo) => {
-    const horarios = [];
-    let horaActual = horaInicio;
-    let minutoActual = 0;
-    while (horaActual < horaFin || (horaActual === horaFin && minutoActual === 0)) {
-      horarios.push(`${String(horaActual).padStart(2, '0')}:${String(minutoActual).padStart(2, '0')}`);
-      minutoActual += intervalo;
-      if (minutoActual >= 60) {
-        minutoActual = 0;
-        horaActual += 1;
-      }
-    }
-    return horarios;
-  };
 
-  const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica pero no anda
+const fechaHoraReservaModify = useWatch({
+    control: controlModify, 
+    name: "fechaHoraReserva"
+});
   
-  useEffect(() => {
-    if (fechaHoraReserva) {
-      const turnosFecha = async () => {
-        try {
-          const data = { fechaHoraReserva: fechaHoraReserva };
-          const response = await getTurnosQuery(data);
-          console.log('Turnos de la fecha seleccionada:', response);
-          
-          // Extrae los horarios ocupados de los turnos recibidos
-          const occupiedTimes = response
-            .filter(turno => turno.estado !== "Anulado")
-            .map(turno => {
-              const date = new Date(turno.fechaHoraReserva);
-              const hour = String(date.getHours()).padStart(2, '0');
-              const minute = String(date.getMinutes()).padStart(2, '0');
-              return `${hour}:${minute}`;
-            });
+const handleDetalleClick = async (id) => {
+  setTurnoDetalleId(id);
+  setShowModal(true);
+};
 
-          // Filtra todos los horarios para quitar los que ya están ocupados
-          const availableSlots = allTimeSlots.filter(
-            slot => !occupiedTimes.includes(slot)
-          );
-          setHorariosDisponibles(availableSlots);
-        } catch (error) {
-          console.error("Error al obtener los turnos:", error);
-        }
-      };
-      turnosFecha();
-    }
-  }, [fechaHoraReserva]);
+useEffect(() => {
+    if (!fechaHoraReserva) return; // Early return si no hay fecha
+    
+    const turnosFecha = async () => {
+      try {
+        const data = { fechaHoraReserva: fechaHoraReserva ? fechaHoraReserva : fechaHoraReservaModify };
+        const response = await getTurnosQuery(data);
+        
+        const occupiedTimes = response
+          .filter(turno => turno.estado !== "Anulado")
+          .map(turno => {
+            const date = new Date(turno.fechaHoraReserva);
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            return `${hour}:${minute}`;
+          });
+
+        const availableSlots = allTimeSlots.filter(
+          slot => !occupiedTimes.includes(slot)
+        );
+        setHorariosDisponibles(availableSlots);
+      } catch (error) {
+        console.error("Error al obtener los turnos:", error);
+      }
+    };
+    turnosFecha();
+  }, [fechaHoraReserva, fechaHoraReservaModify]); 
 
 const onSubmitDelete = async (data) => {
 try {
@@ -98,6 +108,9 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try {
   data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
+  const response = await axiosInstance.get("paciente/"+data.paciente);
+  const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
+  data.email = email.data.data.email;
   console.log("Datos del formulario:", data);
   await addTurnos(data);
   location.reload(); 
@@ -120,7 +133,10 @@ useEffect(() => {
     if (Array.isArray(turnos)) {
       setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
     }
-  }, [turnos]);
+  else if (!isLoading) {
+      setTurnosFiltrados([]);
+    }
+  }, [turnos, isLoading]); // Depende de turnos e isLoading
 
   if (isLoading) {
     return (
@@ -139,26 +155,23 @@ useEffect(() => {
     );
   }
 
-  if (turnosFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
-            Volver
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Turnos</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Numero de Turno</th>
-                  <th>Paciente</th>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+            Volver
+          </button>
+        </div>
+      ) : (
+        <table className="table responsive-table">
+          <thead>
+            <tr>
+              <th>Numero de Turno</th>
+              <th>Paciente</th>
                   <th>Tipo de Analisis</th>
                   <th>Centro de Atencion</th>
                   <th>Fecha y Hora Reserva</th>
@@ -166,6 +179,7 @@ useEffect(() => {
                   <th>Estado</th>
                   <th>Observación</th>
                   <th>Recibe Mail</th>
+                  <th>Detalle</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,11 +194,73 @@ useEffect(() => {
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td>{turno.recibeMail ? "Si" : "No"}</td>
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleDetalleClick(turno.id)}>Ver Detalle</button></td>}
                 </tr>
               ))}
             </tbody>
             </table>
+          )}
       </div>
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div className="detalle-modal">
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Detalles del turno</h4>
+              <div style={{ marginTop: '20px' }}>
+                {turnoDetalleId && (() => {
+                const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
+                if (!turno) return null;
+                return (
+                  <div className="turno-detalle-grid">
+                    <div className="form-group">
+                      <label>
+                        Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
+                      </label>
+                      <label>
+                        DNI: {turno.paciente?.dni} 
+                      </label>
+                      <label>
+                        Fecha Nac: {turno.paciente?.fechaNacimiento ? new Date(turno.paciente.fechaNacimiento).toLocaleDateString() : "-"}
+                      </label>
+                      <label>
+                        Dirección: {turno.paciente?.direccion}
+                      </label>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                      Tel: {turno.paciente?.telefono}
+                      </label>
+                      <label>
+                        Tipo de Análisis: {turno.tipoAnalisis?.nombre} 
+                      </label>
+                      <label>
+                        Importe: {turno.tipoAnalisis?.importe}
+                      </label>
+                      <label>
+                      Plantilla: {turno.tipoAnalisis?.plantillaAnalisis}
+                      </label>
+                    </div>
+                  </div>
+                );
+              })()}
+                <button onClick={() => setShowModal(false)} className='login-btn' style={{ backgroundColor: 'red', marginTop: '20px' }}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <Tabs
       defaultActiveKey="filtrar"
       id="justify-tab-example"
@@ -213,8 +289,8 @@ useEffect(() => {
                 </option>
               ))}
             </select>
-            {errorsAdd.paciente && (
-              <div className="error-message">{errorsAdd.paciente.message}</div>
+            {errorsFilter.paciente && (
+              <div className="error-message">{errorsFilter.paciente.message}</div>
             )}
           </div>
 
@@ -277,7 +353,7 @@ useEffect(() => {
           className="form-input"
         >
         <option value="">-</option>
-        {turnosFiltrados.map((p, index) => (
+        {turnos.map((p, index) => (
         <option key={index} value={p.id}>
           {p.id} - {p.paciente?.apellido}, {p.paciente?.nombre} - {p.tipoAnalisis?.nombre}
         </option>
@@ -288,97 +364,120 @@ useEffect(() => {
         )}
       </div>
 
-          <div className="form-group" id="tres">
-          <label htmlFor="text">Nombre</label>
-          <input
-              type="text"
-              id="nombre"
-              {...registerModify("nombre")}
-              className="form-input"
-            />
-            {errorsModify.nombre && (
-              <div className="error-message">{errorsModify.nombre.message}</div>
-            )}
-            </div>
-            <div className="form-group" id="cuatro">
-            <label htmlFor="text">Apellido</label>
-            <input
-              type="text"
-              id="apellido"
-              {...registerModify("apellido")}
-              className="form-input"
-            />
-            {errorsModify.apellido && (
-              <div className="error-message">{errorsModify.apellido.message}</div>
-            )}</div>
-            <div className="form-group">
-            <label htmlFor="number">DNI</label>
-            <input
-              type="text"
-              id="dni"
-              {...registerModify("dni", {
-                pattern: {
-                  value: undefined||/^\d{8}$/, // Expresión regular para validar dni
-                  message: "Formato de dni no válido",
-                },
+       <div className="form-group" id="uno">
+            <label htmlFor="text">Tipo de Análisis</label>
+            <select
+              id="tipoAnalisis"
+              {...registerModify("tipoAnalisis", {
               })}
               className="form-input"
-            />
-            {errorsModify.dni && (
-              <div className="error-message">{errorsModify.dni.message}</div>
+            >
+              <option value="">-</option>
+              {tipos.map((ta, index) => (
+                <option key={index} value={ta.id}>
+                  {ta.id} - {ta.nombre}
+                </option>
+              ))}
+            </select>
+            {errorsModify.tipoAnalisis && (
+              <div className="error-message">{errorsModify.tipoAnalisis.message}</div>
             )}
           </div>
-          <div className="form-group">
-            <label htmlFor="text">Direccion</label>
-            <input
-              type="text"
-              id="direccion"
-              {...registerModify("direccion")}
-              className="form-input"
-            />
-            {errorsModify.direccion && (
-              <div className="error-message">{errorsModify.direccion.message}</div>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="text">Telefono</label>
-            <input
-              type="text"
-              id="telefono"
-              {...registerModify("telefono", {
-              })}
-              className="form-input"
-            />
-            {errorsModify.telefono && (
-              <div className="error-message">{errorsModify.telefono.message}</div>
-            )}
-          </div>
-          <div id="fechaNac" className="form-group">
-            <label htmlFor="date">Fecha de Nacimiento</label>
+
+          <div id="dos" className="form-group">
+            <label htmlFor="date">Fecha del Turno</label>
             <input
               type="date"
-              id="fechaNacimiento"
-              {...registerModify("fechaNacimiento", {
+              id="fechaHoraReserva"
+              {...registerModify("fechaHoraReserva", {
                 validate: (value) => {
-                  if (!value) return true;
                   const selectedDate = new Date(value);
                   const currentDate = new Date();
                   currentDate.setHours(0, 0, 0, 0);
-                  if (selectedDate > currentDate) {
-                    return "Fecha de nacimiento inválida";
+                  if (selectedDate < currentDate) {
+                    return "Fecha de turno inválida";
                   }
                   return true;
                 },
               })}
               className="form-input"
             />
-            {errorsModify.fechaNacimiento && (
-              <div className="error-message">{errorsModify.fechaNacimiento.message}</div>
+            {errorsModify.fechaHoraReserva && (
+              <div className="error-message">{errorsModify.fechaHoraReserva.message}</div>
+            )}
+            </div>
+              <div id="tres" className="form-group">
+            {(fechaHoraReservaModify && errorsModify.fechaHoraReserva == undefined) && (
+              <>
+                <label htmlFor="time">Hora del Turno</label>
+                <select 
+                  id="horaReserva"
+                  {...registerModify("horaReserva", {
+                  })}
+                  className="form-input"
+                >
+                  <option value="">-</option>
+                  {horariosDisponibles.map((hora, index) => (
+                    <option key={index} value={hora}>
+                      {hora}
+                    </option>
+                  ))}
+                </select>
+                {errorsModify.horaReserva && (
+                  <div className="error-message">{errorsModify.horaReserva.message}</div>
+                )}
+              </>
             )}
           </div>
-          
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow: 4}}>
-            {isSubmittingModify ? "Un momento..." : "Modificar"}
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "2"}} id="tres">
+            <label htmlFor="text">Centro de Atención</label>
+            <select
+              id="centroAtencion"
+              {...registerModify("centroAtencion", {
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {centros.map((ca, index) => (
+                <option key={index} value={ca.id}>
+                  {ca.nombre + " - " + ca.localidad?.denominacion + ", " + ca.domicilio}
+                </option>
+              ))}
+            </select>
+            {errorsModify.centroAtencion && (
+              <div className="error-message">{errorsModify.centroAtencion.message}</div>
+            )}
+          </div>
+
+          <div className="form-group" style={{gridColumn: "1", gridRow : "3"}} id="tres">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerModify("paciente", {
+              })}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((p, index) => (
+                <option key={index} value={p.id}>
+                  {p.id + " - " + p.nombre + ", " + p.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsModify.paciente && (
+              <div className="error-message">{errorsModify.paciente.message}</div>
+            )}
+          </div>
+
+          <div className="form-options" style={{gridColumn: "1", gridRow : "4"}}>
+            <label className="checkbox-label">
+              <input type="checkbox" {...registerModify("recibeMail")} />
+              <span>Deseo recibir Email recordatorio</span>
+            </label>
+          </div>
+          <button id="turno" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridColumn: "2", gridRow : "4"}}>
+            {isSubmittingModify ? "Un momento..." : "Registrar"}
           </button>
         </form>
       </Tab>
@@ -414,7 +513,6 @@ useEffect(() => {
           <div id="dos" className="form-group">
             <label htmlFor="date">Fecha del Turno</label>
             <input
-              style={{ width: "40%" }}
               type="date"
               id="fechaHoraReserva"
               {...registerAdd("fechaHoraReserva", {
@@ -586,9 +684,6 @@ const pageStyles = {
     margin: "0 auto",
     textAlign: "center",
   },
-  table: {
-    justifyItems:"center"
-  },
   containerCentered: {
     fontFamily: "Arial, sans-serif",
     maxWidth: "1200px",
@@ -604,7 +699,7 @@ const pageStyles = {
   grid: {
     marginTop:"50px",
     display: "flex",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", // Diseño responsivo en cuadrícula
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
     justifyItems: "center",
   },
   message: {

@@ -52,6 +52,7 @@
   color: #333333;
   align-self: center;
   line-height: normal;
+  max-width: fit-content;
 }
 
 .features-grid {

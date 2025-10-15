@@ -12,7 +12,7 @@ node_modules
 Thumbs.db
 
 # ignore jpgs
-uploads/*
+public
 
 # ignore built ts files
 dist/**/*

@@ -87,23 +87,25 @@ catch (error) {
     );
   }
 
-  if (parametros.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron parámetros.</p>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Parámetros de Análisis</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
+        {parametros.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron parámetros.</p>
+          </div>
+        ) : (
+          <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
                   <th>Referencia</th>
                   <th>Unidad</th>
                 </tr>
@@ -119,8 +121,8 @@ catch (error) {
               ))}
             </tbody>
             </table>
+        )}
       </div>
-      
       <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
@@ -136,12 +138,12 @@ catch (error) {
           noValidate
         >
         <div className="form-group" id="uno">
-        <label htmlFor="text">Id Parametro de Analisis</label>
+        <label htmlFor="text">Parametro de Analisis</label>
         <select
           id="id"
           
           {...registerModify("id", {
-            required:"Id del Parametro de Analisis requerido",
+            required:"Parametro de Analisis requerido",
             pattern: {
             },
           })}
@@ -265,10 +267,10 @@ catch (error) {
         noValidate
       >
       <div className="form-group">
-        <label htmlFor="text">Id Parametro</label>
+        <label htmlFor="text">Parametro</label>
         <select
           id="id"
-          {...registerDelete("id", {required:"Id requerido"})}
+          {...registerDelete("id", {required:"Parametro requerido"})}
           className="form-input"
         >
         <option value="">-</option>
@@ -297,10 +299,10 @@ catch (error) {
         noValidate
       >
       <div className="form-group">
-        <label htmlFor="text">Id Parámetro de Análisis</label>
+        <label htmlFor="text">Parámetro de Análisis</label>
         <select
           id="parametroAnalisis"
-          {...registerVinculo("parametroAnalisis", {required:"Id Parametro requerido"})}
+          {...registerVinculo("parametroAnalisis", {required:"Parámetro de Análisis requerido"})}
           className="form-input"
         >
         <option value="">-</option>
@@ -316,10 +318,10 @@ catch (error) {
         )}
       </div>
             <div className="form-group">
-        <label htmlFor="text">Id Tipo de Análisis</label>
+        <label htmlFor="text">Tipo de Análisis</label>
         <select
           id="tipoAnalisis"
-          {...registerVinculo("tipoAnalisis", {required:"Id Tipo de Análisis requerido"})}
+          {...registerVinculo("tipoAnalisis", {required:"Tipo de Análisis requerido"})}
           className="form-input"
         >
         <option value="">-</option>

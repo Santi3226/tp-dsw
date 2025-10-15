@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../helpers/api';
+import { rectangle } from 'leaflet';
 
 const getDatos = async () => {
   try {
@@ -11,34 +12,40 @@ const getDatos = async () => {
 };
 
 const addTurnos = async (data) => {
-  const turnoData = {};
+  console.log("Archivo en Hook:", data.receta);  
+  const formData = new FormData();
+    formData.append('receta', data.receta[0]);
+    formData.append('recibeMail', data.recibeMail);
+    formData.append('estado', 'Pendiente');
+    formData.append('observacion', '-');
+    formData.append('fechaHoraReserva', data.fechaHoraReserva);
+    formData.append('paciente', data.paciente);
+    formData.append('email', data.email);
+    formData.append('centroAtencion', data.centroAtencion);
+    formData.append('tipoAnalisis', data.tipoAnalisis);
   try {
-    const response = await axiosInstance.post('/turno', turnoData);
+    const response = await axiosInstance.post('/turno', formData);
     alert('Turno creado Correctamente!');
   } catch (error) {
     console.error('Error en Hook:', error);
-    if (error.response && error.response.data && error.response.data.message) {
-      setErrorLogin(error.response.data.message);
-    } else {
-      setErrorLogin(
-        'Error de red o del servidor. Por favor, inténtalo de nuevo.'
-      );
-    }
     throw error;
   }
 };
 
 const modifyTurnos = async (data) => {
   const turnoData = {
+    /*Cambiar*/
     id: data.id,
-    nombre: data.nombre === '' ? undefined : data.nombre,
-    apellido: data.apellido === '' ? undefined : data.apellido,
-    dni: data.dni === '' ? undefined : data.dni,
-    telefono: data.telefono === '' ? undefined : data.telefono,
-    direccion: data.direccion === '' ? undefined : data.direccion,
+    recibeMail: data.recibeMail === '' ? undefined : data.recibeMail,
+    fechaHoraReserva: data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
+    paciente: data.paciente === '' ? undefined : data.paciente,
+    centroAtencion: data.centroAtencion === '' ? undefined : data.centroAtencion,
+    tipoAnalisis: data.tipoAnalisis === '' ? undefined : data.tipoAnalisis,
     estado: data.estado === '' ? undefined : data.estado,
-    fechaNacimiento:
-      data.fechaNacimiento === '' ? undefined : data.fechaNacimiento,
+    fechaHoraExtraccion: data.fechaHoraExtraccion === '' ? undefined : data.fechaHoraExtraccion,
+    observacion: data.observacion === '' ? undefined : data.observacion,
+    email: data.email === '' ? undefined : data.email,
+    receta: data.receta === '' ? undefined : data.receta,
   };
   try {
     await axiosInstance.put('/turno/' + turnoData.id, turnoData);

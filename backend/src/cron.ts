@@ -29,7 +29,7 @@ const recordatoriosDiarios = () => {
                     }
                 );
                 for (const turno of turnos) {
-                    await sendNotification(turno.paciente.usuario.email || "Usuario", '¡Mañana es tu turno en Laboratorio Genérico!, recorda leer la preparación para tu visita y revisar el horario para evitar demoras!', 'Turno Proximo', "prox");
+                    await sendNotification(turno.paciente.usuario.email || "Usuario", `¡Mañana es tu turno en Laboratorio Genérico, en la sucursal ${turno.centroAtencion.nombre} - ${turno.centroAtencion.domicilio}! Recorda leer la preparación para el/la ${turno.tipoAnalisis.nombre} y arribar antes de las ${turno.fechaHoraReserva.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} para evitar demoras!`, 'Turno Proximo', "prox");
                     turno.notificacionEnviada = true;
                     await em.persistAndFlush(turno);
                 }
@@ -42,7 +42,7 @@ const recordatoriosDiarios = () => {
 };
 
 const recordatoriosPrevistos = () => {
-    cron.schedule('0 9 * * *', async () => { // Ejecuta diariamente a las 9 AM
+    cron.schedule('0 7 * * *', async () => { // Ejecuta diariamente a las 7 AM
         console.log('Ejecutando tarea diaria de verificación de previstos...');
         try {
             await orm.em.fork().transactional(async (em) => {
@@ -81,8 +81,6 @@ const recordatoriosPrevistos = () => {
                         "prev"
                     );
                 }
-
-                console.log(`Se procesaron ${turnosListos.length} turnos con resultados listos.`);
             });
         } catch (error) {
             console.error('Error en la verificación de previstos:', error);

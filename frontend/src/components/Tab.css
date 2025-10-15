@@ -1,10 +1,7 @@
-/* Estilos para las pestañas de navegación */
 .nav-link {
   color: #000000;
   border-bottom: none;
-  /* Eliminar el borde inferior */
   margin-right: 5px;
-  /* Espacio entre pestañas */
   transition: all 0.3s ease;
 }
 
@@ -57,13 +54,66 @@
 .foto {
   margin: 0;
   padding: 0;
-  height: 768px;
-  width: 1024px;
+  height: 576px;
+  width: 768px;
   text-align: left;
+  object-fit: cover;
 }
 
 .divFoto {
   box-sizing: border-box;
+}
+
+.instalaciones-content {
+  display: grid;
+  grid-template-columns: 768px 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.columna {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Breakpoints */
+@media (min-width: 1025px) {
+  .instalaciones-content {
+    grid-template-columns: 768px 1fr;
+  }
+  .foto {
+    width: 768px;
+    height: 576px;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+  .instalaciones-content {
+    grid-template-columns: 420px 1fr;
+    gap: 1rem;
+  }
+  .foto {
+    width: 420px;
+    height: 315px;
+  }
+}
+
+@media (max-width: 767px) {
+  .instalaciones-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .foto {
+    width: 100%;
+    height: auto;
+    max-height: 360px;
+  }
+  .columna {
+    font-size: 0.95rem;
+  }
+  .politicas-table-container .table {
+    font-size: 0.9rem;
+  }
 }
 
 .error-message {

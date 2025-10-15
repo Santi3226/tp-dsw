@@ -35,22 +35,24 @@ const { isLoading, isError, error, politicas = [] } = usePolitica();
     );
   }
 
-  if (politicas.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron politicas.</p>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestras Politicas</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Dia Habilitacion</th>
+        {politicas.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron políticas.</p>
+          </div>
+        ) : (
+          <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Dia Habilitacion</th>
                   <th>Hora Inicio</th>
                   <th>Hora Fin</th>
                 </tr>
@@ -65,6 +67,7 @@ const { isLoading, isError, error, politicas = [] } = usePolitica();
               ))}
             </tbody>
             </table>
+          )}
       </div>
     <h2 className='titulo'>Modificar las politicas</h2>
           <form

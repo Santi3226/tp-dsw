@@ -78,47 +78,48 @@ useEffect(() => {
     );
   }
 
-  if (pacientesFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron pacientes.</p>
-        <a href="">
-        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}> 
-            Volver
-        </button>
-        </a>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Pacientes</h1>
       <div style={pageStyles.grid}>
-      <table className="table">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
-                  <th>DNI</th>
-                  <th>Direccion</th>
-                  <th>Telefono</th>
-                  <th>Fecha de Nacimiento</th>
-                </tr>
-              </thead>
-              <tbody>
+        {pacientesFiltrados.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron pacientes.</p>
+            <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Limpiar filtros
+            </button>
+          </div>
+        ) : (
+          <table className="table" style={{display: "block",
+              maxWidth: "-moz-fit-content",
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Fecha de Nacimiento</th>
+              </tr>
+            </thead>
+            <tbody>
               {pacientesFiltrados.map((paciente) => (
                 <tr key={paciente.id}>
                   <td>{paciente.id}</td>
-                  <td>{paciente.nombre +" "+ paciente.apellido}</td>
+                  <td>{paciente.nombre + " " + paciente.apellido}</td>
                   <td>{paciente.dni}</td>
                   <td>{paciente.direccion}</td>
                   <td>{paciente.telefono}</td>
-                 <td>{new Date(paciente.fechaNacimiento).toLocaleDateString()}</td>
+                  <td>{new Date(paciente.fechaNacimiento).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
-            </table>
+          </table>
+        )}
       </div>
       <Tabs
       defaultActiveKey="filtrar"
@@ -392,7 +393,7 @@ useEffect(() => {
         </form>
       </Tab>
       <Tab eventKey="eliminar" title="Eliminar">
-        <h2 className='titulo'>Eliminar un tipo</h2>
+        <h2 className='titulo'>Eliminar un Paciente</h2>
         <form
         className="login-formReg"
         onSubmit={handleSubmitDelete(onSubmitDelete)}

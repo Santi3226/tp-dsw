@@ -14,6 +14,11 @@
   left: 0;
   right: 0;
   z-index: 2000;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .header-content {
@@ -23,6 +28,11 @@
   padding: 0 2rem;
   display: flex;
   align-items: center;
+  padding: 0;
+  gap: 0; /*OVERFLOW X E Y TAPAN EL DROPDOWN*/
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
 }
 
 .titulo h1 {
@@ -45,8 +55,8 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  width: 210px;
-  height: 61px;
+  flex: 1;
+  justify-content: flex-end;
   padding: 0px;
 }
 
@@ -88,30 +98,40 @@
   transform: translateY(-2px);
 }
 
-.login-btn {
-  background-color: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.login-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
 .logout-btn {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  width: 150px;
-  height: 61px;
-  padding: 0px 20px;
-  border-radius: 6px;
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  transition: all 0.3s ease;
+  color: #ffffff;
+  background-color: #169bd5;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .logout-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #1b4aa0;
+}
+
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #169bd5;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #1b4aa0;
 }
 
 .main-content {
@@ -128,7 +148,7 @@
 }
 
 .main-footer {
-  background-color: #d7d7d7;
+  background-color: #d7d7d7ba;
   padding: 2rem 0;
   text-align: center;
   color: #6c757d;
@@ -153,6 +173,27 @@
     left: 0;
     right: 0;
     z-index: 2000;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .titulo {
+    display: none;
+  }
+
+  .CarrouselCaption h3 {
+    display: none;
+  }
+
+  .logo {
+    height: 80px;
+    width: 80px;
+    padding: 0px;
+    margin-right: 20px;
+    cursor: pointer;
   }
 
   .header-content {
@@ -178,14 +219,6 @@
     font: revert;
   }
 
-  .logo {
-    height: 60px;
-    width: 60px;
-    padding: 0px;
-    margin-right: 0px;
-    cursor: pointer;
-  }
-
   .titulo h1 {
     color: #2c3e50;
     font-size: 1.0rem;
@@ -194,17 +227,15 @@
   }
 
   .main-nav {
-    width: 100%;
     height: auto;
-    display: flex;
-    overflow-x: auto;
-  }
+    }
 
   .drop {
     flex-shrink: 0;
     padding: 0.75rem 1rem;
     border-left: none;
     border-bottom: 3px solid transparent;
+    width: 160px;
   }
 
   .main-content {
@@ -234,3 +265,4 @@
     font-size: 0.9rem;
   }
 }
+

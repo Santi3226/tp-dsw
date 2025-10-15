@@ -19,6 +19,7 @@ import PoliticaAdmin from "./pages/PoliticaAdmin";
 import ResultadosAdmin from "./pages/ResultadosAdmin";
 import ParametrosAdmin from "./pages/ParametrosAdmin";
 import Muestras from "./pages/Muestras";
+import LocalidadAdmin from "./pages/LocalidadAdmin";
 
 // Other components
 import Login from "./pages/Login";
@@ -75,6 +76,7 @@ function App() {
                 <Route path="resultado" element={<ResultadosAdmin />} />
                 <Route path="parametroAnalisis" element={<ParametrosAdmin />} />
                 <Route path="muestras" element={<Muestras />} />
+                <Route path="localidad" element={<LocalidadAdmin />} />
 
               </Route>
               

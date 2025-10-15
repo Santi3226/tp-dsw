@@ -9,11 +9,12 @@ import './TurnoAdmin.css';
 import { useForm } from 'react-hook-form';
 import { Tab } from 'bootstrap';
 import Tabs from 'react-bootstrap/esm/Tabs';
+import { usePaciente } from '../hooks/usePacientes';
 
 function ResultadosAdmin() {
   const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
   const { isLoading, isError, error, turnos = [] } = useTurnos();
-
+  const { pacientes = [] } = usePaciente();
   const {
     register: registerAdd,
     handleSubmit: handleSubmitAdd,
@@ -32,7 +33,7 @@ function ResultadosAdmin() {
     try {
       console.log('Datos a enviar:', data);
       await addResultados(data);
-      data.estado = "Completado";
+      data.estado = "Resultado";
       await modifyTurnos(data);
       location.reload();
     } catch (error) {
@@ -42,7 +43,7 @@ function ResultadosAdmin() {
 
   const onSubmitFilter = async (data) => {
     try {
-      data.estado = 'Confirmado';
+      data.estado = 'Completado';
       const response = await getTurnosQuery(data); //Filtrado condicional
       setTurnosFiltrados(response || []);
     } catch (error) {
@@ -54,7 +55,7 @@ function ResultadosAdmin() {
     // Filtrar turnos pendientes al cargar el componente
     const fetchPendientes = async () => {
       try {
-        const data = { estado: 'Confirmado', fechaInicio: '', fechaFin: '' };
+        const data = { estado: 'Completado', fechaInicio: '', fechaFin: '' };
         const response = await getTurnosQuery(data);
         setTurnosFiltrados(response || []);
       } catch (error) {
@@ -93,66 +94,69 @@ function ResultadosAdmin() {
     );
   }
 
-  if (turnosFiltrados.length === 0) {
-    return (
-      <div style={pageStyles.containerCentered}>
-        <p style={pageStyles.message}>No se encontraron turnos.</p>
-        <a href="">
-          <button
-            id="login"
-            type="button"
-            className="login-btn"
-            onClick={() => window.location.reload()}
-          >
-            Volver
-          </button>
-        </a>
-      </div>
-    );
-  }
-
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Turnos Pendientes de Resultados</h1>
-      <div style={pageStyles.grid}>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Numero de Turno</th>
-              <th>Paciente</th>
-              <th>Tipo de Analisis</th>
-              <th>Centro de Atencion</th>
-              <th>Fecha y Hora Reserva</th>
-              <th>Fecha y Hora Extraccion</th>
-              <th>Estado</th>
-              <th>Observación</th>
-              <th>Recibe Mail</th>
-            </tr>
-          </thead>
-          <tbody>
-            {turnosFiltrados.map((turno) => (
-              <tr key={turno.id}>
-                <td>{turno.id}</td>
-                <td>
-                  {turno.paciente.apellido + ', ' + turno.paciente.nombre}
-                </td>
-                <td>{turno.tipoAnalisis.nombre}</td>
-                <td>{turno.centroAtencion.nombre}</td>
-                <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                <td>
-                  {new Date(turno.fechaHoraExtraccion).toLocaleString() !==
-                  '31/12/1969, 09:00:00'
-                    ? new Date(turno.fechaHoraExtraccion).toLocaleString()
-                    : '-'}
-                </td>
-                <td>{turno.estado}</td>
-                <td>{turno.observacion === '' ? '-' : turno.observacion}</td>
-                <td>{turno.recibeMail ? 'Si' : 'No'}</td>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <a href="">
+            <button
+              id="login"
+              type="button"
+              className="login-btn"
+              onClick={() => window.location.reload()}
+            >
+              Volver
+            </button>
+          </a>
+        </div>
+      ) : (
+        <div style={pageStyles.grid}>
+          <table className="table" style={{display: "block",
+                maxWidth: "-moz-fit-content",
+                maxWidth: "fit-content",
+                margin: "0 auto",
+                overflowX: "auto",
+                whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Numero de Turno</th>
+                <th>Paciente</th>
+                <th>Tipo de Analisis</th>
+                <th>Centro de Atencion</th>
+                <th>Fecha y Hora Reserva</th>
+                <th>Fecha y Hora Extraccion</th>
+                <th>Estado</th>
+                <th>Observación</th>
+                <th>Recibe Mail</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {turnosFiltrados.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>
+                    {turno.paciente.apellido + ', ' + turno.paciente.nombre}
+                  </td>
+                  <td>{turno.tipoAnalisis.nombre}</td>
+                  <td>{turno.centroAtencion.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  <td>
+                    {new Date(turno.fechaHoraExtraccion).toLocaleString() !==
+                    '31/12/1969, 09:00:00'
+                      ? new Date(turno.fechaHoraExtraccion).toLocaleString()
+                      : '-'}
+                  </td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === '' ? '-' : turno.observacion}</td>
+                  <td>{turno.recibeMail ? 'Si' : 'No'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
       <Tabs
         defaultActiveKey="resultado"
         id="justify-tab-example"
@@ -167,13 +171,31 @@ function ResultadosAdmin() {
             onSubmit={handleSubmitFilter(onSubmitFilter)}
             noValidate
           >
+            <div className="form-group" id="uno">
+              <label htmlFor="text">Paciente</label>
+              <select
+                id="paciente"
+                {...registerFilter("paciente")}
+                className="form-input"
+              >
+                <option value="">-</option>
+                {pacientes.map((pa, index) => (
+                  <option key={index} value={pa.id}>
+                    {pa.id} - {pa.nombre} {pa.apellido}
+                  </option>
+                ))}
+              </select>
+              {errorsFilter.paciente && (
+                <div className="error-message">{errorsFilter.paciente.message}</div>
+              )}
+            </div>
+
             <div id="fechaNac" className="form-group">
               <label htmlFor="date">Fecha de Inicio</label>
               <input
                 type="date"
                 id="fechaInicio"
                 {...registerFilter('fechaInicio', {
-                  required: 'Fecha de inicio requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"
@@ -190,7 +212,6 @@ function ResultadosAdmin() {
                 type="date"
                 id="fechaFin"
                 {...registerFilter('fechaFin', {
-                  required: 'Fecha de fin requerida',
                   validate: (value) => {},
                 })}
                 className="form-input"
@@ -222,6 +243,7 @@ function ResultadosAdmin() {
             noValidate
             style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
           >
+            <label htmlFor="text">Turno</label>
             <select
               id="id"
               {...registerAdd('id', { required: 'Id requerido' })}
@@ -258,7 +280,7 @@ function ResultadosAdmin() {
                     </div>
                   ))}
               </div>
-          )}
+            )}
 
             <button
               id="login"

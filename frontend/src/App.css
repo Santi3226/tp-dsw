@@ -2,6 +2,7 @@
   margin: 0 auto;
   text-align: center;
   width: 100%;
+  font-size: 14px;
 }
 
 .logo {
@@ -28,8 +29,4 @@
 
 .card {
   padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
