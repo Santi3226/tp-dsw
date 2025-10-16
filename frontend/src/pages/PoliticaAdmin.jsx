@@ -10,7 +10,7 @@ const onSubmit = async (data) => {
 try { 
   data.id = 2; //Sugar 
   await modifyPoliticas(data);
-  //location.reload(); 
+  location.reload(); 
 } 
 catch (error) {
   console.error("Fallo al eliminar:", error);
