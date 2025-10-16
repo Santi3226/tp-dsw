@@ -108,7 +108,7 @@ async function login(req: Request, res: Response) {
       };
       let token;
       if (req.body.remember) {
-        token = jwt.sign(payload, claveJWT!, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
+        token = jwt.sign(payload, claveJWT!, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bueno
       } else {
         token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
       }

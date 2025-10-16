@@ -119,6 +119,9 @@
 .logout-btn:hover {
   background-color: #1b4aa0;
 }
+.nav-link.login-btn {
+    margin-right: 20px;
+}
 
 .login-btn {
   display: inline-flex;

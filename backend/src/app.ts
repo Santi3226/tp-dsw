@@ -27,7 +27,7 @@ app.use((req, res, next) => {
    if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
-        next();
+        next(); //Se debe agregar JWT para validacion de usuarios q realizan peticiones
     }
 });
 
