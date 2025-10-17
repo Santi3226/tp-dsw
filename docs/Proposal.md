@@ -23,6 +23,8 @@ Un laboratorio de análisis bioquímico de la ciudad nos convoca para realizar e
 
 ## Alcance Funcional
 
+El alcance fue evaluado con intención de un TP para 3 personas, los criterios de estimación final deben ser decididos por el profesor evaluador.
+
 ### Alcance Mínimo
 
 Regularidad:
@@ -41,9 +43,7 @@ Adicionales para Aprobación
 
 ### Alcance Adicional Voluntario
 
-| Req      | Detalle                                                                                                                           |
-| :------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis |
-| CUU/Epic | 1. Carga de Plantillas de Análisis<br>2. Cancelación de reserva                                                                   |
-| Otros    | 1. Envío de recordatorios por email (al crear un turno, notificando dias previos y avisando sobre turnos previstos)               |
-
+| Req      | Detalle                                                                                                                                                                    |
+| :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Listados | 1. Informe de preferencia de recepción de resultados <br>2. Turnos filtrados por cliente muestra datos del cliente y del análisis                                          |
+| Otros    | 1. Envío de recordatorios por email (al crear un turno, notificando dias previos y avisando sobre turnos previstos)<br>2. Observacion de turnos y confirmaciones del mismo |
