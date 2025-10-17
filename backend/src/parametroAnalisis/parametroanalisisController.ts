@@ -25,6 +25,9 @@ function sanitizeParametroAnalisisInput(
 
 // Get all centros de atencion
 async function findAll(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const parametroAnalisis = await em.find(
       ParametroAnalisis,
@@ -44,6 +47,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one centro de atencion
 async function findOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const parametroAnalisis = await em.findOneOrFail(
@@ -63,6 +69,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const parametroAnalisis = em.create(ParametroAnalisis, req.body.sanitizedInput);
     await em.flush();
@@ -78,6 +87,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const parametroAnalisis = em.getReference(ParametroAnalisis, id);
@@ -95,6 +107,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const parametroAnalisis = em.getReference(ParametroAnalisis, id);

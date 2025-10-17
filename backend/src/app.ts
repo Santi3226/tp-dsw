@@ -13,7 +13,6 @@ import { resultadoAnalisisRouter } from './resultadoAnalisis/resultadoanalisisRo
 import { politicaRouter } from './politica/politicaRoutes.js';
 import { usuarioRouter } from './usuario/usuarioRoutes.js';
 import { recordatoriosDiarios, recordatoriosPrevistos } from './cron.js';
-import multer from 'multer';
 
 const app = express();
 

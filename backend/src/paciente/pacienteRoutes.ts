@@ -1,15 +1,17 @@
 import { Router } from "express";
 import {sanitizePacienteInput, findAll, findOne, deleteOne, add, update, findSome} from "./pacienteController.js";
-
+import { authMiddleware } from "../shared/authMiddleware.js";
+import asyncHandler from '../shared/asyncHandler.js';
 const pacienteRouter = Router();
 
-pacienteRouter.get('/',findAll);
-pacienteRouter.get('/filter',findSome);
-pacienteRouter.get('/:id',findOne);
-pacienteRouter.delete('/:id',deleteOne);
-pacienteRouter.post('/',sanitizePacienteInput,add);
-pacienteRouter.patch('/:id',sanitizePacienteInput,update);
-pacienteRouter.put('/:id',sanitizePacienteInput,update);
+pacienteRouter.use(authMiddleware);
+pacienteRouter.get('/', asyncHandler(findAll));
+pacienteRouter.get('/filter', asyncHandler(findSome));
+pacienteRouter.get('/:id', asyncHandler(findOne));
+pacienteRouter.delete('/:id', asyncHandler(deleteOne));
+pacienteRouter.post('/',sanitizePacienteInput, asyncHandler(add));
+pacienteRouter.patch('/:id',sanitizePacienteInput, asyncHandler(update));
+pacienteRouter.put('/:id',sanitizePacienteInput, asyncHandler(update));
 
 
 export {pacienteRouter}

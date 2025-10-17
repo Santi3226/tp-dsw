@@ -25,6 +25,9 @@ function sanitizePlantillaAnalisisInput(
 
 // Get all localidades
 async function findAll(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const plantillas = await em.find(PlantillaAnalisis, {}, { populate: ['tipoAnalisis'] });
     res.status(200).json({
@@ -38,6 +41,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one localidad
 async function findOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin'  && (req as any).user?.role !== 'user'){
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const plantillas = await em.findOneOrFail(PlantillaAnalisis, { id },{ populate: ['tipoAnalisis'] }); //(Localidad, filtros)
@@ -53,6 +59,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const plantilla = em.create(PlantillaAnalisis, req.body.sanitizedInput);
     await em.persistAndFlush(plantilla);
@@ -67,6 +76,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const plantilla = em.getReference(PlantillaAnalisis, id);
@@ -83,6 +95,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const plantilla = em.getReference(PlantillaAnalisis, id);

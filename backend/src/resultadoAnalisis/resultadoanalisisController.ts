@@ -25,6 +25,9 @@ function sanitizeResultadoAnalisisInput(
 
 // Get all localidades
 async function findAll(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const resultados = await em.find(ResultadoAnalisis, {}, { populate: ['parametroAnalisis', 'turno', 'turno.paciente', 'turno.centroAtencion', 'turno.tipoAnalisis'] });
     res.status(200).json({
@@ -38,6 +41,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one resultado
 async function findOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const resultados = await em.findOneOrFail(ResultadoAnalisis, {
       turno: Number(req.params.turno),
@@ -55,6 +61,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const resultado = em.create(ResultadoAnalisis, req.body.sanitizedInput);
     await em.persistAndFlush(resultado);
@@ -69,6 +78,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const resultado = await em.findOneOrFail(ResultadoAnalisis, {
       turno: Number(req.params.turno),
@@ -87,6 +99,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const resultado = await em.findOneOrFail(ResultadoAnalisis, {
       turno: Number(req.params.turno),

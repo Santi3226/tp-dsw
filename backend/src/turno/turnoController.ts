@@ -30,6 +30,9 @@ function sanitizeTurnoInput(req: Request, res: Response, next: NextFunction) {
 
 // Get all turnos
 async function findAll(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const turnos = await em.find(
       Turno,
@@ -48,6 +51,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one turno
 async function findOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const turnos = await em.findOneOrFail(
@@ -67,6 +73,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function findSome(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const filtros: FilterQuery<Turno> = {};
 
@@ -99,6 +108,9 @@ async function findSome(req: Request, res: Response) {
 
 
 async function add(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const { recibeMail, estado, notificacionEnviada, observacion, fechaHoraExtraccion, fechaHoraReserva, paciente, centroAtencion, tipoAnalisis, email } = req.body; 
     //Pq el formdata me desacomoda los datos del sanitizer
@@ -137,6 +149,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const turno = em.getReference(Turno, id);
@@ -153,6 +168,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const turno = em.getReference(Turno, id);
