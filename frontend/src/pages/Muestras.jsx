@@ -55,7 +55,7 @@ const handleMuestrasClick = async (id) => {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    location.reload();
+    refetch();
   }
 };
 
@@ -66,7 +66,7 @@ const handleConfirmarClick = async (id) => {
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
-    location.reload();
+    refetch();
   }
 };
 
@@ -97,7 +97,7 @@ const handleConfirmarObservacion = async (observacion) => {
     const data = { id:turnoAObservarId, observacion: observacion };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    location.reload();
+    refetch();
   }
   else {
     alert("La observación no puede estar vacía.");
@@ -149,58 +149,6 @@ useEffect(() => {
       style={{marginTop:"30px"}}
       >
     <Tab eventKey="muestras" title="Muestras">
-      {turnosFiltradosMuestras.length > 0 ? (
-
-      <div style={pageStyles.grid}>
-
-      <table className="table"  style={{display: "block",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr >
-                  <th>Numero de Turno</th>
-                  <th>Paciente</th>
-                  <th>Tipo de Analisis</th>
-                  <th>Centro de Atencion</th>
-                  <th>Fecha y Hora Reserva</th>
-                  <th>Estado</th>
-                  <th>Observación</th>
-                  <th>Registrar Muestra </th>
-                </tr>
-              </thead>
-              <tbody>
-              {turnosFiltradosMuestras.map((turno) => (
-                <tr key={turno.id}>
-                  <td>{turno.id}</td>
-                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
-                  <td>{turno.tipoAnalisis?.nombre}</td>
-                  <td>{turno.centroAtencion?.nombre}</td>
-                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  <td>{turno.estado}</td>
-                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
-                  <td><button
-                          onClick={() => handleMuestrasClick(turno.id)}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'red',
-                            cursor: 'pointer',
-                            fontSize: '20px',
-                            fontStyle: 'underline'
-                          }}
-                        >
-                          ✔️ 
-                        </button></td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-      </div>      
-       ) : (
-          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
-        )}
           <form
             className="login-formReg"
             onSubmit={handleSubmitFilter(onSubmitFilter)}
@@ -269,77 +217,60 @@ useEffect(() => {
             </button>
           </form>
    
-    </Tab>
-    <Tab eventKey="confirmar" title="Confirmar">
-      {turnosFiltradosConfirmar.length > 0 ? (
-          <div style={pageStyles.grid}>
+              {turnosFiltradosMuestras.length > 0 ? (
 
-      <table className="table" style={{display: "block",
-              
+      <div style={pageStyles.grid}>
+
+      <table className="table"  style={{display: "block",
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
               whiteSpace: "nowrap"}}>
               <thead>
-                <tr>
+                <tr >
                   <th>Numero de Turno</th>
                   <th>Paciente</th>
                   <th>Tipo de Analisis</th>
                   <th>Centro de Atencion</th>
                   <th>Fecha y Hora Reserva</th>
-                  {<th>Receta</th>}
                   <th>Estado</th>
                   <th>Observación</th>
-                  <th>Observar Turno</th>
-                  <th>Confirmar Turno</th>
+                  <th>Registrar Muestra </th>
                 </tr>
               </thead>
-              <tbody style={{justifyItems:"center", textAlign:"center", alignItems:"center"}}>
-              {turnosFiltradosConfirmar.map((turno) => (
+              <tbody>
+              {turnosFiltradosMuestras.map((turno) => (
                 <tr key={turno.id}>
                   <td>{turno.id}</td>
                   <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
                   <td>{turno.tipoAnalisis?.nombre}</td>
                   <td>{turno.centroAtencion?.nombre}</td>
                   <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
                   <td>{turno.estado}</td>
                   <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
                   <td><button
-                  onClick={() => handleObservarClick(turno.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'red',
-                    cursor: 'pointer',
-                    fontSize: '20px',
-                    fontStyle: 'underline'
-                  }}
-                >
-                  X
-                </button></td>
-                  <td><button
-                  onClick={() => handleConfirmarClick(turno.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'red',
-                    cursor: 'pointer',
-                    fontSize: '20px',
-                    fontStyle: 'underline'
-                  }}
-                >
-                  ✔️ 
-                </button></td>
+                          onClick={() => handleMuestrasClick(turno.id)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'red',
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                            fontStyle: 'underline'
+                          }}
+                        >
+                          ✔️ 
+                        </button></td>
                 </tr>
-                
               ))}
             </tbody>
             </table>
       </div>      
-             ) : (
+       ) : (
           <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
         )}
+    </Tab>
+    <Tab eventKey="confirmar" title="Confirmar">
       {showModal && (
           <div style={{
             position: 'fixed',
@@ -447,7 +378,75 @@ useEffect(() => {
               {isSubmittingFilterConfirmar ? 'Un momento...' : 'Filtrar'}
             </button>
           </form>
-   
+              {turnosFiltradosConfirmar.length > 0 ? (
+          <div style={pageStyles.grid}>
+
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Numero de Turno</th>
+                  <th>Paciente</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora Reserva</th>
+                  {<th>Receta</th>}
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Observar Turno</th>
+                  <th>Confirmar Turno</th>
+                </tr>
+              </thead>
+              <tbody style={{justifyItems:"center", textAlign:"center", alignItems:"center"}}>
+              {turnosFiltradosConfirmar.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
+                  <td>{turno.tipoAnalisis?.nombre}</td>
+                  <td>{turno.centroAtencion?.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleRecetaClick(turno.id)}>Ver Receta</button></td>}
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                  <td><button
+                  onClick={() => handleObservarClick(turno.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'red',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    fontStyle: 'underline'
+                  }}
+                >
+                  X
+                </button></td>
+                  <td><button
+                  onClick={() => handleConfirmarClick(turno.id)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'red',
+                    cursor: 'pointer',
+                    fontSize: '20px',
+                    fontStyle: 'underline'
+                  }}
+                >
+                  ✔️ 
+                </button></td>
+                </tr>
+                
+              ))}
+            </tbody>
+            </table>
+      </div>      
+             ) : (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
+        )}
     </Tab>
     </Tabs>
      </div>

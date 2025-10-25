@@ -11,27 +11,31 @@ const getDatos = async () => {
 };
 
 const addResultados = async (data) => {
-  for(const i in data.resultados){
-  let resultadoData = {
-    turno: data.id,
-    parametroAnalisis: i === '' ? undefined : i,
-    valor: data.resultados[i] === '' ? undefined : data.resultados[i],
-  };
-  try {
-    const response = axiosInstance.post('/resultadoAnalisis', resultadoData);
-  } catch (error) {
-    console.error('Error en Hook:', error);
-    if (error.response && error.response.data && error.response.data.message) {
-      setErrorLogin(error.response.data.message);
-    } else {
-      setErrorLogin(
-        'Error de red o del servidor. Por favor, inténtalo de nuevo.'
-      );
+  for (const i in data.resultados) {
+    let resultadoData = {
+      turno: data.id,
+      parametroAnalisis: i === '' ? undefined : i,
+      valor: data.resultados[i] === '' ? undefined : data.resultados[i],
+    };
+    try {
+      const response = axiosInstance.post('/resultadoAnalisis', resultadoData);
+    } catch (error) {
+      console.error('Error en Hook:', error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setErrorLogin(error.response.data.message);
+      } else {
+        setErrorLogin(
+          'Error de red o del servidor. Por favor, inténtalo de nuevo.'
+        );
+      }
+      throw error;
     }
-    throw error;
   }
-};
-alert('Resultados cargados Correctamente!');
+  alert('Resultados cargados Correctamente!');
 };
 
 const getTurnosQuery = async (data) => {
@@ -55,7 +59,7 @@ const getTurnosQuery = async (data) => {
 };
 
 function useTurnos() {
-  const { data, isError, error, isLoading } = useQuery({
+  const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ['turno'],
     queryFn: getDatos,
   });
@@ -64,6 +68,7 @@ function useTurnos() {
     isError,
     error,
     isLoading,
+    refetch,
   };
 }
 

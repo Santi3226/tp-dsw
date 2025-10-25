@@ -29,6 +29,18 @@ app.use((req, res, next) => {
         next(); //Se debe agregar JWT para validacion de usuarios q realizan peticiones
     }
 });
+/* Global
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app'); //Mas adelante cambiar el * por el localhost
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+*/
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
@@ -60,4 +72,5 @@ recordatoriosPrevistos();
 
 app.listen(3000, () => {
   console.log('Server activo en puerto 3000 y http://localhost:3000/api');
+  //console.log('Server activo en puerto 3000 y URL https://laboratorio-dsw.onrender.com/api');
 });

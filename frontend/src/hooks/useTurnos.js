@@ -12,17 +12,17 @@ const getDatos = async () => {
 };
 
 const addTurnos = async (data) => {
-  console.log("Archivo en Hook:", data.receta);  
+  console.log('Archivo en Hook:', data.receta);
   const formData = new FormData();
-    formData.append('receta', data.receta[0]);
-    formData.append('recibeMail', data.recibeMail);
-    formData.append('estado', 'Pendiente');
-    formData.append('observacion', '-');
-    formData.append('fechaHoraReserva', data.fechaHoraReserva);
-    formData.append('paciente', data.paciente);
-    formData.append('email', data.email);
-    formData.append('centroAtencion', data.centroAtencion);
-    formData.append('tipoAnalisis', data.tipoAnalisis);
+  formData.append('receta', data.receta[0]);
+  formData.append('recibeMail', data.recibeMail);
+  formData.append('estado', 'Pendiente');
+  formData.append('observacion', '-');
+  formData.append('fechaHoraReserva', data.fechaHoraReserva);
+  formData.append('paciente', data.paciente);
+  formData.append('email', data.email);
+  formData.append('centroAtencion', data.centroAtencion);
+  formData.append('tipoAnalisis', data.tipoAnalisis);
   try {
     const response = await axiosInstance.post('/turno', formData);
     alert('Turno creado Correctamente!');
@@ -37,12 +37,15 @@ const modifyTurnos = async (data) => {
     /*Cambiar*/
     id: data.id,
     recibeMail: data.recibeMail === '' ? undefined : data.recibeMail,
-    fechaHoraReserva: data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
+    fechaHoraReserva:
+      data.fechaHoraReserva === '' ? undefined : data.fechaHoraReserva,
     paciente: data.paciente === '' ? undefined : data.paciente,
-    centroAtencion: data.centroAtencion === '' ? undefined : data.centroAtencion,
+    centroAtencion:
+      data.centroAtencion === '' ? undefined : data.centroAtencion,
     tipoAnalisis: data.tipoAnalisis === '' ? undefined : data.tipoAnalisis,
     estado: data.estado === '' ? undefined : data.estado,
-    fechaHoraExtraccion: data.fechaHoraExtraccion === '' ? undefined : data.fechaHoraExtraccion,
+    fechaHoraExtraccion:
+      data.fechaHoraExtraccion === '' ? undefined : data.fechaHoraExtraccion,
     observacion: data.observacion === '' ? undefined : data.observacion,
     email: data.email === '' ? undefined : data.email,
     receta: data.receta === '' ? undefined : data.receta,
@@ -62,15 +65,15 @@ const getTurnosQuery = async (data) => {
     // Si solo se proporciona fechaHoraReserva (para buscar turnos de un día específico)
     if (data.fechaHoraReserva && !data.fechaInicio && !data.fechaFin) {
       params.fechaHoraReserva = data.fechaHoraReserva;
-    } 
+    }
     // Si se proporcionan fechas de rango (filtrado por rango de fechas)
     else if (data.fechaInicio && data.fechaFin) {
       let [year, month, day] = data.fechaInicio.split('-').map(Number);
       const fechaInicioUTC = new Date(year, month - 1, day);
-      
+
       [year, month, day] = data.fechaFin.split('-').map(Number);
       const fechaFinUTC = new Date(year, month - 1, day);
-      
+
       params.fechaInicio = fechaInicioUTC;
       params.fechaFin = fechaFinUTC;
     }
@@ -101,7 +104,7 @@ const deleteTurnos = async (id) => {
 };
 
 function useTurnos() {
-  const { data, isError, error, isLoading } = useQuery({
+  const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ['turno'],
     queryFn: getDatos,
   });
@@ -109,6 +112,7 @@ function useTurnos() {
     turnos: data,
     isError,
     error,
+    refetch,
     isLoading,
   };
 }

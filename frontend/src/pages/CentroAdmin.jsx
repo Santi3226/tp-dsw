@@ -20,7 +20,7 @@ const onSubmitDelete = async (data) => {
 try {
   const id = data.id; 
   await deleteCentros(id);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
@@ -30,7 +30,7 @@ catch (error) {
 const onSubmitModify = async (data) => {
 try { 
   await modifyCentros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -40,7 +40,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try {
   await addCentros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -67,43 +67,7 @@ catch (error) {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Centros</h1>
-      <div style={pageStyles.grid}>
-      {centros.length === 0 ? (
-        <div style={pageStyles.containerCentered}>
-          <p style={pageStyles.message}>No se encontraron centros.</p>
-              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
-              Reintentar
-            </button>
-        </div>
-      ) : (
-      <table className="table" style={{display: "block",
-              
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
-                  <th>Localidad</th>
-                  <th>Direccion</th>
-                </tr>
-              </thead>
-              <tbody>
-              {centros.map((centro) => (
-                <tr key={centro.id}>
-                  <td>{centro.id}</td>
-                  <td>{centro.nombre}</td>
-                  <td>{centro.localidad?.denominacion}</td>
-                  <td>{centro.domicilio}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-    )}
-    </div>
-        <Tabs
+         <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -277,6 +241,43 @@ catch (error) {
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+      {centros.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron centros.</p>
+              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+        </div>
+      ) : (
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nombre</th>
+                  <th>Localidad</th>
+                  <th>Direccion</th>
+                </tr>
+              </thead>
+              <tbody>
+              {centros.map((centro) => (
+                <tr key={centro.id}>
+                  <td>{centro.id}</td>
+                  <td>{centro.nombre}</td>
+                  <td>{centro.localidad?.denominacion}</td>
+                  <td>{centro.domicilio}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+    )}
+    </div>
+     
     
     </div>
   );

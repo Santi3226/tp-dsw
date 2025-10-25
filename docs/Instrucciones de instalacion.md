@@ -3,17 +3,22 @@
 ## Requisitos Previos
 
 ### Software Requerido
+
 - **Node.js** (versión 18 o superior)
 - **pnpm** (versión 10.14.0 o superior)
 - **MySQL** (versión 8.0 o superior)
 - **Git**
 
 ### Stack Tecnológico
+
 ### Backend
+
 - Node.js + Express + TypeScript
 - MikroORM + MySQL
 - JWT Authentication
+
 ### Frontend
+
 - React 19 + TypeScript
 - Vite (bundler)
 - React Router DOM
@@ -23,6 +28,7 @@
 - React Hook Form
 
 ### Servicios Externos
+
 - Cuenta de email para envío de notificaciones (Gmail, Outlook, etc.)
 
 ## Instalación
@@ -43,12 +49,14 @@ git checkout dev
 ### 3. Instalar Dependencias
 
 #### Backend
+
 ```bash
 cd backend
 pnpm install
 ```
 
 #### Frontend
+
 ```bash
 cd ../frontend
 pnpm install
@@ -72,7 +80,7 @@ touch .env
 SMTP_HOST= Host del Mail
 SMTP_PORT= Puerto
 SMTP_USER= Usuario del Mail
-SMTP_PASS= Contraseña del Mail 
+SMTP_PASS= Contraseña del Mail
 
 # JWT
 claveJWT = Clave para JWT
@@ -95,6 +103,7 @@ pnpm run build
 ### 6. Configurar Base de Datos
 
 #### Generar/Actualizar Schema
+
 El sistema utiliza MikroORM para gestión automática del schema:
 
 ```bash
@@ -103,7 +112,9 @@ El sistema utiliza MikroORM para gestión automática del schema:
 ```
 
 #### Para recrear completamente el schema
+
 Descomenta las líneas en `src/shared/db/orm.ts`:
+
 ```typescript
 await generator.dropSchema(); // Descomentar para eliminar schema
 await generator.createSchema(); // Descomentar para crear schema nuevo
@@ -113,38 +124,52 @@ await generator.createSchema(); // Descomentar para crear schema nuevo
 
 ### Modo Desarrollo
 
+#### Cambios mínimos
+
+- Hay que descomentar los encabezados en Backend/App, Frontend/Helper/Api y Backend/Shared/DB/Orm
+
 #### Backend
+
 ```bash
 cd backend
-pnpm run start:dev
+pnpm install
+pnpm start:dev
 ```
+
 Esto iniciará el servidor con hot-reload en `http://localhost:3000`
 
 #### Frontend
+
 ```bash
 cd frontend
-pnpm run dev
+pnpm install
+pnpm dev
 ```
+
 Esto iniciará el frontend con Vite en `http://localhost:5173`
 
 ### Ejecutar Ambos Servicios Simultáneamente
+
 Para desarrollo, abre dos terminales:
 
 **Terminal 1 (Backend):**
+
 ```bash
 cd backend
-pnpm run start:dev
+pnpm start:dev
 ```
 
 **Terminal 2 (Frontend):**
+
 ```bash
 cd frontend
-pnpm run dev
+pnpm dev
 ```
 
 ### Scripts Disponibles
 
 #### Backend
+
 ```json
 {
   "build": "tsc -p ./tsconfig.json",
@@ -153,6 +178,7 @@ pnpm run dev
 ```
 
 #### Frontend
+
 ```json
 {
   "dev": "vite",
@@ -161,9 +187,9 @@ pnpm run dev
 }
 ```
 
-- `pnpm run dev` - Servidor de desarrollo con hot-reload (puerto 5173)
-- `pnpm run build` - Build de producción
-- `pnpm run preview` - Preview del build de producción
+- `pnpm dev` - Servidor de desarrollo con hot-reload (puerto 5173)
+- `pnpm build` - Build de producción
+- `pnpm preview` - Preview del build de producción
 
 ## Estructura del Proyecto
 
@@ -215,52 +241,60 @@ tp-dsw/
 ## Configuración de Desarrollo
 
 ### URLs por Defecto
+
 - **Backend API**: `http://localhost:3000`
 - **Frontend**: `http://localhost:5173`
 
 ### 1. Configurar CORS
+
 En desarrollo, CORS está configurado para permitir cualquier origen:
+
 ```typescript
 res.setHeader('Access-Control-Allow-Origin', '*');
 ```
 
 **En producción, cambiar por dominios específicos:**
+
 ```typescript
 // Backend CORS
 res.setHeader('Access-Control-Allow-Origin', 'https://tu-frontend-dominio.com');
 ```
 
 ### Error de Conexión a Base de Datos
+
 1. Verificar que MySQL esté ejecutándose
 2. Comprobar credenciales en `.env`
 3. Confirmar que la base de datos existe
 4. Verificar permisos del usuario
 
 ### Problemas de Compilación Frontend
+
 ```bash
 # Limpiar cache de Vite
 cd frontend
 rm -rf node_modules/.vite
 rm -rf dist
-pnpm run build
+pnpm build
 ```
 
 ### Error de Conexión Frontend-Backend
+
 1. Verificar que ambos servicios estén ejecutándose
 2. Comprobar la URL de la API en `.env` del frontend
 3. Verificar configuración de CORS en el backend
 4. Revisar la consola del navegador para errores de red
 
-
 ### Error de Compilación TypeScript (Backend)
+
 ```bash
 # Limpiar dist y recompilar
 cd backend
 rm -rf dist
-pnpm run build
+pnpm build
 ```
 
 ### Problemas con dependencias
+
 ```bash
 # Limpiar cache y reinstalar
 rm -rf node_modules

@@ -8,7 +8,7 @@
   grid-row: 2;
 }
 
-h2{
+h2 {
   margin-top: 35px;
   margin-bottom: 30px;
 }
@@ -33,6 +33,15 @@ h2{
   font-size: 14px;
 }
 
+/* Evitar que el layout global de .login-formReg (definido en Register.css)
+   imponga filas fijas y genere mucho espacio vertical en esta página. */
+.login-formReg {
+  /* quitar las filas fijas y usar alturas auto/ajustadas */
+  grid-template-rows: auto;
+  grid-auto-rows: min-content;
+  gap: 1.2rem;
+}
+
 .detalle-modal {
   background-color: white;
   padding: 20px;
@@ -41,6 +50,7 @@ h2{
   min-width: 500px;
   box-sizing: border-box;
 }
+
 .parametros {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -55,6 +65,7 @@ h2{
     column-gap: 0;
     row-gap: 1rem;
   }
+
   .login-formReg {
     width: 100%;
     display: flex;

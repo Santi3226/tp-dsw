@@ -35,13 +35,14 @@ const deletePaciente = async (id) => {
 };
 
 function usePaciente() {
-  const { data, isError, error, isLoading } = useQuery({
+  const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ['paciente'],
     queryFn: getDatos,
   });
   return {
     pacientes: data,
     isError,
+    refetch,
     error,
     isLoading,
   };

@@ -56,7 +56,7 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
       data.paciente = user.paciente.id;
       data.email = user.email;
       await addTurnos(data);
-      location.reload(); 
+      refetch(); 
     } catch (error) {
       console.error("Fallo al registrar:", error);
     }
@@ -84,7 +84,7 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
       estado: "Anulado",
     };
     await modifyTurnos(data);
-    location.reload();
+    refetch();
     handleCerrarModal();
   };
 

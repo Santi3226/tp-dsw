@@ -52,7 +52,7 @@ const modifyLocalidad = async (data) => {
 
 
 function useLocalidad() {
-  const { data, isError, error, isLoading } = useQuery({
+  const { data, isError, error, isLoading, refetch } = useQuery({
     queryKey: ["localidad"],
     queryFn: getDatos,
   });
@@ -60,6 +60,7 @@ function useLocalidad() {
     localidades: data,
     isError,
     error,
+    refetch,
     isLoading,
   };
 }
