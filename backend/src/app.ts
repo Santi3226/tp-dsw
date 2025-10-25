@@ -53,7 +53,7 @@ app.use((_, res) => {
   return; //Si no entro en ninguna de las instucciones CRUD, que venga aca
 });
 
-await syncSchema();
+//await syncSchema();
 
 recordatoriosDiarios();
 recordatoriosPrevistos();
