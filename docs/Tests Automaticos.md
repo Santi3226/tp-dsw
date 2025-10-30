@@ -89,3 +89,4 @@ pnpm test
 ```
 
 ### Resultados
+<img width="841" height="200" alt="Captura de pantalla 2025-10-30 173645" src="https://github.com/user-attachments/assets/981483a3-1461-4bad-8409-73cec65a78c5" />
