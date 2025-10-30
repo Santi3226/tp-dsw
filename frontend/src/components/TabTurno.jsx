@@ -472,10 +472,11 @@ useEffect(() => {
                     {turnosPaciente.find((t) => t.id === Number(resultadosId))
                       .resultados.map((resultado) => (
                         <div key={resultado.parametroAnalisis.id} className="form-group">
-                          <label>
+                          <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>
                             {resultado.parametroAnalisis.nombre} ({resultado.parametroAnalisis.unidad})
                           </label>
-                          <label>{resultado.valor}</label>
+                          <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>{resultado.valor}</label>
+                           <label>Referencia: {resultado.parametroAnalisis.referencia} {resultado.parametroAnalisis.unidad}</label>
                         </div>
                       ))}
                   </div>
