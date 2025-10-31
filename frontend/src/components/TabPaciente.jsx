@@ -60,7 +60,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
 
   const onSubmitConsult = async (data) => {
     try {
-    alert("En teoria, mandaste una consulta, felicitaciones crack!");
+    alert("En teoria, mandaste una consulta, felicidades!");
   } 
   catch (error) {
     console.error("Fallo al consultar:", error);
@@ -271,7 +271,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
 
       </Tab>
       <Tab eventKey="consultas" title="Consultas">
-        <h2 className='titulo'>Consultas generales</h2>
+        <h2 className='titulo'>Consultas generales (Fuera del alcance - no implementado)</h2>
         <form
           className="login-formReg"
           onSubmit={handleSubmit(onSubmitConsult)}

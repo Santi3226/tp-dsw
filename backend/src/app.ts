@@ -19,6 +19,7 @@ const app = express();
 app.use(express.json());
 
 //luego de los middleware base
+/* Local para desarrollo
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); //Mas adelante cambiar el * por el localhost
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -29,7 +30,8 @@ app.use((req, res, next) => {
         next(); 
     }
 });
-/* Global
+*/
+// Global
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -40,7 +42,7 @@ app.use((req, res, next) => {
         next();
     }
 });
-*/
+
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
@@ -71,6 +73,6 @@ recordatoriosDiarios();
 recordatoriosPrevistos();
 
 app.listen(3000, () => {
-  console.log('Server activo en puerto 3000 y http://localhost:3000/api');
-  //console.log('Server activo en puerto 3000 y URL https://laboratorio-dsw.onrender.com/api');
+  //console.log('Server activo en puerto 3000 y http://localhost:3000/api');
+  console.log('Server activo en puerto 3000 y URL https://laboratorio-dsw.onrender.com/api');
 });

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
-  //  baseURL: 'https://laboratorio-dsw.onrender.com/api',
+  //baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://laboratorio-dsw.onrender.com/api',
 });
 
 axiosInstance.interceptors.request.use((config) => {

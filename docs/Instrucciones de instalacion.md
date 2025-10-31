@@ -16,16 +16,21 @@
 - Node.js + Express + TypeScript
 - MikroORM + MySQL
 - JWT Authentication
+- Multer
+- Node-Cron
+- NodeMailer
+- Bcrypt
+- Vitest
 
 ### Frontend
 
 - React 19 + TypeScript
 - Vite (bundler)
-- React Router DOM
 - React Bootstrap + Bootstrap 5
-- Axios (HTTP client)
+- Axios
 - React Query (TanStack Query)
-- React Hook Form
+- Playwright
+- Vitest
 
 ### Servicios Externos
 
@@ -76,21 +81,22 @@ touch .env
 #### Contenido del archivo `.env`:
 
 ```env
-# Mailer
-SMTP_HOST= Host del Mail
-SMTP_PORT= Puerto
-SMTP_USER= Usuario del Mail
-SMTP_PASS= Contraseña del Mail
+SMTP_HOST= Host del Mailer
+SMTP_PORT= Puerto del Mailer
+SMTP_USER= Dirección de Mail
+SMTP_PASS= Password del Mail
 
-# JWT
-claveJWT = Clave para JWT
+claveJWT= claveJWT
 
-# BD
-clientUrl = URL de BD
-dbName = laboratorio
+DATABASE_URL = Url de la BD
+DB_HOST= Host de la BD
+DB_PORT= Puerto de la BD
+DB_USERNAME= Nombre de Usuario en la BD
+DB_PASSWORD= Contraseña en la BD
+DB_DATABASE= Nombre de la BD
 
-# API Keys
-GOOGLE_MAPS_API_KEY=tu_google_maps_api_key
+En caso de usar TiBD:
+TIDB_CA_CERTIFICATE=./src/shared/db/isrgrootx1.pem
 ```
 
 ### 5. Compilar TypeScript
@@ -124,7 +130,7 @@ await generator.createSchema(); // Descomentar para crear schema nuevo
 
 ### Modo Desarrollo
 
-#### Cambios mínimos
+#### Cambios mínimos para desarrollo Local
 
 - Hay que descomentar los encabezados en Backend/App, Frontend/Helper/Api y Backend/Shared/DB/Orm
 
