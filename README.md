@@ -16,11 +16,11 @@ El repositorio contiene el Frontend y Backend de un sitio web para un Laboratori
 
 ## Instrucciones de Instalación
 
-[Instrucciones](https://github.com/Santi3226/tp-dsw/blob/5a5c3b5e286cf48dc4217163caf904e7a702cc10/docs/Instrucciones%20de%20instalacion.md)
+[Instrucciones](https://github.com/Santi3226/tp-dsw/blob/main/docs/Instrucciones%20de%20instalacion.md)
 
 ## Tracking
 
-[Features-Bugs](https://github.com/Santi3226/tp-dsw/blob/6e171cac5e3fdce0573a7d15e68b770933b6bec5/docs/Tracking%20de%20features-bugs.md)
+[Features-Bugs](https://github.com/Santi3226/tp-dsw/blob/main/docs/Tracking%20de%20features-bugs.md)
 
 ## Meta
 
