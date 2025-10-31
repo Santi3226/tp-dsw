@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  //baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://laboratorio-dsw.onrender.com/api',
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -9,7 +10,6 @@ axiosInstance.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 

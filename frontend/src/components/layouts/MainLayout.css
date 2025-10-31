@@ -4,6 +4,9 @@
   flex-direction: column;
 }
 
+.titulo {
+  text-decoration: none;
+}
 .main-header {
   background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
   color: white;
@@ -116,6 +119,9 @@
 .logout-btn:hover {
   background-color: #1b4aa0;
 }
+.nav-link.login-btn {
+    margin-right: 20px;
+}
 
 .login-btn {
   display: inline-flex;
@@ -154,6 +160,7 @@
   color: #6c757d;
   border-top: 1px solid #e9ecef;
   position: 0 0 0 fixed;
+  z-index: 0;
 }
 
 .main-footer p {

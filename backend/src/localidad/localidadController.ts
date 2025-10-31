@@ -51,6 +51,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const localidad = em.create(Localidad, req.body.sanitizedInput);
     await em.persistAndFlush(localidad);
@@ -65,6 +68,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const localidad = em.getReference(Localidad, id);
@@ -81,6 +87,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const localidad = em.getReference(Localidad, id);

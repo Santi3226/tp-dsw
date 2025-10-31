@@ -34,7 +34,7 @@ function TabTurno(props) {
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
   const {  centros = [] } = useCentros();
   const {  tipos = [] } = useTiposAnalisis();
-  const { isLoading, isError, error, turnos = [] } = useTurnos();
+  const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
   const { politicas = [] } = usePolitica();
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -56,7 +56,7 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
       data.paciente = user.paciente.id;
       data.email = user.email;
       await addTurnos(data);
-      location.reload(); 
+      refetch(); 
     } catch (error) {
       console.error("Fallo al registrar:", error);
     }
@@ -84,7 +84,7 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
       estado: "Anulado",
     };
     await modifyTurnos(data);
-    location.reload();
+    refetch();
     handleCerrarModal();
   };
 
@@ -127,18 +127,30 @@ useEffect(() => {
 
 // Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
 useEffect(() => {
-  if (turnosPaciente.length > 0) {
+  if (turnosPaciente.length > 0) 
+    {
     const turnosGestion = turnosPaciente.filter(
-      turno => turno.estado === "Pendiente"
+      turno => (turno.estado === "Pendiente" || turno.estado === "Confirmado") 
+      && turno.paciente.id === user.paciente.id
     );
     setTurnosFiltradosGestion(turnosGestion);
 
     const turnosResultados = turnosPaciente.filter(
       turno => turno.estado === "Resultado"
+      && turno.paciente.id === user.paciente.id
     );
+
     setTurnosFiltradosResultados(turnosResultados);
+    console.log("Turnos filtrados para resultados:", turnosFiltradosResultados);
   }
+  if (!Array.isArray(turnosPaciente) || turnosPaciente.length === 0) {
+    setTurnosFiltradosGestion([]);
+    setTurnosFiltradosResultados([]);
+  }
+  
 }, [turnosPaciente]);
+
+
 
   const { inicio } = props;
   return (
@@ -150,8 +162,8 @@ useEffect(() => {
     >
       <Tab eventKey="gestiondeturnos" title="Gestión de Turnos">
         <h2 className='titulo'>Mis turnos</h2>
-        {turnosPaciente.length > 0 ? (
-          <div style={{ marginTop: '20px' }}>
+        {turnosFiltradosGestion.length > 0 ? (
+          <div style={{ marginTop: '20px', overflowX: 'scroll' }}>
             <table className="table">
               <thead>
                 <tr>
@@ -381,7 +393,7 @@ useEffect(() => {
       <Tab eventKey="resultados" title="Resultados">
         <h2 className='titulo'>Resultados disponibles</h2>
         {turnosFiltradosResultados.length > 0 ? (
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px' , overflowX: 'scroll'}}>
             <table className="table" style={{ verticalAlign: 'middle' }}>
               <thead>
                 <tr>
@@ -396,7 +408,7 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody>
-                {turnosPaciente.map((turno) => {
+                {turnosFiltradosResultados.map((turno) => {
                   if (turno.estado !== "Resultado") {
                     return null;
                   }
@@ -460,10 +472,11 @@ useEffect(() => {
                     {turnosPaciente.find((t) => t.id === Number(resultadosId))
                       .resultados.map((resultado) => (
                         <div key={resultado.parametroAnalisis.id} className="form-group">
-                          <label>
+                          <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>
                             {resultado.parametroAnalisis.nombre} ({resultado.parametroAnalisis.unidad})
                           </label>
-                          <label>{resultado.valor}</label>
+                          <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>{resultado.valor}</label>
+                           <label>Referencia: {resultado.parametroAnalisis.referencia} {resultado.parametroAnalisis.unidad}</label>
                         </div>
                       ))}
                   </div>

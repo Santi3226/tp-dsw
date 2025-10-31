@@ -39,8 +39,6 @@
 | 32  | Test Automáticos                                                                     | Completo  | Docs       | Santi    | 6-10-25  |
 | 33  | Mostrar Recetas                                                                      | Completo  | Frontend   | Santi    | 6-10-25  |
 | 34  | Video Explicativo                                                                    | Pendiente | Docs       | Santi    | 6-10-25  |
-
-El responsive design esta casi completo, pero no puedo manejar los dropdowns en el navbar
-
-Cuando creo un turno se rompe el dashboard
-Entregar la proposal actualizada con links al pull request de back y/o front.
+| 35  | Middleware para JWT en las peticiones                                                | Completo  | Backend    | Santi    | 16-10-25 |
+| 36  | Cambiar location.reloads por refetch                                                 | Completo  | Frontend   | Santi    | 16-10-25 |
+| 37  | Paginar las tablas o invertir los cruds                                              | Completo  | Frontend   | Santi    | 16-10-25 |

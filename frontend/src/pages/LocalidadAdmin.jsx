@@ -9,16 +9,15 @@ function LocalidadAdmin() {
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
-const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 
-const { isLoading, isError, error, localidades = [] } = useLocalidad();
+const { isLoading, isError, error, localidades = [] , refetch } = useLocalidad();
 
 const onSubmitDelete = async (data) => {
 try {
   const id = data.id; 
   await deleteLocalidad(id);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
@@ -28,7 +27,7 @@ catch (error) {
 const onSubmitModify = async (data) => {
 try { 
   await modifyLocalidad(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -38,7 +37,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try {
   await addLocalidad(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -65,38 +64,7 @@ catch (error) {
  return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestras Localidades</h1>
-      <div style={pageStyles.grid}>
-        {localidades.length === 0 ? (
-          <div style={pageStyles.containerCentered}>
-            <p style={pageStyles.message}>No se encontraron localidades.</p>
-          </div>
-        ) : (
-      <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Denominación</th>
-                  <th>Cod. Postal</th>
-                </tr>
-              </thead>
-              <tbody>
-              {localidades.map((localidad) => (
-                <tr key={localidad.id}>
-                  <td>{localidad.id}</td>
-                  <td>{localidad.denominacion}</td>
-                  <td>{localidad.codPostal}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-      )}
-      </div>
-        <Tabs
+            <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -230,6 +198,41 @@ catch (error) {
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+        {localidades.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron localidades.</p>
+              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+          </div>
+        ) : (
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Denominación</th>
+                  <th>Cod. Postal</th>
+                </tr>
+              </thead>
+              <tbody>
+              {localidades.map((localidad) => (
+                <tr key={localidad.id}>
+                  <td>{localidad.id}</td>
+                  <td>{localidad.denominacion}</td>
+                  <td>{localidad.codPostal}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+      )}
+      </div>
+  
     
     </div>
   );

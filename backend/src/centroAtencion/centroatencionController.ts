@@ -66,6 +66,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const centro = em.create(CentroAtencion, req.body.sanitizedInput);
     await em.flush();
@@ -80,6 +83,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const centro = em.getReference(CentroAtencion, id);
@@ -96,6 +102,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const centro = em.getReference(CentroAtencion, id);

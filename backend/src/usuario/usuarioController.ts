@@ -46,8 +46,12 @@ function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
   // Aqui van todos los chequeos de seg y datos
   next();
 }
+
 // Get all Pacientes
 async function findAll(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const usuarios = await em.find(Usuario, {}, { populate: ['paciente'] });
     res.status(200).json({
@@ -61,6 +65,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one usuario
 async function findOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const usuarios = await em.findOneOrFail(
@@ -108,7 +115,7 @@ async function login(req: Request, res: Response) {
       };
       let token;
       if (req.body.remember) {
-        token = jwt.sign(payload, claveJWT!, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bue
+        token = jwt.sign(payload, claveJWT!, { expiresIn: '365d' }); //Es mejor usar cookies para guardar el recuerdame pero bueno
       } else {
         token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
       }
@@ -140,6 +147,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const usuario = em.getReference(Usuario, id);
@@ -159,6 +169,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const usuario = em.getReference(Usuario, id);

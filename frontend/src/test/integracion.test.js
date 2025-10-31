@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import axiosInstance from "../helpers/api";
 
+// este es literal codigo funcional con front y back
 describe('Test de Integración - API de Centros', () => {
 
   it('debe obtener centros desde el backend', async () => {

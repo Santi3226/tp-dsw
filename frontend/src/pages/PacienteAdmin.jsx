@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 function PacienteAdmin() {
 
 const [pacientesFiltrados, setPacientesFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, pacientes} = usePaciente(); //Traida de todos los pacientes
+const { isLoading, isError, error, pacientes, refetch } = usePaciente(); //Traida de todos los pacientes
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });
@@ -19,7 +19,7 @@ const onSubmitDelete = async (data) => {
 try {
   const id = data.id; 
   await deletePaciente(id);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
@@ -29,7 +29,7 @@ catch (error) {
 const onSubmitModify = async (data) => {
 try { 
   await modifyPaciente(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -39,7 +39,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try { 
   await addPaciente(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -81,46 +81,6 @@ useEffect(() => {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Pacientes</h1>
-      <div style={pageStyles.grid}>
-        {pacientesFiltrados.length === 0 ? (
-          <div style={pageStyles.containerCentered}>
-            <p style={pageStyles.message}>No se encontraron pacientes.</p>
-            <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
-              Limpiar filtros
-            </button>
-          </div>
-        ) : (
-          <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>DNI</th>
-                <th>Direccion</th>
-                <th>Telefono</th>
-                <th>Fecha de Nacimiento</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pacientesFiltrados.map((paciente) => (
-                <tr key={paciente.id}>
-                  <td>{paciente.id}</td>
-                  <td>{paciente.nombre + " " + paciente.apellido}</td>
-                  <td>{paciente.dni}</td>
-                  <td>{paciente.direccion}</td>
-                  <td>{paciente.telefono}</td>
-                  <td>{new Date(paciente.fechaNacimiento).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
       <Tabs
       defaultActiveKey="filtrar"
       id="justify-tab-example"
@@ -424,6 +384,46 @@ useEffect(() => {
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+        {pacientesFiltrados.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron pacientes.</p>
+            <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Limpiar filtros
+            </button>
+          </div>
+        ) : (
+          <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Fecha de Nacimiento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pacientesFiltrados.map((paciente) => (
+                <tr key={paciente.id}>
+                  <td>{paciente.id}</td>
+                  <td>{paciente.nombre + " " + paciente.apellido}</td>
+                  <td>{paciente.dni}</td>
+                  <td>{paciente.direccion}</td>
+                  <td>{paciente.telefono}</td>
+                  <td>{new Date(paciente.fechaNacimiento).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }

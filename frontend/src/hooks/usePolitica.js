@@ -31,13 +31,14 @@ const modifyPoliticas = async (data) => {
 };
 
 function usePolitica() {
-  const { data, isError, error, isLoading } = useQuery({
+  const { data, isError, refetch, error, isLoading } = useQuery({
     queryKey: ['politica'],
     queryFn: getDatos,
   });
   return {
     politicas: data,
     isError,
+    refetch,
     error,
     isLoading,
   };

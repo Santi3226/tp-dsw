@@ -60,7 +60,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
 
   const onSubmitConsult = async (data) => {
     try {
-    alert("En teoria, mandaste una consulta, felicitaciones crack!");
+    alert("En teoria, mandaste una consulta, felicidades!");
   } 
   catch (error) {
     console.error("Fallo al consultar:", error);
@@ -95,7 +95,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
             {analisisElegido && analisisElegido.plantillaAnalisis && (
             <div style={{ marginTop: '20px' }}>
               <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
@@ -271,7 +271,7 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
 
       </Tab>
       <Tab eventKey="consultas" title="Consultas">
-        <h2 className='titulo'>Consultas generales</h2>
+        <h2 className='titulo'>Consultas generales (Fuera del alcance - no implementado)</h2>
         <form
           className="login-formReg"
           onSubmit={handleSubmit(onSubmitConsult)}
@@ -282,91 +282,78 @@ const analisisElegido = tiposAnalisis.find(ta => ta.id === Number(tipoAnalisisSe
             <input
               type="email"
               id="email"
-              {...register("email", {
+              {...register("email", /*{
                 required: "Email requerido",
                 pattern: {
                   value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, // Expresión regular para validar formato de email
                   message: "Formato de email no válido",
                 },
-              })}
+              }*/)}
               defaultValue={user?.email}
               className="form-input"
             />
-            {errors.email && (
-              <div className="error-message">{errors.email.message}</div>
-            )}
           </div>
           <div className="form-group" id="tres">
           <label htmlFor="text">Nombre</label>
           <input
               type="text"
               id="nombre"
-              {...register("nombre",{
+              {...register("nombre",{/*
                 required:"Nombre requerido",
-              })}
+              */})}
               defaultValue={user?.paciente?.nombre}
               className="form-input"
             />
-            {errors.nombre && (
-              <div className="error-message">{errors.nombre.message}</div>
-            )}
             </div>
             <div className="form-group" id="cuatro">
             <label htmlFor="text">Apellido</label>
             <input
               type="text"
               id="apellido"
-              {...register("apellido",{
+              {...register("apellido",{/*
                 required:"Apellido requerido",
-              })}
+              */})}
               defaultValue={user?.paciente?.apellido}
               className="form-input"
             />
-            {errors.apellido && (
-              <div className="error-message">{errors.apellido.message}</div>
-            )}</div>
-            <div className="form-group">
+
+          </div>
+          <div className="form-group">
             <label htmlFor="text">DNI</label>
             <input
               type="text"
               id="dni"
-              {...register("dni", {
+              {...register("dni", {/*
                 required: "DNI requerido",
                 pattern: {
                   value: /^\d{8}$/, // Expresión regular para validar dni
                   message: "Formato de dni no válido",
                 },
-              })}
+              */})}
               defaultValue={user?.paciente?.dni}
               className="form-input"
             />
-            {errors.dni && (
-              <div className="error-message">{errors.dni.message}</div>
-            )}
           </div>
           <div className="form-group">
             <label htmlFor="text">Consulta</label>
             <textarea
               type="text"
               id="consulta"
-              {...register("consulta", {
+              {...register("consulta", {/*
                 required:"Consulta requerida",
-              })}
+              */})}
               placeholder='Constatá tu consulta aquí:'
               className="form-input"
             />
-            {errors.consulta && (
-              <div className="error-message">{errors.consulta.message}</div>
-            )}
           </div>
           <div className="form-group">
             <label htmlFor="text">Telefono</label>
             <input
               type="text"
               id="telefono"
-              {...register("telefono", {
+              {...register("telefono", {/*
                 required:"Telefono requerido",
-              })}
+              */})}
               defaultValue={user?.paciente?.telefono}
               className="form-input"
             />

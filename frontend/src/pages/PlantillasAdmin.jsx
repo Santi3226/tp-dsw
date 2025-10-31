@@ -4,7 +4,7 @@ import Tabs from "react-bootstrap/esm/Tabs";
 import { Tab } from "bootstrap";
 import { useEffect, useState } from "react";
 import axiosInstance from "../helpers/api";
-import { addPlantillas,deletePlantillas,modifyPlantillas, usePlantillasAnalisis } from "../hooks/usePlantillasAnalisis";
+import { addPlantillas,deletePlantillas,modifyPlantillas, usePlantillasAnalisis, } from "../hooks/usePlantillasAnalisis";
 
 function PlantillasAdmin() {
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
@@ -28,7 +28,7 @@ useEffect(() => {
 const onSubmitModify = async (data) => {
 try { 
   await modifyPlantillas(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -38,7 +38,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try { 
   await addPlantillas(data);
-  //location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -48,14 +48,14 @@ catch (error) {
 const onSubmitDelete = async (data) => {
 try { 
   await deletePlantillas(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al eliminar:", error);
 }
 };
 
-const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
+const { isLoading, isError, error, plantillas = [] , refetch } = usePlantillasAnalisis();
 
   if (isLoading) {
     return (
@@ -77,43 +77,7 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestras Plantillas de Análisis</h1>
-      <div style={pageStyles.grid}>
-      {plantillas.length === 0 ? (
-          <div style={pageStyles.containerCentered}>
-            <p style={pageStyles.message}>No se encontraron plantillas.</p>
-          </div>
-        ) : (
-      <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Hs. Ayuno</th>
-                  <th>Preparación</th>
-                  <th>Tiempo Previsto</th>
-                  <th>Fecha Desde</th>
-                </tr>
-              </thead>
-              <tbody>
-              {plantillas.map((ta) => (
-                <tr key={ta.id}>
-                  <td>{ta.id}</td>
-                  <td>{ta.hsAyuno}</td>
-                  <td>{ta.preparacion}</td>
-                  <td>{ta.tiempoPrevisto.toString()} días</td>
-                  <td>{new Date(ta.fechaDesde).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-          )}
-      </div>
-      
-      <Tabs
+        <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -177,13 +141,12 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
               <div className="error-message">{errorsModify.preparacion.message}</div>
             )}
           </div>
-          <div className="form-group" id="cuatro">
+          <div className="form-group" style={{gridRow:"2", gridColumn:"2"}}>
           <label htmlFor="number">Tiempo Previsto (en Dias)</label>
             <input
               type="number"
               id="tiempoPrevisto"
               {...registerModify("tiempoPrevisto", {
-                required: "Tiempo previsto es requerido"
               })}
               className="form-input"
             />
@@ -192,7 +155,7 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
             )}
             </div>
 
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify}>
+          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridRow:"3", gridColumn:"2"}}>
             {isSubmittingModify ? "Un momento..." : "Modificar"}
           </button>
         </form>
@@ -282,6 +245,43 @@ const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+      {plantillas.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron plantillas.</p>
+          </div>
+        ) : (
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Hs. Ayuno</th>
+                  <th>Preparación</th>
+                  <th>Tiempo Previsto</th>
+                  <th>Fecha Desde</th>
+                </tr>
+              </thead>
+              <tbody>
+              {plantillas.map((ta) => (
+                <tr key={ta.id}>
+                  <td>{ta.id}</td>
+                  <td>{ta.hsAyuno}</td>
+                  <td>{ta.preparacion}</td>
+                  <td>{ta.tiempoPrevisto.toString()} días</td>
+                  <td>{new Date(ta.fechaDesde).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+          )}
+      </div>
+      
+    
     </div>
   );
 }

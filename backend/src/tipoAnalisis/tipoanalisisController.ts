@@ -29,6 +29,9 @@ function sanitizeTipoAnalisisInput(
 
 // Get all centros de atencion
 async function findAll(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const tipoAnalisis = await em.find(
       TipoAnalisis,
@@ -48,6 +51,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one centro de atencion
 async function findOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const tipoAnalisis = await em.findOneOrFail(
@@ -67,6 +73,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function add(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const tipoAnalisis = em.create(TipoAnalisis, req.body.sanitizedInput);
     await em.flush();
@@ -82,6 +91,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+    if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const tipoAnalisis = em.getReference(TipoAnalisis, id);
@@ -99,6 +111,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const tipoAnalisis = em.getReference(TipoAnalisis, id);
@@ -114,6 +129,9 @@ async function deleteOne(req: Request, res: Response) {
   }
 }
 async function vincular(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const tipoAnalisisParametro = em.create(TipoAnalisisParametro, req.body.sanitizedInput);
     await em.flush();

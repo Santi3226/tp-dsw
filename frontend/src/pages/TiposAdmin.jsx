@@ -28,7 +28,7 @@ useEffect(() => {
 const onSubmitModify = async (data) => {
 try { 
   await modifyTipos(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -38,7 +38,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try { 
   await addTipos(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -48,14 +48,14 @@ catch (error) {
 const onSubmitDelete = async (data) => {
 try { 
   await deleteTipos(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al eliminar:", error);
 }
 };
 
-const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();  
+const { isLoading, isError, error, tipos = [] , refetch } = useTiposAnalisis();  
 
   if (isLoading) {
     return (
@@ -78,6 +78,9 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
     return (
       <div style={pageStyles.containerCentered}>
         <p style={pageStyles.message}>No se encontraron tipos.</p>
+        <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
       </div>
     );
   }
@@ -85,35 +88,7 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Tipos de Análisis</h1>
-      <div style={pageStyles.grid}>
-      <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
-                  <th>Importe</th>
-                  <th>Plantilla</th>
-                </tr>
-              </thead>
-              <tbody>
-              {tipos.map((ta) => (
-                <tr key={ta.id}>
-                  <td>{ta.id}</td>
-                  <td>{ta.nombre}</td>
-                  <td>{ta.importe}</td>
-                  <td>{ta.plantillaAnalisis.id}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-      </div>
-      
-      <Tabs
+       <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -298,6 +273,35 @@ const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nombre</th>
+                  <th>Importe</th>
+                  <th>Plantilla</th>
+                </tr>
+              </thead>
+              <tbody>
+              {tipos.map((ta) => (
+                <tr key={ta.id}>
+                  <td>{ta.id}</td>
+                  <td>{ta.nombre}</td>
+                  <td>{ta.importe}</td>
+                  <td>{ta.plantillaAnalisis.id}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+      </div>
+      
+     
     </div>
   );
 }

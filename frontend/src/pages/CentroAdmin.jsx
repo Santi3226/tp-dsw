@@ -1,7 +1,7 @@
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import {useCentros, deleteCentros, addCentros, modifyCentros } from "../hooks/useCentros";
+import {useCentros, deleteCentros, addCentros, modifyCentros} from "../hooks/useCentros";
 import "./TurnoAdmin.css";
 import { useLocalidad } from "../hooks/useLocalidad";
 
@@ -12,7 +12,7 @@ const { register: registerModify, handleSubmit: handleSubmitModify, formState: {
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
-const { isLoading, isError, error, centros = [] } = useCentros();  
+const { isLoading, isError, error, centros = [], refetch } = useCentros();  
 const {localidades = []} = useLocalidad();
 
 
@@ -20,7 +20,7 @@ const onSubmitDelete = async (data) => {
 try {
   const id = data.id; 
   await deleteCentros(id);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
@@ -30,7 +30,7 @@ catch (error) {
 const onSubmitModify = async (data) => {
 try { 
   await modifyCentros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -40,7 +40,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try {
   await addCentros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -67,40 +67,7 @@ catch (error) {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Centros</h1>
-      <div style={pageStyles.grid}>
-      {centros.length === 0 ? (
-        <div style={pageStyles.containerCentered}>
-          <p style={pageStyles.message}>No se encontraron centros.</p>
-        </div>
-      ) : (
-      <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Nombre</th>
-                  <th>Localidad</th>
-                  <th>Direccion</th>
-                </tr>
-              </thead>
-              <tbody>
-              {centros.map((centro) => (
-                <tr key={centro.id}>
-                  <td>{centro.id}</td>
-                  <td>{centro.nombre}</td>
-                  <td>{centro.localidad?.denominacion}</td>
-                  <td>{centro.domicilio}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-    )}
-    </div>
-        <Tabs
+         <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -274,6 +241,43 @@ catch (error) {
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+      {centros.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron centros.</p>
+              <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+              Reintentar
+            </button>
+        </div>
+      ) : (
+      <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Nombre</th>
+                  <th>Localidad</th>
+                  <th>Direccion</th>
+                </tr>
+              </thead>
+              <tbody>
+              {centros.map((centro) => (
+                <tr key={centro.id}>
+                  <td>{centro.id}</td>
+                  <td>{centro.nombre}</td>
+                  <td>{centro.localidad?.denominacion}</td>
+                  <td>{centro.domicilio}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+    )}
+    </div>
+     
     
     </div>
   );

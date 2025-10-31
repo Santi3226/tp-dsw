@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos.js";
+import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, } from "../hooks/useTurnos.js";
 import "./TurnoAdmin.css";
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
@@ -9,7 +9,7 @@ import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
 
 function Muestras() {
-const { isLoading, isError, error, turnos = [] } = useTurnos();
+const { isLoading, isError, error, turnos = [], refetch  } = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const [turnoAObservarId, setTurnoAObservarId] = useState(null);
 const [showModal, setShowModal] = useState(false);
@@ -18,6 +18,7 @@ const [turnosFiltradosMuestras, setTurnosFiltradosMuestras] = useState([]);
 const [turnosFiltradosConfirmar, setTurnosFiltradosConfirmar] = useState([]);
 
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
+const { register: registerFilterConfirmar, handleSubmit: handleSubmitFilterConfirmar, formState: { errors: errorsFilterConfirmar, isSubmitting: isSubmittingFilterConfirmar } } = useForm({ mode: "onBlur" });
 
 
 const handleRecetaClick = (id) => {
@@ -54,7 +55,7 @@ const handleMuestrasClick = async (id) => {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    location.reload();
+    refetch();
   }
 };
 
@@ -65,7 +66,7 @@ const handleConfirmarClick = async (id) => {
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
-    location.reload();
+    refetch();
   }
 };
 
@@ -78,6 +79,7 @@ const onSubmitFilter = async (data) => {
     try {
       //Determinar la pestaña activa
       data.estado = activeTab === "muestras" ? "Confirmado" : "Pendiente"; 
+      console.log("Datos para filtrar:", data);
       const response = await getTurnosQuery(data); //Filtrado condicional
       
       if (activeTab === "muestras") {
@@ -95,7 +97,7 @@ const handleConfirmarObservacion = async (observacion) => {
     const data = { id:turnoAObservarId, observacion: observacion };
     console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
-    location.reload();
+    refetch();
   }
   else {
     alert("La observación no puede estar vacía.");
@@ -147,10 +149,79 @@ useEffect(() => {
       style={{marginTop:"30px"}}
       >
     <Tab eventKey="muestras" title="Muestras">
-          <div style={pageStyles.grid}>
+          <form
+            className="login-formReg"
+            onSubmit={handleSubmitFilter(onSubmitFilter)}
+            noValidate
+            style={{ marginTop: "30px" }}
+          >
+            <div className="form-group" id="uno">
+            <label htmlFor="text">Paciente</label>
+            <select
+              id="paciente"
+              {...registerFilter("paciente")}
+              className="form-input"
+            >
+              <option value="">-</option>
+              {pacientes.map((pa, index) => (
+                <option key={index} value={pa.id}>
+                  {pa.id} - {pa.nombre} {pa.apellido}
+                </option>
+              ))}
+            </select>
+            {errorsFilter.paciente && (
+              <div className="error-message">{errorsFilter.paciente.message}</div>
+            )}
+          </div>
+
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Inicio</label>
+              <input
+                type="date"
+                id="fechaInicio"
+                {...registerFilter('fechaInicio', {
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaInicio && (
+                <div className="error-message">
+                  {errorsFilter.fechaInicio.message}
+                </div>
+              )}
+            </div>
+            <div id="fechaNac" className="form-group">
+              <label htmlFor="date">Fecha de Fin</label>
+              <input
+                type="date"
+                id="fechaFin"
+                {...registerFilter('fechaFin', {
+                })}
+                className="form-input"
+              />
+              {errorsFilter.fechaFin && (
+                <div className="error-message">
+                  {errorsFilter.fechaFin.message}
+                </div>
+              )}
+            </div>
+
+            <button
+              id="login"
+              type="submit"
+              className="login-btn"
+              disabled={isSubmittingFilter}
+              style={{ alignSelf: 'center' }}
+              onClick={() => setActiveTab("muestras")}
+            >
+              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
+            </button>
+          </form>
+   
+              {turnosFiltradosMuestras.length > 0 ? (
+
+      <div style={pageStyles.grid}>
 
       <table className="table"  style={{display: "block",
-              maxWidth: "-moz-fit-content",
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
@@ -195,17 +266,60 @@ useEffect(() => {
             </tbody>
             </table>
       </div>      
+       ) : (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
+        )}
+    </Tab>
+    <Tab eventKey="confirmar" title="Confirmar">
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '500px'
+            }}>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Establecer Observacion</h4>
+              <div style={{ marginTop: '20px' }}>
+                 <textarea style={{ width: '100%', height: '100px' }} id="observacion" type="text" />
+              </div>
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
+                  Volver
+                </button>
+                 <button onClick={() => handleConfirmarObservacion(document.getElementById("observacion").value)} className='login-btn' style={{ marginLeft: '10px' }}>
+                  Confirmar
+                </button>
+
+              </div>
+            </div>
+          </div>
+        )}
           <form
             className="login-formReg"
-            onSubmit={handleSubmitFilter(onSubmitFilter)}
+            onSubmit={handleSubmitFilterConfirmar(onSubmitFilter)}
             noValidate
             style={{ marginTop: "30px" }}
+
           >
             <div className="form-group" id="uno">
             <label htmlFor="text">Paciente</label>
             <select
               id="paciente"
-              {...registerFilter("paciente")}
+              {...registerFilterConfirmar("paciente")}
               className="form-input"
             >
               <option value="">-</option>
@@ -215,8 +329,8 @@ useEffect(() => {
                 </option>
               ))}
             </select>
-            {errorsFilter.paciente && (
-              <div className="error-message">{errorsFilter.paciente.message}</div>
+            {errorsFilterConfirmar.paciente && (
+              <div className="error-message">{errorsFilterConfirmar.paciente.message}</div>
             )}
           </div>
 
@@ -225,12 +339,12 @@ useEffect(() => {
               <input
                 type="date"
                 id="fechaInicio"
-                {...registerFilter('fechaInicio', {
+                {...registerFilterConfirmar('fechaInicio', {
                   validate: (value) => {},
                 })}
                 className="form-input"
               />
-              {errorsFilter.fechaInicio && (
+              {errorsFilterConfirmar.fechaInicio && (
                 <div className="error-message">
                   {errorsFilter.fechaInicio.message}
                 </div>
@@ -241,14 +355,14 @@ useEffect(() => {
               <input
                 type="date"
                 id="fechaFin"
-                {...registerFilter('fechaFin', {
+                {...registerFilterConfirmar('fechaFin', {
                   validate: (value) => {},
                 })}
                 className="form-input"
               />
-              {errorsFilter.fechaFin && (
+              {errorsFilterConfirmar.fechaFin && (
                 <div className="error-message">
-                  {errorsFilter.fechaFin.message}
+                  {errorsFilterConfirmar.fechaFin.message}
                 </div>
               )}
             </div>
@@ -257,19 +371,18 @@ useEffect(() => {
               id="login"
               type="submit"
               className="login-btn"
-              disabled={isSubmittingFilter}
+              disabled={isSubmittingFilterConfirmar}
               style={{ alignSelf: 'center' }}
+              onClick={() => setActiveTab("confirmar")}
             >
-              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
+              {isSubmittingFilterConfirmar ? 'Un momento...' : 'Filtrar'}
             </button>
           </form>
-   
-    </Tab>
-    <Tab eventKey="confirmar" title="Confirmar">
+              {turnosFiltradosConfirmar.length > 0 ? (
           <div style={pageStyles.grid}>
 
       <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
@@ -331,113 +444,9 @@ useEffect(() => {
             </tbody>
             </table>
       </div>      
-      {showModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-          }}>
-            <div style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '5px',
-              textAlign: 'center',
-              minWidth: '500px'
-            }}>
-              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
-                Establecer Observacion</h4>
-              <div style={{ marginTop: '20px' }}>
-                 <textarea style={{ width: '100%', height: '100px' }} id="observacion" type="text" />
-              </div>
-              <div style={{ marginTop: '20px' }}>
-                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
-                  Volver
-                </button>
-                 <button onClick={() => handleConfirmarObservacion(document.getElementById("observacion").value)} className='login-btn' style={{ marginLeft: '10px' }}>
-                  Confirmar
-                </button>
-
-              </div>
-            </div>
-          </div>
+             ) : (
+          <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
         )}
-          <form
-            className="login-formReg"
-            onSubmit={handleSubmitFilter(onSubmitFilter)}
-            noValidate
-            style={{ marginTop: "30px" }}
-
-          >
-            <div className="form-group" id="uno">
-            <label htmlFor="text">Paciente</label>
-            <select
-              id="paciente"
-              {...registerFilter("paciente")}
-              className="form-input"
-            >
-              <option value="">-</option>
-              {pacientes.map((pa, index) => (
-                <option key={index} value={pa.id}>
-                  {pa.id} - {pa.nombre} {pa.apellido}
-                </option>
-              ))}
-            </select>
-            {errorsFilter.paciente && (
-              <div className="error-message">{errorsFilter.paciente.message}</div>
-            )}
-          </div>
-
-            <div id="fechaNac" className="form-group">
-              <label htmlFor="date">Fecha de Inicio</label>
-              <input
-                type="date"
-                id="fechaInicio"
-                {...registerFilter('fechaInicio', {
-                  validate: (value) => {},
-                })}
-                className="form-input"
-              />
-              {errorsFilter.fechaInicio && (
-                <div className="error-message">
-                  {errorsFilter.fechaInicio.message}
-                </div>
-              )}
-            </div>
-            <div id="fechaNac" className="form-group">
-              <label htmlFor="date">Fecha de Fin</label>
-              <input
-                type="date"
-                id="fechaFin"
-                {...registerFilter('fechaFin', {
-                  validate: (value) => {},
-                })}
-                className="form-input"
-              />
-              {errorsFilter.fechaFin && (
-                <div className="error-message">
-                  {errorsFilter.fechaFin.message}
-                </div>
-              )}
-            </div>
-
-            <button
-              id="login"
-              type="submit"
-              className="login-btn"
-              disabled={isSubmittingFilter}
-              style={{ alignSelf: 'center' }}
-            >
-              {isSubmittingFilter ? 'Un momento...' : 'Filtrar'}
-            </button>
-          </form>
-   
     </Tab>
     </Tabs>
      </div>

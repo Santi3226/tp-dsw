@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   useTurnos,
   addResultados,
-  getTurnosQuery,
+  getTurnosQuery
 } from '../hooks/useResultados';
 import {modifyTurnos} from "../hooks/useTurnos";
 import './TurnoAdmin.css';
@@ -13,7 +13,7 @@ import { usePaciente } from '../hooks/usePacientes';
 
 function ResultadosAdmin() {
   const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-  const { isLoading, isError, error, turnos = [] } = useTurnos();
+  const { isLoading, isError, error, turnos = [],refetch } = useTurnos();
   const { pacientes = [] } = usePaciente();
   const {
     register: registerAdd,
@@ -35,7 +35,7 @@ function ResultadosAdmin() {
       await addResultados(data);
       data.estado = "Resultado";
       await modifyTurnos(data);
-      location.reload();
+      refetch();
     } catch (error) {
       console.error('Fallo al agregar:', error);
     }
@@ -97,68 +97,8 @@ function ResultadosAdmin() {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Turnos Pendientes de Resultados</h1>
-      {turnosFiltrados.length === 0 ? (
-        <div style={pageStyles.containerCentered}>
-          <p style={pageStyles.message}>No se encontraron turnos.</p>
-          <a href="">
-            <button
-              id="login"
-              type="button"
-              className="login-btn"
-              onClick={() => window.location.reload()}
-            >
-              Volver
-            </button>
-          </a>
-        </div>
-      ) : (
-        <div style={pageStyles.grid}>
-          <table className="table" style={{display: "block",
-                maxWidth: "-moz-fit-content",
-                maxWidth: "fit-content",
-                margin: "0 auto",
-                overflowX: "auto",
-                whiteSpace: "nowrap"}}>
-            <thead>
-              <tr>
-                <th>Numero de Turno</th>
-                <th>Paciente</th>
-                <th>Tipo de Analisis</th>
-                <th>Centro de Atencion</th>
-                <th>Fecha y Hora Reserva</th>
-                <th>Fecha y Hora Extraccion</th>
-                <th>Estado</th>
-                <th>Observación</th>
-                <th>Recibe Mail</th>
-              </tr>
-            </thead>
-            <tbody>
-              {turnosFiltrados.map((turno) => (
-                <tr key={turno.id}>
-                  <td>{turno.id}</td>
-                  <td>
-                    {turno.paciente.apellido + ', ' + turno.paciente.nombre}
-                  </td>
-                  <td>{turno.tipoAnalisis.nombre}</td>
-                  <td>{turno.centroAtencion.nombre}</td>
-                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  <td>
-                    {new Date(turno.fechaHoraExtraccion).toLocaleString() !==
-                    '31/12/1969, 09:00:00'
-                      ? new Date(turno.fechaHoraExtraccion).toLocaleString()
-                      : '-'}
-                  </td>
-                  <td>{turno.estado}</td>
-                  <td>{turno.observacion === '' ? '-' : turno.observacion}</td>
-                  <td>{turno.recibeMail ? 'Si' : 'No'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      <Tabs
-        defaultActiveKey="resultado"
+       <Tabs
+        defaultActiveKey="filtrar"
         id="justify-tab-example"
         className="mb-3"
         justify
@@ -261,7 +201,7 @@ function ResultadosAdmin() {
             )}
 
             {idSeleccionado && (
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
+              <div className='parametros'>
                 {turnosFiltrados.find((t) => t.id === Number(idSeleccionado))
                   ?.tipoAnalisis.parametros.map((parametro) => (
                     <div key={parametro.parametroAnalisis.id} className="form-group">
@@ -294,6 +234,67 @@ function ResultadosAdmin() {
           </form>
         </Tab>
       </Tabs>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <a href="">
+            <button
+              id="login"
+              type="button"
+              className="login-btn"
+              onClick={() => window.location.reload()}
+            >
+              Limpiar Filtros
+            </button>
+          </a>
+        </div>
+      ) : (
+        <div style={pageStyles.grid}>
+          <table className="table" style={{display: "block",
+                
+                maxWidth: "fit-content",
+                margin: "0 auto",
+                overflowX: "auto",
+                whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Numero de Turno</th>
+                <th>Paciente</th>
+                <th>Tipo de Analisis</th>
+                <th>Centro de Atencion</th>
+                <th>Fecha y Hora Reserva</th>
+                <th>Fecha y Hora Extraccion</th>
+                <th>Estado</th>
+                <th>Observación</th>
+                <th>Recibe Mail</th>
+              </tr>
+            </thead>
+            <tbody>
+              {turnosFiltrados.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>
+                    {turno.paciente.apellido + ', ' + turno.paciente.nombre}
+                  </td>
+                  <td>{turno.tipoAnalisis.nombre}</td>
+                  <td>{turno.centroAtencion.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  <td>
+                    {new Date(turno.fechaHoraExtraccion).toLocaleString() !==
+                    '31/12/1969, 09:00:00'
+                      ? new Date(turno.fechaHoraExtraccion).toLocaleString()
+                      : '-'}
+                  </td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === '' ? '-' : turno.observacion}</td>
+                  <td>{turno.recibeMail ? 'Si' : 'No'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+     
     </div>
   );
 }

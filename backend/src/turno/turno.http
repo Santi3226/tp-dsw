@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ### ID
-@id = 15
+@id = 16
 
 ### GET ONE 
 GET http://localhost:3000/api/turno/{{id}}
@@ -31,7 +31,7 @@ PUT http://localhost:3000/api/turno/{{id}}
 Content-Type: application/json
 
 {
-"estado": "Confirmado"
+"receta": "cp1.png"
 }
 
 ### DELETE

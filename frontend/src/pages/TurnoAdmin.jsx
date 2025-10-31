@@ -28,7 +28,7 @@ const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica p
 
 function TurnoAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, turnos = [] } = useTurnos();
+const { isLoading, isError, error, turnos = [] ,refetch} = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
@@ -37,7 +37,8 @@ const [showModal, setShowModal] = useState(false);
 const [horariosDisponibles, setHorariosDisponibles] = useState([]);
 
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control: controlAdd } = useForm({ mode: "onBlur" });
-const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify }, control: controlModify } = useForm({ mode: "onBlur" });const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
+const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify }, control: controlModify } = useForm({ mode: "onBlur" });
+const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 const fechaHoraReserva = useWatch({
@@ -88,7 +89,7 @@ const onSubmitDelete = async (data) => {
 try {
   const id = data.id; 
   await deleteTurnos(id);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al registrar:", error);
@@ -98,7 +99,7 @@ catch (error) {
 const onSubmitModify = async (data) => {
 try { 
   await modifyTurnos(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -113,7 +114,7 @@ try {
   data.email = email.data.data.email;
   console.log("Datos del formulario:", data);
   await addTurnos(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -122,6 +123,7 @@ catch (error) {
 
 const onSubmitFilter = async (data) => {
   try {
+    console.log(data);
     const response = await getTurnosQuery(data); //Filtrado condicional
     setTurnosFiltrados(response || []); 
   } catch (error) {
@@ -158,110 +160,8 @@ useEffect(() => {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Turnos</h1>
-      <div style={pageStyles.grid}>
-      {turnosFiltrados.length === 0 ? (
-        <div style={pageStyles.containerCentered}>
-          <p style={pageStyles.message}>No se encontraron turnos.</p>
-          <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
-            Volver
-          </button>
-        </div>
-      ) : (
-        <table className="table responsive-table">
-          <thead>
-            <tr>
-              <th>Numero de Turno</th>
-              <th>Paciente</th>
-                  <th>Tipo de Analisis</th>
-                  <th>Centro de Atencion</th>
-                  <th>Fecha y Hora Reserva</th>
-                  <th>Fecha y Hora Extraccion</th>
-                  <th>Estado</th>
-                  <th>Observación</th>
-                  <th>Recibe Mail</th>
-                  <th>Detalle</th>
-                </tr>
-              </thead>
-              <tbody>
-              {turnosFiltrados.map((turno) => (
-                <tr key={turno.id}>
-                  <td>{turno.id}</td>
-                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
-                  <td>{turno.tipoAnalisis?.nombre}</td>
-                  <td>{turno.centroAtencion?.nombre}</td>
-                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
-                  <td>{turno.fechaHoraExtraccion && new Date(turno.fechaHoraExtraccion).toLocaleString() !== "31/12/1969, 09:00:00" ? new Date(turno.fechaHoraExtraccion).toLocaleString() : "-"}</td>
-                  <td>{turno.estado}</td>
-                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
-                  <td>{turno.recibeMail ? "Si" : "No"}</td>
-                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleDetalleClick(turno.id)}>Ver Detalle</button></td>}
-                </tr>
-              ))}
-            </tbody>
-            </table>
-          )}
-      </div>
-      {showModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-          }}>
-            <div className="detalle-modal">
-              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
-                Detalles del turno</h4>
-              <div style={{ marginTop: '20px' }}>
-                {turnoDetalleId && (() => {
-                const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
-                if (!turno) return null;
-                return (
-                  <div className="turno-detalle-grid">
-                    <div className="form-group">
-                      <label>
-                        Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
-                      </label>
-                      <label>
-                        DNI: {turno.paciente?.dni} 
-                      </label>
-                      <label>
-                        Fecha Nac: {turno.paciente?.fechaNacimiento ? new Date(turno.paciente.fechaNacimiento).toLocaleDateString() : "-"}
-                      </label>
-                      <label>
-                        Dirección: {turno.paciente?.direccion}
-                      </label>
-                    </div>
-                    <div className="form-group">
-                      <label>
-                      Tel: {turno.paciente?.telefono}
-                      </label>
-                      <label>
-                        Tipo de Análisis: {turno.tipoAnalisis?.nombre} 
-                      </label>
-                      <label>
-                        Importe: {turno.tipoAnalisis?.importe}
-                      </label>
-                      <label>
-                      Plantilla: {turno.tipoAnalisis?.plantillaAnalisis}
-                      </label>
-                    </div>
-                  </div>
-                );
-              })()}
-                <button onClick={() => setShowModal(false)} className='login-btn' style={{ backgroundColor: 'red', marginTop: '20px' }}>
-                  Volver
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        <Tabs
+      
+      <Tabs
       defaultActiveKey="filtrar"
       id="justify-tab-example"
       className="mb-3"
@@ -673,6 +573,110 @@ useEffect(() => {
       </form>
       </Tab>
     </Tabs>
+
+      <div style={pageStyles.grid}>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+            Limpiar Filtros
+          </button>
+        </div>
+      ) : (
+        <table className="table responsive-table">
+          <thead>
+            <tr>
+              <th>Numero de Turno</th>
+              <th>Paciente</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora Reserva</th>
+                  <th>Fecha y Hora Extraccion</th>
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Recibe Mail</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody>
+              {turnosFiltrados.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
+                  <td>{turno.tipoAnalisis?.nombre}</td>
+                  <td>{turno.centroAtencion?.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  <td>{turno.fechaHoraExtraccion && new Date(turno.fechaHoraExtraccion).toLocaleString() !== "31/12/1969, 09:00:00" ? new Date(turno.fechaHoraExtraccion).toLocaleString() : "-"}</td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                  <td>{turno.recibeMail ? "Si" : "No"}</td>
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleDetalleClick(turno.id)}>Ver Detalle</button></td>}
+                </tr>
+              ))}
+            </tbody>
+            </table>
+          )}
+      </div>
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div className="detalle-modal">
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Detalles del turno</h4>
+              <div style={{ marginTop: '20px' }}>
+                {turnoDetalleId && (() => {
+                const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
+                if (!turno) return null;
+                return (
+                  <div className="turno-detalle-grid">
+                    <div className="form-group">
+                      <label>
+                        Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
+                      </label>
+                      <label>
+                        DNI: {turno.paciente?.dni} 
+                      </label>
+                      <label>
+                        Fecha Nac: {turno.paciente?.fechaNacimiento ? new Date(turno.paciente.fechaNacimiento).toLocaleDateString() : "-"}
+                      </label>
+                      <label>
+                        Dirección: {turno.paciente?.direccion}
+                      </label>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                      Tel: {turno.paciente?.telefono}
+                      </label>
+                      <label>
+                        Tipo de Análisis: {turno.tipoAnalisis?.nombre} 
+                      </label>
+                      <label>
+                        Importe: {turno.tipoAnalisis?.importe}
+                      </label>
+                      <label>
+                      Plantilla: {turno.tipoAnalisis?.plantillaAnalisis}
+                      </label>
+                    </div>
+                  </div>
+                );
+              })()}
+                <button onClick={() => setShowModal(false)} className='login-btn' style={{ backgroundColor: 'red', marginTop: '20px' }}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 }

@@ -48,13 +48,13 @@ function App() {
                 
                 <Route path="/paciente/:tab" element={
                   <ProtectedRoute>
-                      <Paciente allowedRoles={["Paciente","admin"]}/>
+                      <Paciente allowedRoles={["user","admin","Paciente"]}/>
                   </ProtectedRoute>
                 }></Route>
 
                 <Route path="/turno/:tab" element={
                   <ProtectedRoute>
-                      <Turno allowedRoles={["Paciente","admin"]}/>
+                      <Turno allowedRoles={["user","admin","Paciente"]}/>
                   </ProtectedRoute>
                 }></Route>
 

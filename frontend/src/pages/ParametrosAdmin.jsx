@@ -30,7 +30,7 @@ useEffect(() => {
 const onSubmitModify = async (data) => {
 try { 
   await modifyParametros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al modificar:", error);
@@ -40,7 +40,7 @@ catch (error) {
 const onSubmitAdd = async (data) => {
 try { 
   await addParametros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al agregar:", error);
@@ -50,7 +50,7 @@ catch (error) {
 const onSubmitDelete = async (data) => {
 try { 
   await deleteParametros(data);
-  location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al eliminar:", error);
@@ -60,14 +60,14 @@ catch (error) {
 const onSubmitVinculo = async (data) => {
 try {
   await addVinculo(data);
-  //location.reload();
+  //refetch();
 }
 catch (error) {
   console.error("Fallo al vincular:", error);
 }
 };
 
-  const { isLoading, isError, error, parametros = [] } = useParametrosAnalisis();
+  const { isLoading, isError, error, parametros = [] , refetch } = useParametrosAnalisis();
 
 
   if (isLoading) {
@@ -90,40 +90,7 @@ catch (error) {
   return (
     <div style={pageStyles.container}>
       <h1 style={pageStyles.header}>Nuestros Parámetros de Análisis</h1>
-      <div style={pageStyles.grid}>
-        {parametros.length === 0 ? (
-          <div style={pageStyles.containerCentered}>
-            <p style={pageStyles.message}>No se encontraron parámetros.</p>
-          </div>
-        ) : (
-          <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
-              maxWidth: "fit-content",
-              margin: "0 auto",
-              overflowX: "auto",
-              whiteSpace: "nowrap"}}>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                  <th>Referencia</th>
-                  <th>Unidad</th>
-                </tr>
-              </thead>
-              <tbody>
-              {parametros.map((pa) => (
-                <tr key={pa.id}>
-                  <td>{pa.id}</td>
-                  <td>{pa.nombre}</td>
-                  <td>{pa.referencia}</td>
-                  <td>{pa.unidad}</td>
-                </tr>
-              ))}
-            </tbody>
-            </table>
-        )}
-      </div>
-      <Tabs
+       <Tabs
       defaultActiveKey="modificar"
       id="justify-tab-example"
       className="mb-3"
@@ -343,6 +310,43 @@ catch (error) {
       </form>
       </Tab>
     </Tabs>
+      <div style={pageStyles.grid}>
+        {parametros.length === 0 ? (
+          <div style={pageStyles.containerCentered}>
+            <p style={pageStyles.message}>No se encontraron parámetros.</p>
+            <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>  
+              Reintentar
+            </button>
+          </div>
+        ) : (
+          <table className="table" style={{display: "block",
+              
+              maxWidth: "fit-content",
+              margin: "0 auto",
+              overflowX: "auto",
+              whiteSpace: "nowrap"}}>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                  <th>Referencia</th>
+                  <th>Unidad</th>
+                </tr>
+              </thead>
+              <tbody>
+              {parametros.map((pa) => (
+                <tr key={pa.id}>
+                  <td>{pa.id}</td>
+                  <td>{pa.nombre}</td>
+                  <td>{pa.referencia}</td>
+                  <td>{pa.unidad}</td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+        )}
+      </div>
+     
 
     </div>
   );

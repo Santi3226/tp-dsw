@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MinimapaCentros from '../components/MinimapaCentros.jsx';
 
-// Mock del hook useCentros
+// Dummy del hook useCentros
 vi.mock('../hooks/useCentros.js', () => ({
   useCentros: vi.fn(() => ({
     isLoading: false,
@@ -26,7 +26,7 @@ vi.mock('../hooks/useCentros.js', () => ({
   })),
 }));
 
-// Mock de react-leaflet
+// Dummy de react-leaflet
 vi.mock('react-leaflet', () => ({
   MapContainer: ({ children }) => (
      <div data-testid="map-container">{children}</div>
@@ -39,13 +39,14 @@ vi.mock('react-leaflet', () => ({
   }),
 }));
 
-// Mock de fetch para geocodificación
+// dummy de geocodificación
 global.fetch = vi.fn(() =>
   Promise.resolve({
     json: () => Promise.resolve([{ lat: '-32.9468', lon: '-60.6393' }]),
   })
 );
 
+//va pickeando uno por uno los componentes y los testea
 describe('MinimapaCentros', () => {
   beforeEach(() => {
     vi.clearAllMocks();

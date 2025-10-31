@@ -29,6 +29,9 @@ function sanitizePacienteInput(
 
 // Get all Pacientes
 async function findAll(req: Request, res: Response) {
+  if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const pacientes = await em.find(Paciente, {}, { populate: ['turnos'] });
     res.status(200).json({
@@ -42,6 +45,9 @@ async function findAll(req: Request, res: Response) {
 
 //Get one paciente
 async function findOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const pacientes = await em.findOneOrFail(Paciente, { id }, { populate: ['turnos'] }); //(Paciente, filtros)
@@ -57,6 +63,9 @@ async function findOne(req: Request, res: Response) {
 }
 
 async function findSome(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const filtros: FilterQuery<Paciente> = {};
 
@@ -91,6 +100,9 @@ async function findSome(req: Request, res: Response) {
   }
 }
 async function add(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const paciente = em.create(Paciente, req.body.sanitizedInput);
     await em.persistAndFlush(paciente);
@@ -105,6 +117,9 @@ async function add(req: Request, res: Response) {
 }
 
 async function update(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' && (req as any).user?.role !== 'user') {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const paciente = em.getReference(Paciente, id);
@@ -121,6 +136,9 @@ async function update(req: Request, res: Response) {
 }
 
 async function deleteOne(req: Request, res: Response) {
+   if ((req as any).user?.role !== 'admin' ) {
+    return res.status(403).json({ error: 'Prohibido' });
+  }
   try {
     const id = Number.parseInt(req.params.id);
     const paciente = em.getReference(Paciente, id);

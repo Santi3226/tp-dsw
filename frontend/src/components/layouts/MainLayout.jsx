@@ -20,14 +20,14 @@ const MainLayout = () => {
           <Link to="/">
             <img className="logo" src="/logo.png" alt="Logo" />
           </Link>
-          <Link className="titulo" to="/">
+          <Link style={{textDecoration:"none"}} className="titulo" to="/">
             <div className="titulo">
-              <h1 style={{textDecoration:"none"}}>{"Laboratorio\nGenérico"}</h1>
+              <h1 >{"Laboratorio\nGenérico"}</h1>
             </div>
           </Link>
 
           <nav className="main-nav">
-            <Link to="/paciente/preparacion" className="dashboard-btn">Paciente</Link>
+            <Link to="/paciente/gestiondepaciente" className="dashboard-btn">Paciente</Link>
             <Link to="/turno/gestiondeturnos" className="dashboard-btn">Turno</Link>
             <Link to="/laboratorio/centrosdeatencion" className="dashboard-btn">Laboratorio</Link>
 

@@ -10,14 +10,14 @@ const onSubmit = async (data) => {
 try { 
   data.id = 2; //Sugar 
   await modifyPoliticas(data);
-  //location.reload(); 
+  refetch(); 
 } 
 catch (error) {
   console.error("Fallo al eliminar:", error);
 }
 };
 
-const { isLoading, isError, error, politicas = [] } = usePolitica();  
+const { isLoading, isError, error, politicas = [], refetch  } = usePolitica();  
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>
@@ -45,7 +45,7 @@ const { isLoading, isError, error, politicas = [] } = usePolitica();
           </div>
         ) : (
           <table className="table" style={{display: "block",
-              maxWidth: "-moz-fit-content",
+              
               maxWidth: "fit-content",
               margin: "0 auto",
               overflowX: "auto",
