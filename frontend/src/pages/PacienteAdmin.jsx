@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 function PacienteAdmin() {
 
 const [pacientesFiltrados, setPacientesFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, pacientes} = usePaciente(); //Traida de todos los pacientes
+const { isLoading, isError, error, pacientes, refetch } = usePaciente(); //Traida de todos los pacientes
 
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmittingAdd } } = useForm({ mode: "onBlur" });

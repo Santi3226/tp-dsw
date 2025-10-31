@@ -67,7 +67,7 @@ catch (error) {
 }
 };
 
-  const { isLoading, isError, error, parametros = [] } = useParametrosAnalisis();
+  const { isLoading, isError, error, parametros = [] , refetch } = useParametrosAnalisis();
 
 
   if (isLoading) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos.js";
+import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, } from "../hooks/useTurnos.js";
 import "./TurnoAdmin.css";
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
@@ -9,7 +9,7 @@ import { useCentros } from "../hooks/useCentros.js";
 import { usePaciente } from "../hooks/usePacientes.js";
 
 function Muestras() {
-const { isLoading, isError, error, turnos = [] } = useTurnos();
+const { isLoading, isError, error, turnos = [], refetch  } = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const [turnoAObservarId, setTurnoAObservarId] = useState(null);
 const [showModal, setShowModal] = useState(false);

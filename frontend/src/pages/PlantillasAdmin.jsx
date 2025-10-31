@@ -4,7 +4,7 @@ import Tabs from "react-bootstrap/esm/Tabs";
 import { Tab } from "bootstrap";
 import { useEffect, useState } from "react";
 import axiosInstance from "../helpers/api";
-import { addPlantillas,deletePlantillas,modifyPlantillas, usePlantillasAnalisis } from "../hooks/usePlantillasAnalisis";
+import { addPlantillas,deletePlantillas,modifyPlantillas, usePlantillasAnalisis, } from "../hooks/usePlantillasAnalisis";
 
 function PlantillasAdmin() {
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmittingModify } } = useForm({ mode: "onBlur" });
@@ -55,7 +55,7 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, plantillas = [] } = usePlantillasAnalisis();
+const { isLoading, isError, error, plantillas = [] , refetch } = usePlantillasAnalisis();
 
   if (isLoading) {
     return (

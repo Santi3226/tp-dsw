@@ -26,12 +26,12 @@ app.use((req, res, next) => {
    if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
-        next(); //Se debe agregar JWT para validacion de usuarios q realizan peticiones
+        next(); 
     }
 });
 /* Global
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app'); //Mas adelante cambiar el * por el localhost
+  res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
    if (req.method === 'OPTIONS') {

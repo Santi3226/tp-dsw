@@ -11,7 +11,7 @@ const { register: registerModify, handleSubmit: handleSubmitModify, formState: {
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 
 
-const { isLoading, isError, error, localidades = [] } = useLocalidad();
+const { isLoading, isError, error, localidades = [] , refetch } = useLocalidad();
 
 const onSubmitDelete = async (data) => {
 try {

@@ -55,7 +55,7 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, tipos = [] } = useTiposAnalisis();  
+const { isLoading, isError, error, tipos = [] , refetch } = useTiposAnalisis();  
 
   if (isLoading) {
     return (

@@ -17,7 +17,7 @@ catch (error) {
 }
 };
 
-const { isLoading, isError, error, politicas = [] } = usePolitica();  
+const { isLoading, isError, error, politicas = [], refetch  } = usePolitica();  
   if (isLoading) {
     return (
       <div style={pageStyles.containerCentered}>

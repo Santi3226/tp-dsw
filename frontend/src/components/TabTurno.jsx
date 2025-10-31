@@ -34,7 +34,7 @@ function TabTurno(props) {
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
   const {  centros = [] } = useCentros();
   const {  tipos = [] } = useTiposAnalisis();
-  const { isLoading, isError, error, turnos = [] } = useTurnos();
+  const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
   const { politicas = [] } = usePolitica();
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);

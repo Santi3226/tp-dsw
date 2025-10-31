@@ -1,7 +1,7 @@
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import {useCentros, deleteCentros, addCentros, modifyCentros } from "../hooks/useCentros";
+import {useCentros, deleteCentros, addCentros, modifyCentros} from "../hooks/useCentros";
 import "./TurnoAdmin.css";
 import { useLocalidad } from "../hooks/useLocalidad";
 
@@ -12,7 +12,7 @@ const { register: registerModify, handleSubmit: handleSubmitModify, formState: {
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
 const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
-const { isLoading, isError, error, centros = [] } = useCentros();  
+const { isLoading, isError, error, centros = [], refetch } = useCentros();  
 const {localidades = []} = useLocalidad();
 
 

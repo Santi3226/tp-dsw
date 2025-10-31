@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   useTurnos,
   addResultados,
-  getTurnosQuery,
+  getTurnosQuery
 } from '../hooks/useResultados';
 import {modifyTurnos} from "../hooks/useTurnos";
 import './TurnoAdmin.css';
@@ -13,7 +13,7 @@ import { usePaciente } from '../hooks/usePacientes';
 
 function ResultadosAdmin() {
   const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-  const { isLoading, isError, error, turnos = [] } = useTurnos();
+  const { isLoading, isError, error, turnos = [],refetch } = useTurnos();
   const { pacientes = [] } = usePaciente();
   const {
     register: registerAdd,

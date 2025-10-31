@@ -28,7 +28,7 @@ const allTimeSlots = generateTimeSlots(7, 19, 15); // Deberia invocar politica p
 
 function TurnoAdmin() {
 const [turnosFiltrados, setTurnosFiltrados] = useState([]); //Definicion del estado
-const { isLoading, isError, error, turnos = [] } = useTurnos();
+const { isLoading, isError, error, turnos = [] ,refetch} = useTurnos();
 const {  pacientes = [] } = usePaciente();
 const {  tipos = [] } = useTiposAnalisis();
 const {  centros = [] } = useCentros();
