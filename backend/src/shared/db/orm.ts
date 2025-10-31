@@ -5,7 +5,7 @@ import "dotenv/config";
 import fs from 'fs';
 
 const getCACertificate = () => {
-  const certPath = process.env.TIDB_CA_CERTIFICATE || '/isrgrootx1.pem';  
+  const certPath = process.env.TIDB_CA_CERTIFICATE || '/etc/secrets/isrgrootx1.pem';  
   try {
     const certContent = fs.readFileSync(certPath, 'utf8');
     console.log(`Certificado cargado: ${certContent.length} caracteres`);
