@@ -42,3 +42,9 @@
 | 35  | Middleware para JWT en las peticiones                                                | Completo  | Backend    | Santi    | 16-10-25 |
 | 36  | Cambiar location.reloads por refetch                                                 | Completo  | Frontend   | Santi    | 16-10-25 |
 | 37  | Paginar las tablas o invertir los cruds                                              | Completo  | Frontend   | Santi    | 16-10-25 |
+
+Hay q combinar las dobles consultas del front a un solo endpoint de backend que haga ambos put y se asegure asi que si falla una operación se haga el rollback -- modify en AuthProvider x ej.
+
+Descomponer las tabs de admin en componentes
+
+Console errors?

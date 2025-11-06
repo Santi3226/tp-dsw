@@ -26,7 +26,6 @@ const addLocalidad = async (data) => {
   };
   try {
     const response = await axiosInstance.post("/localidad", localidadData);
-    console.log(response);
     alert("Localidad n°:" + response.data.data.id + " creada correctamente");
   } catch (error) {
     console.error("Error al crear los datos:", error);

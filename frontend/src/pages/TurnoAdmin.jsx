@@ -112,7 +112,6 @@ try {
   const response = await axiosInstance.get("paciente/"+data.paciente);
   const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
   data.email = email.data.data.email;
-  console.log("Datos del formulario:", data);
   await addTurnos(data);
   refetch(); 
 } 
@@ -123,7 +122,6 @@ catch (error) {
 
 const onSubmitFilter = async (data) => {
   try {
-    console.log(data);
     const response = await getTurnosQuery(data); //Filtrado condicional
     setTurnosFiltrados(response || []); 
   } catch (error) {

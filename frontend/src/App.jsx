@@ -45,16 +45,15 @@ function App() {
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
-                
                 <Route path="/paciente/:tab" element={
-                  <ProtectedRoute>
-                      <Paciente allowedRoles={["user","admin","Paciente"]}/>
+                  <ProtectedRoute allowedRoles={["user","admin","Paciente"]}>
+                      <Paciente />
                   </ProtectedRoute>
                 }></Route>
 
                 <Route path="/turno/:tab" element={
-                  <ProtectedRoute>
-                      <Turno allowedRoles={["user","admin","Paciente"]}/>
+                  <ProtectedRoute allowedRoles={["user","admin","Paciente"]}>
+                      <Turno />
                   </ProtectedRoute>
                 }></Route>
 

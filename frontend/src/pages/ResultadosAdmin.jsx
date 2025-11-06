@@ -31,7 +31,6 @@ function ResultadosAdmin() {
 
   const onSubmitAdd = async (data) => {
     try {
-      console.log('Datos a enviar:', data);
       await addResultados(data);
       data.estado = "Resultado";
       await modifyTurnos(data);
