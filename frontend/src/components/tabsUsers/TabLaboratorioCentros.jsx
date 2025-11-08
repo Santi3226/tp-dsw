@@ -7,7 +7,7 @@ const TabLaboratorioCentros = () => {
       <h2 className='titulo'>Nuestras Instalaciones</h2>
       <div className="instalaciones-content">
         <div className='divFoto'>
-          <img className='foto' src="/frente-1.jpg" alt="centro1" />
+          <img className='foto' src="/frente-1.jpg" alt="Imagen de un Centro de Atencion" />
         </div>
         <div className='columna'>
           Descubre nuestros modernos centros médicos equipados con la última tecnología 

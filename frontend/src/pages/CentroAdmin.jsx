@@ -1,16 +1,18 @@
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import {useCentros, deleteCentros, addCentros, modifyCentros} from "../hooks/useCentros";
+import "../pages/Admin.css";
+import { useLocalidad } from "../hooks/useLocalidad";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import {useCentros, deleteCentros, addCentros, modifyCentros} from "../hooks/useCentros";
-import "./TurnoAdmin.css";
-import { useLocalidad } from "../hooks/useLocalidad";
+import TabCentroModificar from '../components/tabsAdmins/centro/TabCentroModificar';
+import TabCentroAgregar from '../components/tabsAdmins/centro/TabCentroAgregar';
+import TabCentroEliminar from '../components/tabsAdmins/centro/TabCentroEliminar';
 
 function CentroAdmin() {
 
 const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd } } = useForm({ mode: "onBlur" });
 const { register: registerModify, handleSubmit: handleSubmitModify, formState: { errors: errorsModify, isSubmitting: isSubmittingModify } } = useForm({ mode: "onBlur" });
 const { register: registerDelete, handleSubmit: handleSubmitDelete, formState: { errors: errorsDelete, isSubmitting: isSubmittingDelete } } = useForm({ mode: "onBlur" });
-const { register: registerFilter, handleSubmit: handleSubmitFilter, formState: { errors: errorsFilter, isSubmitting: isSubmittingFilter } } = useForm({ mode: "onBlur" });
 
 const { isLoading, isError, error, centros = [], refetch } = useCentros();  
 const {localidades = []} = useLocalidad();
@@ -75,170 +77,35 @@ catch (error) {
       style={{marginTop:"30px"}}
     >
       <Tab eventKey="modificar" title="Modificar">
-          <h2 className='titulo'>Modificar los datos del Centro</h2>
-          <form
-          className="login-formReg"
-          onSubmit={handleSubmitModify(onSubmitModify)}
-          noValidate
-        >
-        <div className="form-group">
-        <label htmlFor="text">Centro</label>
-        <select
-          id="id"
-          {...registerModify("id", {required:"Id requerido"})}
-          className="form-input"
-        >
-        <option value="">-</option>
-        {centros.map((p, index) => (
-        <option key={index} value={p.id}>
-          {p.id} - {p.nombre} - {p.localidad?.denominacion} - {p.domicilio}
-        </option>
-        ))}
-        </select>
-        {errorsModify.id && (
-          <div className="error-message">{errorsModify.id.message}</div>
-        )}
-      </div>
-         <div className="form-group" id="dos">
-          <label htmlFor="text">Nombre</label>
-          <input
-              type="text"
-              id="nombre"
-              {...registerModify("nombre")}
-              className="form-input"
-            />
-            {errorsModify.nombre && (
-              <div className="error-message">{errorsModify.nombre.message}</div>
-            )}
-            </div>
-
-            <div className="form-group" id="tres">
-          <label htmlFor="text">Domicilio</label>
-          <input
-              type="text"
-              id="domicilio"
-              {...registerModify("domicilio")}
-              className="form-input"
-            />
-            {errorsModify.domicilio && (
-              <div className="error-message">{errorsModify.domicilio.message}</div>
-            )}
-            </div>
-
-
-          <div className="form-group" style={{gridColumn: "2", gridRow : "2"}} id="tres">
-            <label htmlFor="text">Localidad</label>
-            <select
-              id="localidad"
-              {...registerModify("localidad", {
-              })}
-              className="form-input"
-            >
-              <option value="">-</option>
-              {localidades.map((p, index) => (
-                <option key={index} value={p.id}>
-                  {p.id + " - " + p.denominacion}
-                </option>
-              ))}
-            </select>
-            {errorsModify.localidad && (
-              <div className="error-message">{errorsModify.localidad.message}</div>
-            )}
-          </div>
-          <button type="submit" className="login-btn" disabled={isSubmittingModify} style={{gridColumn: "2", gridRow : "3"}}>
-            {isSubmittingModify ? "Un momento..." : "Registrar"}
-          </button>
-        </form>
+        <TabCentroModificar
+          registerModify={registerModify}
+          handleSubmitModify={handleSubmitModify}
+          errorsModify={errorsModify}
+          isSubmittingModify={isSubmittingModify}
+          centros={centros}
+          localidades={localidades}
+          onSubmitModify={onSubmitModify}
+        />
       </Tab>
       <Tab eventKey="agregar" title="Agregar">
-         <h2 className='titulo'>Registrar Centro</h2>
-        <form
-          encType="multipart/form-data"
-          className="login-formReg"
-          onSubmit={handleSubmitAdd(onSubmitAdd)}
-          noValidate
-        >
-          <div className="form-group" id="dos">
-          <label htmlFor="text">Nombre</label>
-          <input
-              type="text"
-              id="nombre"
-              {...registerAdd("nombre")}
-              className="form-input"
-            />
-            {errorsAdd.nombre && (
-              <div className="error-message">{errorsAdd.nombre.message}</div>
-            )}
-            </div>
-
-            <div className="form-group" id="tres">
-          <label htmlFor="text">Domicilio</label>
-          <input
-              type="text"
-              id="domicilio"
-              {...registerAdd("domicilio")}
-              className="form-input"
-            />
-            {errorsAdd.domicilio && (
-              <div className="error-message">{errorsAdd.domicilio.message}</div>
-            )}
-            </div>
-
-
-          <div className="form-group" style={{gridColumn: "1", gridRow : "2"}} id="tres">
-            <label htmlFor="text">Localidad</label>
-            <select
-              id="localidad"
-              {...registerAdd("localidad", {
-              })}
-              className="form-input"
-            >
-              <option value="">-</option>
-              {localidades.map((p, index) => (
-                <option key={index} value={p.id}>
-                  {p.id + " - " + p.denominacion}
-                </option>
-              ))}
-            </select>
-            {errorsAdd.localidad && (
-              <div className="error-message">{errorsAdd.localidad.message}</div>
-            )}
-          </div>
-          <button id="turno" type="submit" className="login-btn" disabled={isSubmittingAdd} style={{gridColumn: "2", gridRow : "2"}}>
-            {isSubmittingAdd ? "Un momento..." : "Registrar"}
-          </button>
-        </form>
+        <TabCentroAgregar
+          registerAdd={registerAdd}
+          handleSubmitAdd={handleSubmitAdd}
+          errorsAdd={errorsAdd}
+          isSubmittingAdd={isSubmittingAdd}
+          localidades={localidades}
+          onSubmitAdd={onSubmitAdd}
+        />
       </Tab>
       <Tab eventKey="eliminar" title="Eliminar">
-        <h2 className='titulo'>Eliminar un Centro</h2>
-        <form
-        className="login-formReg"
-        onSubmit={handleSubmitDelete(onSubmitDelete)}
-        noValidate
-      >
-      <div className="form-group">
-        <label htmlFor="text">Centro</label>
-        <select
-          id="id"
-          {...registerDelete("id", {required:"Id requerido"})}
-          className="form-input"
-        >
-        <option value="">-</option>
-        {centros.map((p, index) => (
-        <option key={index} value={p.id}>
-          {p.id} - {p.nombre} - {p.localidad?.denominacion} - {p.domicilio}
-        </option>
-        ))}
-        </select>
-        {errorsDelete.id && (
-          <div className="error-message">{errorsDelete.id.message}</div>
-        )}
-      </div>
-
-      <button id="borrar" type="submit" className="login-btn" disabled={isSubmittingDelete}>
-        {isSubmittingDelete ? "Un momento..." : "Eliminar"}
-      </button>
-      </form>
+        <TabCentroEliminar
+          registerDelete={registerDelete}
+          handleSubmitDelete={handleSubmitDelete}
+          errorsDelete={errorsDelete}
+          isSubmittingDelete={isSubmittingDelete}
+          centros={centros}
+          onSubmitDelete={onSubmitDelete}
+        />
       </Tab>
     </Tabs>
       <div style={pageStyles.grid}>
@@ -277,7 +144,7 @@ catch (error) {
             </table>
     )}
     </div>
-     
+    
     
     </div>
   );

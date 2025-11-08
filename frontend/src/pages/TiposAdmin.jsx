@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import "./TurnoAdmin.css";
+import "./Admin.css";
 import { addTipos, deleteTipos, modifyTipos, useTiposAnalisis } from "../hooks/useTiposAnalisis";
 import Tabs from "react-bootstrap/esm/Tabs";
 import { Tab } from "bootstrap";

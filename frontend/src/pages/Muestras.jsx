@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, } from "../hooks/useTurnos.js";
-import "./TurnoAdmin.css";
+import "./Admin.css";
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import "./TurnoAdmin.css";
+import "./Admin.css";
 import {usePolitica, modifyPoliticas} from "../hooks/usePolitica";
 
 function PoliticaAdmin() {

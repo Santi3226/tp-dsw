@@ -13,6 +13,7 @@ const getDatos = async () => {
 const addResultados = async (data) => {
   for (const i in data.resultados) {
     let resultadoData = {
+      estado: data.estado,
       turno: data.id,
       parametroAnalisis: i === '' ? undefined : i,
       valor: data.resultados[i] === '' ? undefined : data.resultados[i],
