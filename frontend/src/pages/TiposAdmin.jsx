@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
 import "./Admin.css";
 import { addTipos, deleteTipos, modifyTipos, useTiposAnalisis } from "../hooks/useTiposAnalisis";
-import Tabs from "react-bootstrap/esm/Tabs";
-import { Tab } from "bootstrap";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
+import TabTipoModificar from "../components/tabsAdmins/Tipo/TabTipoModificar";
+import TabTipoAgregar from "../components/tabsAdmins/Tipo/TabTipoAgregar";
+import TabTipoEliminar from "../components/tabsAdmins/Tipo/TabTipoEliminar";
 import { useEffect, useState } from "react";
 import axiosInstance from "../helpers/api";
 
@@ -96,181 +99,32 @@ const { isLoading, isError, error, tipos = [] , refetch } = useTiposAnalisis();
       style={{marginTop:"30px"}}
     >
       <Tab eventKey="modificar" title="Modificar">
-          <h2 className='titulo'>Modificar los tipos</h2>
-          <form
-          className="login-formReg"
-          onSubmit={handleSubmitModify(onSubmitModify)}
-          noValidate
-        >
-        <div className="form-group" id="uno">
-        <label htmlFor="text">Tipo de Analisis</label>
-        <select
-          id="id"
-          
-          {...registerModify("id", {
-            required:"Tipo de Analisis requerido",
-            pattern: {
-            },
-          })}
-          className="form-input"
-        >
-        <option value="">-</option>
-        {tipos.map((ta, index) => (
-        <option key={index} value={ta.id}>
-          {ta.id} - {ta.nombre}
-        </option>
-              ))}
-
-        </select> 
-        {errorsModify.id && (
-          <div className="error-message">{errorsModify.id.message}</div>
-        )}
-        </div>
-
-          <div className="form-group" id="dos">
-            <label htmlFor="text">Nombre</label>
-            <input
-              type="text"
-              id="nombre"
-              {...registerModify("nombre")}
-              className="form-input"
-            />
-            {errorsModify.nombre && (
-              <div className="error-message">{errorsModify.nombre.message}</div>
-            )}
-          </div>
-
-          <div className="form-group" id="tres">
-            <label htmlFor="text">Importe</label>
-            <input
-              type="text"
-              id="importe"
-              {...registerModify("importe")}
-              className="form-input"
-            />
-            {errorsModify.importe && (
-              <div className="error-message">{errorsModify.importe.message}</div>
-            )}
-          </div>
-          <div className="form-group" id="cuatro">
-          <label htmlFor="text">Nro. de Plantilla</label>
-          <select
-              id="plantillaAnalisis"
-              
-              {...registerModify("plantillaAnalisis")}
-              className="form-input"
-            >
-            <option value="">-</option>
-            {plantillaAnalisis.map((pa, index) => (
-            <option key={index} value={pa.id}>
-              {pa.id}
-            </option>
-            ))}
-
-            </select> 
-            {errorsModify.plantillaAnalisis && (
-              <div className="error-message">{errorsModify.plantillaAnalisis.message}</div>
-            )}
-            </div>
-
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingModify}>
-            {isSubmittingModify ? "Un momento..." : "Modificar"}
-          </button>
-        </form>
+        <TabTipoModificar
+          registerModify={registerModify}
+          handleSubmitModify={handleSubmitModify(onSubmitModify)}
+          errorsModify={errorsModify}
+          isSubmittingModify={isSubmittingModify}
+          tipos={tipos}
+          plantillaAnalisis={plantillaAnalisis}
+        />
       </Tab>
       <Tab eventKey="agregar" title="Agregar">
-          <h2 className='titulo'>Agregar un tipo</h2>
-          <form
-          className="login-formReg"
-          onSubmit={handleSubmitAdd(onSubmitAdd)}
-          noValidate
-        >
-          <div className="form-group" id="uno">
-            <label htmlFor="text">Nombre</label>
-            <input
-              type="text"
-              id="nombreA"
-              {...registerAdd("nombre", {
-                required:"Nombre requerido",
-              })}
-              className="form-input"
-            />
-            {errorsAdd.nombre && (
-              <div className="error-message">{errorsAdd.nombre.message}</div>
-            )}
-          </div>
-
-          <div className="form-group" id="dos">
-            <label htmlFor="text">Importe</label>
-            <input
-              type="text"
-              id="importe"
-              {...registerAdd("importe", {
-                required:"Importe requerido",
-              })}
-              className="form-input"
-            />
-            {errorsAdd.importe && (
-              <div className="error-message">{errorsAdd.importe.message}</div>
-            )}
-          </div>
-          <div className="form-group" id="tres">
-          <label htmlFor="text">Nro. de Plantilla</label>
-          <select
-              id="plantillaAnalisis"
-              
-              {...registerAdd("plantillaAnalisis")}
-              className="form-input"
-            >
-            <option value="">-</option>
-            {plantillaAnalisis.map((pa, index) => (
-            <option key={index} value={pa.id}>
-              {pa.id} - {pa.hsAyuno} - {pa.tiempoPrevisto} dias - {new Date(pa.fechaDesde).toLocaleDateString()}
-            </option>
-            ))}
-
-            </select> 
-            {errorsAdd.plantillaAnalisis && (
-              <div className="error-message">{errorsAdd.plantillaAnalisis.message}</div>
-            )}
-            </div>
-
-          <button id="login" type="submit" className="login-btn" disabled={isSubmittingAdd}>
-            {isSubmittingAdd ? "Un momento..." : "Agregar"}
-          </button>
-        </form>
+        <TabTipoAgregar
+          registerAdd={registerAdd}
+          handleSubmitAdd={handleSubmitAdd(onSubmitAdd)}
+          errorsAdd={errorsAdd}
+          isSubmittingAdd={isSubmittingAdd}
+          plantillaAnalisis={plantillaAnalisis}
+        />
       </Tab>
       <Tab eventKey="eliminar" title="Eliminar">
-        <h2 className='titulo'>Eliminar un tipo</h2>
-        <form
-        className="login-formReg"
-        onSubmit={handleSubmitDelete(onSubmitDelete)}
-        noValidate
-      >
-      <div className="form-group">
-        <label htmlFor="text">Tipo</label>
-        <select
-          id="id"
-          {...registerDelete("id", {required:"Id requerido"})}
-          className="form-input"
-        >
-        <option value="">-</option>
-        {tipos.map((p, index) => (
-        <option key={index} value={p.id}>
-          {p.id} - {p.nombre}
-        </option>
-        ))}
-
-        </select>
-        {errorsDelete.tipoAnalisis && (
-          <div className="error-message">{errorsDelete.tipoAnalisis.message}</div>
-        )}
-      </div>
-
-      <button id="borrar" type="submit" className="login-btn" disabled={isSubmittingDelete}>
-        {isSubmittingDelete ? "Un momento..." : "Eliminar"}
-      </button>
-      </form>
+        <TabTipoEliminar
+          registerDelete={registerDelete}
+          handleSubmitDelete={handleSubmitDelete(onSubmitDelete)}
+          errorsDelete={errorsDelete}
+          isSubmittingDelete={isSubmittingDelete}
+          tipos={tipos}
+        />
       </Tab>
     </Tabs>
       <div style={pageStyles.grid}>

@@ -115,6 +115,7 @@ try {
 	data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
 	const response = await axiosInstance.get("paciente/"+data.paciente);
 	const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
+  //No hace falta separar pq si falla el get teoricamente no llega a esta línea
 	data.email = email.data.data.email;
 	await addTurnos(data);
 	refetch(); 
