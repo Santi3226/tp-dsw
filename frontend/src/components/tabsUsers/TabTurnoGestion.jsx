@@ -1,6 +1,75 @@
-import React from 'react';
+import { useForm, useWatch } from "react-hook-form";
+import { useAuth } from "../../hooks/useAuth.js";
+import '../../pages/Register.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../Tab.css';
+import { useEffect, useState } from 'react';
+import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../../hooks/useTurnos";
 
-const TabTurnoGestion = ({ turnosFiltradosGestion = [], onEliminarClick }) => {
+const TabTurnoGestion = () => {
+  const { user } = useAuth();
+  const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { errors: errorsAdd, isSubmitting: isSubmittingAdd }, control } = useForm({ mode: "onBlur" });
+  const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
+  const [showModal, setShowModal] = useState(false);
+  const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
+  const [turnosPaciente, setTurnosPaciente] = useState([]);
+  const [turnosFiltradosGestion, setTurnosFiltradosGestion] = useState([]);
+  const [turnosFiltradosResultados, setTurnosFiltradosResultados] = useState([]);
+
+  
+  const handleCerrarModal = () => {
+    setShowModal(false);
+    setTurnoAEliminarId(null);
+  };
+
+  const handleConfirmarEliminacion = async () => {
+    const data = {
+      id: turnoAEliminarId,
+      estado: "Anulado",
+    };
+    await modifyTurnos(data);
+    refetch();
+    handleCerrarModal();
+  };
+
+  const handleEliminarClick = (id) => {
+    setTurnoAEliminarId(id);
+    setShowModal(true);
+  };
+
+  useEffect(() => {
+    if (Array.isArray(turnos)) {
+      setTurnosPaciente(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
+    }
+  else if (!isLoading) {
+      setTurnosPaciente([]);
+    }
+  }, [turnos]); // Depende de turnos e isLoading
+
+// Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
+useEffect(() => {
+  if (turnosPaciente.length > 0) 
+    {
+    const turnosGestion = turnosPaciente.filter(
+      turno => (turno.estado === "Pendiente" || turno.estado === "Confirmado") 
+      && turno.paciente.id === user.paciente.id
+    );
+    setTurnosFiltradosGestion(turnosGestion);
+
+    const turnosResultados = turnosPaciente.filter(
+      turno => turno.estado === "Resultado"
+      && turno.paciente.id === user.paciente.id
+    );
+
+    setTurnosFiltradosResultados(turnosResultados);
+  }
+  if (!Array.isArray(turnosPaciente) || turnosPaciente.length === 0) {
+    setTurnosFiltradosGestion([]);
+    setTurnosFiltradosResultados([]);
+  }
+  
+}, [turnosPaciente]);
+
   return (
     <>
       <h2 className='titulo'>Mis turnos</h2>
@@ -35,7 +104,7 @@ const TabTurnoGestion = ({ turnosFiltradosGestion = [], onEliminarClick }) => {
                     <td>{turno.recibeMail ? "Sí" : "No"}</td>
                     <td>
                       <button
-                        onClick={() => onEliminarClick(turno.id)}
+                        onClick={() => handleEliminarClick(turno.id)}
                         style={{
                           background: 'none',
                           border: 'none',
@@ -57,6 +126,41 @@ const TabTurnoGestion = ({ turnosFiltradosGestion = [], onEliminarClick }) => {
       ) : (
         <p style={{ marginTop: "30px" }}>No tienes turnos registrados.</p>
       )}
+       {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              backgroundColor: 'white',
+              padding: '20px',
+              borderRadius: '5px',
+              textAlign: 'center',
+              minWidth: '300px'
+            }}>
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Confirmar Cancelación</h4>
+              <p>
+                ¿Estás seguro de que quieres cancelar este turno?</p>
+              <div style={{ marginTop: '20px' }}>
+                <button onClick={handleCerrarModal} className='login-btn' style={{ backgroundColor: 'red' }}>
+                  Volver
+                </button>
+                 <button onClick={handleConfirmarEliminacion} className='login-btn' style={{ marginLeft: '10px' }}>
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </>
   );
 };

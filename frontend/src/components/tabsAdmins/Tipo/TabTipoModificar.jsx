@@ -26,7 +26,14 @@ const TabTipoModificar = ({ registerModify, handleSubmitModify, errorsModify, is
 
         <div className="form-group" id="tres">
           <label htmlFor="text">Importe</label>
-          <input type="text" id="importe" {...registerModify('importe')} className="form-input" />
+          <input type="text" id="importe" {...registerModify('importe',
+            { validate: (value) => {
+                if (value !== undefined && (isNaN(value) || parseFloat(value) <= 0)) {
+                  return 'Importe inválido';
+                }
+                return true;
+              },
+          })} className="form-input" />
           {errorsModify.importe && <div className="error-message">{errorsModify.importe.message}</div>}
         </div>
 

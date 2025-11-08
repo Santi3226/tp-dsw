@@ -186,7 +186,7 @@ async function update(req: Request, res: Response) {
   if ((req as any).user?.role !== 'admin') {
     return res.status(403).json({ error: 'Prohibido' });
   }
-  
+  await em.begin();
   try {
     const idUser = Number.parseInt(req.params.id);
     const usuario = await em.findOneOrFail(
@@ -207,7 +207,7 @@ async function update(req: Request, res: Response) {
     await em.flush();
     await em.refresh(usuario);
     await em.refresh(paciente);
-    
+
     const payload = {
       id: usuario.id,
       email: usuario.email,
@@ -216,6 +216,7 @@ async function update(req: Request, res: Response) {
     };
     const token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
     
+    await em.commit();
     res.status(200).json({ 
       message: 'Usuario actualizado exitosamente', 
       data: usuario,
@@ -224,6 +225,7 @@ async function update(req: Request, res: Response) {
   } catch (error: any) {
     // Descarta todos los cambios pendientes
     em.clear();
+    await em.rollback();
     res.status(500).json({ 
       message: 'Error updating usuario', 
       error: error.message 

@@ -64,33 +64,12 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
       console.error("Fallo al registrar:", error);
     }
   };
-
-  const handleEliminarClick = (id) => {
-    setTurnoAEliminarId(id);
-    setShowModal(true);
-  };
-
-  const handleResultadosClick = (id) => {
-    setResultadosId(id);
-    setShowModal(true);
-  };
-
   const handleCerrarModal = () => {
     setShowModal(false);
     setTurnoAEliminarId(null);
     setResultadosId(null);
   };
-
-  const handleConfirmarEliminacion = async () => {
-    const data = {
-      id: turnoAEliminarId,
-      estado: "Anulado",
-    };
-    await modifyTurnos(data);
-    refetch();
-    handleCerrarModal();
-  };
-
+  
   useEffect(() => {
      if (!fechaHoraReserva) return; // Early return si no hay fecha
      
@@ -126,7 +105,7 @@ useEffect(() => {
   else if (!isLoading) {
       setTurnosPaciente([]);
     }
-  }, [turnos, isLoading]); // Depende de turnos e isLoading
+  }, [turnos]); // Depende de turnos e isLoading
 
 // Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
 useEffect(() => {
@@ -163,13 +142,13 @@ useEffect(() => {
       justify
     >
       <Tab eventKey="gestiondeturnos" title="Gestión de Turnos">
-        <TabTurnoGestion turnosFiltradosGestion={turnosFiltradosGestion} onEliminarClick={handleEliminarClick} />
+        <TabTurnoGestion />
       </Tab>
       <Tab eventKey="registrarturno" title="Registrar Turno">
         <TabTurnoRegistrar tipos={tipos} centros={centros} registerAdd={registerAdd} handleSubmitAdd={handleSubmitAdd} onSubmitAdd={onSubmitAdd} errorsAdd={errorsAdd} isSubmittingAdd={isSubmittingAdd} horariosDisponibles={horariosDisponibles} watchFecha={fechaHoraReserva} />
       </Tab>
       <Tab eventKey="resultados" title="Resultados">
-        <TabTurnoResultados turnosFiltradosResultados={turnosFiltradosResultados} onResultadosClick={handleResultadosClick} />
+        <TabTurnoResultados />
       </Tab>
     </Tabs>
   );

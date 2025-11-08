@@ -12,19 +12,6 @@ import TabLaboratorioPoliticas from './tabsUsers/TabLaboratorioPoliticas';
 
 // Componente TabBar principal
 function TabBar(props) {
-  const [politicas, setPoliticas] = useState([]);
-
-  useEffect(() => {
-    const getDatos = async () => {
-      try {
-        const politicas = await axiosInstance.get('/politica');
-        setPoliticas(politicas.data.data);
-      } catch (error) {
-        console.error("Error al obtener las políticas:", error);
-      }
-    };
-    getDatos();
-  }, []);
 
   const { inicio } = props;
 
@@ -37,7 +24,7 @@ function TabBar(props) {
         <TabLaboratorioPresupuesto />
       </Tab>
       <Tab eventKey="politicas" title="Políticas">
-        <TabLaboratorioPoliticas politicas={politicas} />
+        <TabLaboratorioPoliticas />
       </Tab>
     </Tabs>
   );

@@ -24,9 +24,9 @@ const TabPacienteAgregar = ({ registerAdd, handleSubmitAdd, errorsAdd, isSubmitt
         </div>
 
         <div className="form-group">
-          <label htmlFor="text">Direccion</label>
-          <input type="text" id="direccion" {...registerAdd('direccion', { required: 'Direccion requerida' })} className="form-input" />
-          {errorsAdd.direccion && <div className="error-message">{errorsAdd.direccion.message}</div>}
+          <label htmlFor="text">Domicilio</label>
+          <input type="text" id="domicilio" {...registerAdd('domicilio', { required: 'Domicilio requerido' })} className="form-input" />
+          {errorsAdd.domicilio && <div className="error-message">{errorsAdd.domicilio.message}</div>}
         </div>
 
         <div className="form-group">

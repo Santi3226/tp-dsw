@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePolitica } from '../../hooks/usePolitica.js';
+import axiosInstance from '../../helpers/api.js';
 
-const TabLaboratorioPoliticas = ({ politicas = [] }) => {
+const TabLaboratorioPoliticas = () => {
+const [politicas, setPoliticas] = useState([]);
+useEffect(() => {
+const getDatos = async () => {
+  try {
+    const politicas = await axiosInstance.get('/politica');
+    setPoliticas(politicas.data.data);
+  } catch (error) {
+    console.error("Error al obtener las políticas:", error);
+  }
+};
+getDatos();
+}, []);
+
   return (
     <>
       <h2 className='titulo'>Políticas de la Empresa</h2>

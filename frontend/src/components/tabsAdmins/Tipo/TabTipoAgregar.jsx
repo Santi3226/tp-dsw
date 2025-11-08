@@ -13,7 +13,14 @@ const TabTipoAgregar = ({ registerAdd, handleSubmitAdd, errorsAdd, isSubmittingA
 
         <div className="form-group" id="dos">
           <label htmlFor="text">Importe</label>
-          <input type="text" id="importe" {...registerAdd('importe', { required: 'Importe requerido' })} className="form-input" />
+          <input type="text" id="importe" {...registerAdd('importe', { required: 'Importe requerido',
+            validate: (value) => {
+                if (isNaN(value) || parseFloat(value) <= 0) {
+                  return 'Importe inválido';
+                }
+                return true;
+              },
+           })} className="form-input" />
           {errorsAdd.importe && <div className="error-message">{errorsAdd.importe.message}</div>}
         </div>
 

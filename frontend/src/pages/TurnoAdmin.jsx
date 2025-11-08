@@ -162,6 +162,7 @@ useEffect(() => {
 
 	return (
 		<div>
+			<h1 style={pageStyles.header}>Nuestros Turnos</h1>
 			<Tabs
 			defaultActiveKey="filtrar"
 			id="justify-tab-example"
@@ -215,7 +216,110 @@ useEffect(() => {
 				/>
 			</Tab>
 		</Tabs>
-		</div>
+		      <div style={pageStyles.grid}>
+      {turnosFiltrados.length === 0 ? (
+        <div style={pageStyles.containerCentered}>
+          <p style={pageStyles.message}>No se encontraron turnos.</p>
+          <button id="login" type="button" className="login-btn" onClick={() => window.location.reload()}>
+            Limpiar Filtros
+          </button>
+        </div>
+      ) : (
+        <table className="table responsive-table">
+          <thead>
+            <tr>
+              <th>Numero de Turno</th>
+              <th>Paciente</th>
+                  <th>Tipo de Analisis</th>
+                  <th>Centro de Atencion</th>
+                  <th>Fecha y Hora Reserva</th>
+                  <th>Fecha y Hora Extraccion</th>
+                  <th>Estado</th>
+                  <th>Observación</th>
+                  <th>Recibe Mail</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody>
+              {turnosFiltrados.map((turno) => (
+                <tr key={turno.id}>
+                  <td>{turno.id}</td>
+                  <td>{turno.paciente?.apellido + ", " + turno.paciente?.nombre}</td>
+                  <td>{turno.tipoAnalisis?.nombre}</td>
+                  <td>{turno.centroAtencion?.nombre}</td>
+                  <td>{new Date(turno.fechaHoraReserva).toLocaleString()}</td>
+                  <td>{turno.fechaHoraExtraccion && new Date(turno.fechaHoraExtraccion).toLocaleString() !== "31/12/1969, 09:00:00" ? new Date(turno.fechaHoraExtraccion).toLocaleString() : "-"}</td>
+                  <td>{turno.estado}</td>
+                  <td>{turno.observacion === "" ? "-" : turno.observacion}</td>
+                  <td>{turno.recibeMail ? "Si" : "No"}</td>
+                  {<td><button style={{background:"none", color:"blue", fontStyle:"underline"}} onClick={() => handleDetalleClick(turno.id)}>Ver Detalle</button></td>}
+                </tr>
+              ))}
+            </tbody>
+            </table>
+          )}
+      </div>
+      {showModal && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000,
+          }}>
+            <div className="detalle-modal">
+              <h4 style={{fontWeight: 'bold', fontFamily: 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif'}}>
+                Detalles del turno</h4>
+              <div style={{ marginTop: '20px' }}>
+                {turnoDetalleId && (() => {
+                const turno = turnosFiltrados.find((t) => t.id === Number(turnoDetalleId));
+                if (!turno) return null;
+                return (
+                  <div className="turno-detalle-grid">
+                    <div className="form-group">
+                      <label>
+                        Paciente: {turno.paciente?.nombre}, {turno.paciente?.apellido}
+                      </label>
+                      <label>
+                        DNI: {turno.paciente?.dni} 
+                      </label>
+                      <label>
+                        Fecha Nac: {turno.paciente?.fechaNacimiento ? new Date(turno.paciente.fechaNacimiento).toLocaleDateString() : "-"}
+                      </label>
+                      <label>
+                        Dirección: {turno.paciente?.direccion}
+                      </label>
+                    </div>
+                    <div className="form-group">
+                      <label>
+                      Tel: {turno.paciente?.telefono}
+                      </label>
+                      <label>
+                        Tipo de Análisis: {turno.tipoAnalisis?.nombre} 
+                      </label>
+                      <label>
+                        Importe: {turno.tipoAnalisis?.importe}
+                      </label>
+                      <label>
+                      Plantilla: {turno.tipoAnalisis?.plantillaAnalisis}
+                      </label>
+                    </div>
+                  </div>
+                );
+              })()}
+                <button onClick={() => setShowModal(false)} className='login-btn' style={{ backgroundColor: 'red', marginTop: '20px' }}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+    </div>
 	);
 }
 
