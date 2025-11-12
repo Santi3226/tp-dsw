@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       setUser(getUser(response.data.token));
       setWasAuthenticated(true);
       alert("Usuario creado Correctamente!");
-      await login(userPatientData);
+      
     } catch (error) {
         console.error("Error en AuthProvider:", error);
         if (error.response && error.response.data && error.response.data.message) {
@@ -99,26 +99,20 @@ export const AuthProvider = ({ children }) => {
     setErrorLogin(null);
     const usuarioData = 
     {
+    //Usuario data
     id:userData.id,
     email: userData.email,
     contraseña: userData.contraseña,
-    paciente: userData.paciente.id
-    };
-    const pacienteData= 
-    {
-      nombre: userData.paciente.nombre,
-      apellido: userData.paciente.apellido,
-      dni: userData.paciente.dni,
-      telefono: userData.paciente.telefono,
-      direccion: userData.paciente.direccion,
-      fechaNacimiento: userData.paciente.fechaNacimiento
+    paciente: userData.paciente.id,
+    //Paciente data
+    nombre: userData.paciente.nombre,
+    apellido: userData.paciente.apellido,
+    dni: userData.paciente.dni,
+    telefono: userData.paciente.telefono,
+    direccion: userData.paciente.direccion,
+    fechaNacimiento: userData.paciente.fechaNacimiento
     };
     try {
-      const routePaciente = "/paciente/"+usuarioData.paciente;
-      await axiosInstance.put(
-        routePaciente,
-        pacienteData
-      );
       const routeUsuario = "/usuario/"+usuarioData.id;
       const response = await axiosInstance.put(
         routeUsuario,

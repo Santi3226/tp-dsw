@@ -36,7 +36,6 @@ const addPlantillas = async (data) => {
       '/plantillaAnalisis',
       plantillasData
     );
-    console.log(response);
     alert(
       'Plantilla de Analisis n°:' +
         response.data.data.id +

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery, } from "../hooks/useTurnos.js";
-import "./TurnoAdmin.css";
+import "./Admin.css";
 import { useForm, useWatch } from "react-hook-form";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
@@ -53,7 +53,6 @@ const handleMuestrasClick = async (id) => {
   const confirmacion = window.confirm("¿Estás seguro de que deseas registrar la muestra para el turno n° " + id + "?");
   if (confirmacion) {
     const data = { id:id, fechaHoraExtraccion: new Date().toISOString().slice(0, 19), estado: "Completado" };
-    console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     refetch();
   }
@@ -63,7 +62,6 @@ const handleConfirmarClick = async (id) => {
   const confirmacion = window.confirm("¿Estás seguro de que deseas confirmar el turno n° " + id + "?");
   if (confirmacion) {
     const data = { id:id, estado: "Confirmado" };
-    console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     //Abrir nueva pestaña para imprimir etiqueta
     refetch();
@@ -79,7 +77,6 @@ const onSubmitFilter = async (data) => {
     try {
       //Determinar la pestaña activa
       data.estado = activeTab === "muestras" ? "Confirmado" : "Pendiente"; 
-      console.log("Datos para filtrar:", data);
       const response = await getTurnosQuery(data); //Filtrado condicional
       
       if (activeTab === "muestras") {
@@ -95,7 +92,6 @@ const onSubmitFilter = async (data) => {
 const handleConfirmarObservacion = async (observacion) => {
   if (observacion) {
     const data = { id:turnoAObservarId, observacion: observacion };
-    console.log("Datos para modificar el turno:", data);
     await modifyTurnos(data);
     refetch();
   }

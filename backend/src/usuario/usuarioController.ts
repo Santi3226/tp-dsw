@@ -4,6 +4,7 @@ import { orm } from '../shared/db/orm.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import "dotenv/config";
+import { Paciente } from '../paciente/pacienteEntity.js';
 
 const em = orm.em; //EntityManager
 const saltRounds = 10;
@@ -16,7 +17,8 @@ if (!claveJWT) {
 }
 
 function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
-  const { email, contraseña, role, paciente } = req.body;
+  // nombre, apellido, dni, telefono, direccion, fechaNacimiento son agregados para el update, revisar si se puede optimizar
+  const { email, contraseña, role, paciente, nombre, apellido, dni, telefono, direccion, fechaNacimiento } = req.body;
   // Validación: Asegurarse de que la contraseña existe
   try {
     if (contraseña !== undefined) {
@@ -27,12 +29,24 @@ function sanitizeUsuarioInput(req: Request, res: Response, next: NextFunction) {
         contraseña: hash,
         role: role,
         paciente: paciente,
+        nombre: nombre,
+        apellido: apellido,
+        dni: dni,
+        telefono: telefono,
+        direccion: direccion,
+        fechaNacimiento: fechaNacimiento
       };
     } else {
       req.body.sanitizedInput = {
         email: email,
         role: role,
         paciente: paciente,
+        nombre: nombre,
+        apellido: apellido,
+        dni: dni,
+        telefono: telefono,
+        direccion: direccion,
+        fechaNacimiento: fechaNacimiento
       };
     }
     Object.keys(req.body.sanitizedInput).forEach((key) => {
@@ -134,37 +148,88 @@ async function login(req: Request, res: Response) {
 
 async function add(req: Request, res: Response) {
   try {
+
+    const usuarioExistente = await em.findOne(Usuario, { 
+      email: req.body.sanitizedInput.email 
+    }); 
+    if (usuarioExistente) {
+      return res.status(409).json({ 
+        message: 'El email ya está registrado' 
+      });
+    }
     const usuario = em.create(Usuario, req.body.sanitizedInput);
     await em.persistAndFlush(usuario);
-    res
-      .status(201)
-      .json({ message: 'Usuario creado exitosamente', data: usuario });
+    
+    // Agg del token
+    const payload = {
+      id: usuario.id,
+      email: usuario.email,
+      role: usuario.role,
+      paciente: usuario.paciente,
+    };
+    const token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
+    
+    res.status(201).json({ 
+      message: 'Usuario creado exitosamente', 
+      data: usuario,
+      token // Asi no re inicio sesion
+    });
   } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: 'Error creating usuario', error: error.message });
+    res.status(500).json({ 
+      message: 'Error creating usuario', 
+      error: error.message 
+    });
   }
 }
 
 async function update(req: Request, res: Response) {
-   if ((req as any).user?.role !== 'admin') {
+  if ((req as any).user?.role !== 'admin') {
     return res.status(403).json({ error: 'Prohibido' });
   }
+  await em.begin();
   try {
-    const id = Number.parseInt(req.params.id);
-    const usuario = em.getReference(Usuario, id);
-    if(usuario)
-    {
-      em.assign(usuario, req.body.sanitizedInput);
-      await em.flush();
-      res
-        .status(200)
-        .json({ message: 'Usuario actualizado exitosamente', data: usuario });
-    }
+    const idUser = Number.parseInt(req.params.id);
+    const usuario = await em.findOneOrFail(
+      Usuario, 
+      { id: idUser }, 
+      { populate: ['paciente'] }
+    );
+    if (!usuario.paciente) {
+      return res.status(400).json({ 
+        message: 'El usuario no tiene un paciente asociado' 
+      });
+    };
+    const idPaciente = usuario.paciente.id || 0;
+    const paciente = em.getReference(Paciente, idPaciente);
+    em.assign(usuario, req.body.sanitizedInput);
+    em.assign(paciente, req.body.sanitizedInput);
+    
+    await em.flush();
+    await em.refresh(usuario);
+    await em.refresh(paciente);
+
+    const payload = {
+      id: usuario.id,
+      email: usuario.email,
+      role: usuario.role,
+      paciente: usuario.paciente,
+    };
+    const token = jwt.sign(payload, claveJWT!, { expiresIn: '1h' });
+    
+    await em.commit();
+    res.status(200).json({ 
+      message: 'Usuario actualizado exitosamente', 
+      data: usuario,
+      token
+    });
   } catch (error: any) {
-    res
-      .status(500)
-      .json({ message: 'Error updating usuario', error: error.message });
+    // Descarta todos los cambios pendientes
+    em.clear();
+    await em.rollback();
+    res.status(500).json({ 
+      message: 'Error updating usuario', 
+      error: error.message 
+    });
   }
 }
 

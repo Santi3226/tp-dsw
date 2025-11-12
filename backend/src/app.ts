@@ -19,7 +19,7 @@ const app = express();
 app.use(express.json());
 
 //luego de los middleware base
-/* Local para desarrollo
+// Local para desarrollo
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); //Mas adelante cambiar el * por el localhost
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -30,8 +30,8 @@ app.use((req, res, next) => {
         next(); 
     }
 });
-*/
-// Global
+
+/*
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://laboratorio-dsw.netlify.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
         next();
     }
 });
-
+*/
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);

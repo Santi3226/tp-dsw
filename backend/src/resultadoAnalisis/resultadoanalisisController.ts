@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ResultadoAnalisis } from './resultadoanalisisEntity.js';
 import { orm } from '../shared/db/orm.js';
 import { populate } from 'dotenv';
+import { Turno } from '../turno/turnoEntity.js';
 
 const em = orm.em; //EntityManager
 
@@ -15,6 +16,7 @@ function sanitizeResultadoAnalisisInput(
     parametroAnalisis: req.body.parametroAnalisis,
     tipoAnalisis: req.body.tipoAnalisis,
     turno: req.body.turno,
+    estado: req.body.estado
   };
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined)
@@ -66,7 +68,10 @@ async function add(req: Request, res: Response) {
   }
   try {
     const resultado = em.create(ResultadoAnalisis, req.body.sanitizedInput);
-    await em.persistAndFlush(resultado);
+    em.persist(resultado);
+    const turno = em.getReference(Turno, req.body.sanitizedInput.turno);
+    em.assign(turno, req.body.sanitizedInput);
+    await em.flush();
     res
       .status(201)
       .json({ message: 'Resultado creado exitosamente', data: resultado });

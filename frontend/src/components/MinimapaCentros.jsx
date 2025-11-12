@@ -29,7 +29,7 @@ const MapController = ({ selectedCentro }) => {
   return null;
 };
 
-// Servicio de geocodificación optimizado con cache
+// Implementacion del nominatim
 const geocodeAddress = async (domicilio, localidad) => {
   try {
     const query = (`${domicilio} ${localidad} Argentina`);

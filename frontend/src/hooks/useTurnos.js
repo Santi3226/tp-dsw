@@ -12,7 +12,6 @@ const getDatos = async () => {
 };
 
 const addTurnos = async (data) => {
-  console.log('Archivo en Hook:', data.receta);
   const formData = new FormData();
   formData.append('receta', data.receta[0]);
   formData.append('recibeMail', data.recibeMail);

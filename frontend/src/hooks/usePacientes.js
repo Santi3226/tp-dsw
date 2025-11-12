@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../helpers/api';
+import { useState } from 'react';
 
 const getDatos = async () => {
   try {
@@ -63,9 +64,9 @@ const addPaciente = async (data) => {
   } catch (error) {
     console.error('Error en Hook:', error);
     if (error.response && error.response.data && error.response.data.message) {
-      setErrorLogin(error.response.data.message);
+      console.error(error.response.data.message);
     } else {
-      setErrorLogin(
+      console.error(
         'Error de red o del servidor. Por favor, inténtalo de nuevo.'
       );
     }
