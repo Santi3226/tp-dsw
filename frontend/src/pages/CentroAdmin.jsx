@@ -4,9 +4,9 @@ import "../pages/Admin.css";
 import { useLocalidad } from "../hooks/useLocalidad";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import TabCentroModificar from '../components/tabsAdmins/centro/TabCentroModificar';
-import TabCentroAgregar from '../components/tabsAdmins/centro/TabCentroAgregar';
-import TabCentroEliminar from '../components/tabsAdmins/centro/TabCentroEliminar';
+import TabCentroModificar from '../components/tabsAdmins/Centro/TabCentroModificar';
+import TabCentroAgregar from '../components/tabsAdmins/Centro/TabCentroAgregar';
+import TabCentroEliminar from '../components/tabsAdmins/Centro/TabCentroEliminar';
 
 function CentroAdmin() {
 

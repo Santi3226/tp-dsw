@@ -3,9 +3,9 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import "../pages/Admin.css";
 import { useLocalidad, deleteLocalidad, addLocalidad, modifyLocalidad } from "../hooks/useLocalidad";
-import TabLocalidadModificar from "../components/tabsAdmins/localidad/TabLocalidadModificar.jsx";
-import TabLocalidadEliminar from "../components/tabsAdmins/localidad/TabLocalidadEliminar.jsx";
-import TabLocalidadAgregar from "../components/tabsAdmins/localidad/TabLocalidadAgregar.jsx";
+import TabLocalidadModificar from "../components/tabsAdmins/Localidad/TabLocalidadModificar.jsx";
+import TabLocalidadEliminar from "../components/tabsAdmins/Localidad/TabLocalidadEliminar.jsx";
+import TabLocalidadAgregar from "../components/tabsAdmins/Localidad/TabLocalidadAgregar.jsx";
 
 
 function LocalidadAdmin() {
