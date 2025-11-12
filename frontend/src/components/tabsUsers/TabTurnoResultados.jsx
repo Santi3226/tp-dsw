@@ -6,7 +6,6 @@ const TabTurnoResultados = () => {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [resultadosId, setResultadosId] = useState(null);
-  const [turnosPaciente, setTurnosPaciente] = useState([]);
   const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
 
   const turnosFiltradosResultados = useMemo(() => {
@@ -109,13 +108,12 @@ const TabTurnoResultados = () => {
                 Resultados</h4>
                 {resultadosId && (
                   <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: "50px", rowGap: "20px", marginTop: "20px"}}>
-                    {turnosPaciente.find((t) => t.id === Number(resultadosId))
+                    {turnosFiltradosResultados.find((t) => t.id === Number(resultadosId))
                       .resultados.map((resultado) => (
                         <div key={resultado.parametroAnalisis.id} className="form-group">
                           <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>
-                            {resultado.parametroAnalisis.nombre} ({resultado.parametroAnalisis.unidad})
-                          </label>
-                          <label style={{fontWeight:"bold", fontSize:"1.2rem"}}>{resultado.valor}</label>
+                            {resultado.parametroAnalisis.nombre}</label>
+                          <label style={{fontWeight:"bold", fontSize:"1.1rem"}}>Valor: {resultado.valor} {resultado.parametroAnalisis.unidad}</label>
                            <label>Referencia: {resultado.parametroAnalisis.referencia} {resultado.parametroAnalisis.unidad}</label>
                         </div>
                       ))}

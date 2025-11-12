@@ -10,8 +10,8 @@ const Home = () => {
       <div className="hero-section">
         <Carrousel />
         <p></p>
-        <p style={{color:"black",fontWeight:"bold", backgroundColor:"yellow"}}>Aviso! Netlify y Render pueden tumbar el sitio por inactividad, en caso de inactividad prolongada, 
-          puede que el sitio no esté disponible temporalmente (El tiempo de carga de los servicios en teoria es de 40seg)</p>   
+        <p style={{color:"black",fontWeight:"bold", backgroundColor:"yellow"}}>Aviso! Netlify y Render pueden tumbar el sitio por inactividad, en caso de que parezca que fallen los servicios, 
+          puede que el sitio aún esté construyéndose (El tiempo de carga de los servicios en teoría es de 40seg!)</p>   
         <h1>Laboratorio Genérico</h1>
         <p>
           Somos una empresa dedicada al diagnóstico clínico y al desarrollo de soluciones biotecnológicas, 

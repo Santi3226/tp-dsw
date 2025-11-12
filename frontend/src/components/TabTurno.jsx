@@ -8,7 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Tab.css';
 import { useEffect, useState } from 'react';
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../hooks/useTurnos";
-import { usePolitica } from '../hooks/usePolitica.js';
 import { useCentros } from '../hooks/useCentros.js';
 import { useTiposAnalisis } from '../hooks/useTiposAnalisis.js';
 import TabTurnoGestion from './tabsUsers/TabTurnoGestion';
@@ -38,14 +37,11 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
   const {  centros = [] } = useCentros();
   const {  tipos = [] } = useTiposAnalisis();
   const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
-  const { politicas = [] } = usePolitica();
   const [horariosDisponibles, setHorariosDisponibles] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
   const [resultadosId, setResultadosId] = useState(null);
-  const [turnosPaciente, setTurnosPaciente] = useState([]);
-  const [turnosFiltradosGestion, setTurnosFiltradosGestion] = useState([]);
-  const [turnosFiltradosResultados, setTurnosFiltradosResultados] = useState([]);
+
 
   // Utiliza useWatch para observar los cambios en el campo de fecha
   const fechaHoraReserva = useWatch({

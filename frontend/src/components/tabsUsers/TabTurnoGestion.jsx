@@ -12,7 +12,6 @@ const TabTurnoGestion = () => {
   const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
-  const [turnosPaciente, setTurnosPaciente] = useState([]);
   
   const handleCerrarModal = () => {
     setShowModal(false);
