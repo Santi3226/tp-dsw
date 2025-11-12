@@ -98,41 +98,6 @@ const { register: registerAdd, handleSubmit: handleSubmitAdd, formState: { error
      turnosFecha();
   }, [fechaHoraReserva]);
 
-useEffect(() => {
-    if (Array.isArray(turnos)) {
-      setTurnosPaciente(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-    }
-  else if (!isLoading) {
-      setTurnosPaciente([]);
-    }
-  }, [turnos]); // Depende de turnos e isLoading
-
-// Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
-useEffect(() => {
-  if (turnosPaciente.length > 0) 
-    {
-    const turnosGestion = turnosPaciente.filter(
-      turno => (turno.estado === "Pendiente" || turno.estado === "Confirmado") 
-      && turno.paciente.id === user.paciente.id
-    );
-    setTurnosFiltradosGestion(turnosGestion);
-
-    const turnosResultados = turnosPaciente.filter(
-      turno => turno.estado === "Resultado"
-      && turno.paciente.id === user.paciente.id
-    );
-
-    setTurnosFiltradosResultados(turnosResultados);
-  }
-  if (!Array.isArray(turnosPaciente) || turnosPaciente.length === 0) {
-    setTurnosFiltradosGestion([]);
-    setTurnosFiltradosResultados([]);
-  }
-  
-}, [turnosPaciente]);
-
-
-
   const { inicio } = props;
   return (
     <Tabs

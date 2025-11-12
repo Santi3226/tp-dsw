@@ -3,7 +3,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import '../../pages/Register.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Tab.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {useTurnos, deleteTurnos, addTurnos, modifyTurnos, getTurnosQuery} from "../../hooks/useTurnos";
 
 const TabTurnoGestion = () => {
@@ -13,9 +13,6 @@ const TabTurnoGestion = () => {
   const [showModal, setShowModal] = useState(false);
   const [turnoAEliminarId, setTurnoAEliminarId] = useState(null);
   const [turnosPaciente, setTurnosPaciente] = useState([]);
-  const [turnosFiltradosGestion, setTurnosFiltradosGestion] = useState([]);
-  const [turnosFiltradosResultados, setTurnosFiltradosResultados] = useState([]);
-
   
   const handleCerrarModal = () => {
     setShowModal(false);
@@ -37,44 +34,20 @@ const TabTurnoGestion = () => {
     setShowModal(true);
   };
 
-  useEffect(() => {
-    if (Array.isArray(turnos)) {
-      setTurnosPaciente(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-    }
-  else if (!isLoading) {
-      setTurnosPaciente([]);
-    }
-  }, [turnos]); // Depende de turnos e isLoading
-
-// Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
-useEffect(() => {
-  if (turnosPaciente.length > 0) 
-    {
-    const turnosGestion = turnosPaciente.filter(
-      turno => (turno.estado === "Pendiente" || turno.estado === "Confirmado") 
-      && turno.paciente.id === user.paciente.id
+  const turnosFiltradosGestion = useMemo(() => {
+    if (!Array.isArray(turnos) || !user?.paciente?.id) return [];
+    return turnos.filter(
+      (turno) =>
+        (turno.estado === "Pendiente" || turno.estado === "Confirmado") &&
+        turno.paciente?.id === user.paciente.id
     );
-    setTurnosFiltradosGestion(turnosGestion);
-
-    const turnosResultados = turnosPaciente.filter(
-      turno => turno.estado === "Resultado"
-      && turno.paciente.id === user.paciente.id
-    );
-
-    setTurnosFiltradosResultados(turnosResultados);
-  }
-  if (!Array.isArray(turnosPaciente) || turnosPaciente.length === 0) {
-    setTurnosFiltradosGestion([]);
-    setTurnosFiltradosResultados([]);
-  }
-  
-}, [turnosPaciente]);
+  }, [turnos, user?.paciente?.id]);
 
   return (
     <>
       <h2 className='titulo'>Mis turnos</h2>
       {turnosFiltradosGestion.length > 0 ? (
-        <div style={{ marginTop: '20px', overflowX: 'scroll' }}>
+        <div style={{ marginTop: '20px', overflowX: 'scroll'}}>
           <table className="table">
             <thead>
               <tr>

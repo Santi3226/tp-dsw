@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTurnos } from '../../hooks/useTurnos.js';
 import { useAuth } from '../../hooks/useAuth.js';
 
@@ -8,41 +8,16 @@ const TabTurnoResultados = () => {
   const [resultadosId, setResultadosId] = useState(null);
   const [turnosPaciente, setTurnosPaciente] = useState([]);
   const { isLoading, isError, error, turnos = [], refetch } = useTurnos();
-  const [turnosFiltradosGestion, setTurnosFiltradosGestion] = useState([]);
-  const [turnosFiltradosResultados, setTurnosFiltradosResultados] = useState([]);
 
-  useEffect(() => {
-      if (Array.isArray(turnos)) {
-        setTurnosPaciente(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-      }
-    else if (!isLoading) {
-        setTurnosPaciente([]);
-      }
-    }, [turnos]); // Depende de turnos e isLoading
-  
-  // Agrega un nuevo useEffect para filtrar cuando turnosPaciente cambie:
-  useEffect(() => {
-    if (turnosPaciente.length > 0) 
-      {
-      const turnosGestion = turnosPaciente.filter(
-        turno => (turno.estado === "Pendiente" || turno.estado === "Confirmado") 
-        && turno.paciente.id === user.paciente.id
+  const turnosFiltradosResultados = useMemo(() => {
+      if (!Array.isArray(turnos) || !user?.paciente?.id) return [];
+      return turnos.filter(
+        (turno) =>
+          (turno.estado === "Resultado") &&
+          turno.paciente?.id === user.paciente.id
       );
-      setTurnosFiltradosGestion(turnosGestion);
-  
-      const turnosResultados = turnosPaciente.filter(
-        turno => turno.estado === "Resultado"
-        && turno.paciente.id === user.paciente.id
-      );
-  
-      setTurnosFiltradosResultados(turnosResultados);
-    }
-    if (!Array.isArray(turnosPaciente) || turnosPaciente.length === 0) {
-      setTurnosFiltradosGestion([]);
-      setTurnosFiltradosResultados([]);
-    }
-    
-  }, [turnosPaciente]);
+    }, [turnos, user?.paciente?.id]);
+
 
   const handleCerrarModal = () => {
     setShowModal(false);

@@ -50,7 +50,6 @@ const fechaHoraReserva = useWatch({
 		name: "fechaHoraReserva"
 });
 
-
 const fechaHoraReservaModify = useWatch({
 		control: controlModify, 
 		name: "fechaHoraReserva"
@@ -61,68 +60,70 @@ const handleDetalleClick = async (id) => {
 	setShowModal(true);
 };
 
+// Efecto para calcular horarios disponibles
 useEffect(() => {
-		if (!fechaHoraReserva) return; // Early return si no hay fecha
+	const fechaSeleccionada = fechaHoraReserva || fechaHoraReservaModify;
+	if (!fechaSeleccionada) return;
     
-		const turnosFecha = async () => {
-			try {
-				const data = { fechaHoraReserva: fechaHoraReserva ? fechaHoraReserva : fechaHoraReservaModify };
-				const response = await getTurnosQuery(data);
+	const turnosFecha = async () => {
+		try {
+			const data = { fechaHoraReserva: fechaSeleccionada };
+			const response = await getTurnosQuery(data);
         
-				const occupiedTimes = response
-					.filter(turno => turno.estado !== "Anulado")
-					.map(turno => {
-						const date = new Date(turno.fechaHoraReserva);
-						const hour = String(date.getHours()).padStart(2, '0');
-						const minute = String(date.getMinutes()).padStart(2, '0');
-						return `${hour}:${minute}`;
-					});
+			const occupiedTimes = response
+				.filter(turno => turno.estado !== "Anulado")
+				.map(turno => {
+					const date = new Date(turno.fechaHoraReserva);
+					const hour = String(date.getHours()).padStart(2, '0');
+					const minute = String(date.getMinutes()).padStart(2, '0');
+					return `${hour}:${minute}`;
+				});
 
-				const availableSlots = allTimeSlots.filter(
-					slot => !occupiedTimes.includes(slot)
-				);
-				setHorariosDisponibles(availableSlots);
-			} catch (error) {
-				console.error("Error al obtener los turnos:", error);
-			}
-		};
-		turnosFecha();
-	}, [fechaHoraReserva, fechaHoraReservaModify]); 
+			const availableSlots = allTimeSlots.filter(
+				slot => !occupiedTimes.includes(slot)
+			);
+			setHorariosDisponibles(availableSlots);
+		} catch (error) {
+			console.error("Error al obtener los turnos:", error);
+		}
+	};
+	turnosFecha();
+}, [fechaHoraReserva, fechaHoraReservaModify]); 
 
 const onSubmitDelete = async (data) => {
-try {
-	const id = data.id; 
-	await deleteTurnos(id);
-	refetch(); 
-} 
-catch (error) {
-	console.error("Fallo al registrar:", error);
-}
+	try {
+		const id = data.id; 
+		await deleteTurnos(id);
+		refetch(); 
+	} 
+	catch (error) {
+		console.error("Fallo al registrar:", error);
+	}
 };
 
 const onSubmitModify = async (data) => {
-try { 
-	await modifyTurnos(data);
-	refetch(); 
-} 
-catch (error) {
-	console.error("Fallo al modificar:", error);
-}
+	try { 
+		await modifyTurnos(data);
+		refetch(); 
+	} 
+	catch (error) {
+		console.error("Fallo al modificar:", error);
+	}
 };
 
 const onSubmitAdd = async (data) => {
-try {
-	data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
-	const response = await axiosInstance.get("paciente/"+data.paciente);
-	const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
-  //No hace falta separar pq si falla el get teoricamente no llega a esta línea
-	data.email = email.data.data.email;
-	await addTurnos(data);
-	refetch(); 
-} 
-catch (error) {
-	console.error("Fallo al agregar:", error);
-}
+	try {
+		data.fechaHoraReserva = `${data.fechaHoraReserva}T${data.horaReserva}:00`;
+		const response = await axiosInstance.get("paciente/"+data.paciente);
+		const email = await axiosInstance.get("usuario/"+response.data.data.usuario);
+		//No hace falta separar pq si falla el get teoricamente no llega a esta línea
+		data.email = email.data.data.email;
+		await addTurnos(data);
+		refetch(); 
+	} 
+	catch (error) {
+		console.error("Fallo al agregar:", error);
+	}
 };
 
 const onSubmitFilter = async (data) => {
@@ -134,14 +135,14 @@ const onSubmitFilter = async (data) => {
 	}
 };
 
+// Tengo q usar 2 useEffect para evitar el bucle
 useEffect(() => {
-		if (Array.isArray(turnos)) {
-			setTurnosFiltrados(turnos); //La primera vez llena el arreglo con todos los turnos, desp se actaliza con los filtros
-		}
-	else if (!isLoading) {
-			setTurnosFiltrados([]);
-		}
-	}, [turnos, isLoading]);
+	if (Array.isArray(turnos) && turnos.length > 0) {
+		setTurnosFiltrados(turnos);
+	} else if (!isLoading && Array.isArray(turnos)) {
+		setTurnosFiltrados([]);
+	}
+}, [turnos.length, isLoading]); // Solo cuando cambia la cantidad de turnos
 
 	if (isLoading) {
 		return (

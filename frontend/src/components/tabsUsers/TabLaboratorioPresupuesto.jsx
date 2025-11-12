@@ -4,7 +4,7 @@ const TabLaboratorioPresupuesto = () => {
   return (
     <>
       <h2 className='titulo'>Presupuestos</h2>
-      <p>A implementar...</p>
+      <p style={{marginBottom:"60px"}}>A implementar...</p>
     </>
   );
 };
